@@ -208,7 +208,7 @@
   </entry>
   <entry>
     <title>KaliLinux2021安装GUI_Tools依赖问题</title>
-    <url>/2021/11/09/KaliLinux2021%E5%AE%89%E8%A3%85GUI_Tools%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</url>
+    <url>/2021/11/10/KaliLinux2021%E5%AE%89%E8%A3%85GUI-Tools%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="KaliLinux2021安装GUI-Tools依赖问题"><a href="#KaliLinux2021安装GUI-Tools依赖问题" class="headerlink" title="KaliLinux2021安装GUI_Tools依赖问题"></a>KaliLinux2021安装GUI_Tools依赖问题</h2><h3 id="WxPython库依赖问题"><a href="#WxPython库依赖问题" class="headerlink" title="WxPython库依赖问题"></a>WxPython库依赖问题</h3><hr>
 <p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215057722.png" alt="image-20211003215057722"></p>
 <p>需要安装 <code>wxpython</code> 库 , 但是kali 下 pip3 安装, 编译会产生报错, 具体原因 我也不清楚</p>
@@ -229,7 +229,7 @@
 <p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220519837.png" alt="image-20211003220519837"></p>
 <p>谷歌之后, 很快解决了问题</p>
 <p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220650344.png" alt="image-20211003220650344"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt-get install libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">apt-get install libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0</span><br></pre></td></tr></table></figure>
 
 
 
@@ -266,7 +266,7 @@
 <p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003222202425.png" alt="image-20211003222202425"></p>
 <h4 id="权限问题"><a href="#权限问题" class="headerlink" title="权限问题"></a>权限问题</h4><p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003210104791.png" alt="image-20211003210104791"></p>
 <p>给予 java 执行权限,  </p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x -R java_1.8/</span><br><span class="line">chmod +x -R java9/</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod +x -R java_1.8/</span><br><span class="line">chmod +x -R java9/</span><br></pre></td></tr></table></figure>
 
 
 
@@ -277,8 +277,8 @@
         <category>Kali</category>
       </categories>
       <tags>
-        <tag>\- 技巧
-\- 杂谈</tag>
+        <tag>技巧</tag>
+        <tag>杂谈</tag>
       </tags>
   </entry>
 </search>
