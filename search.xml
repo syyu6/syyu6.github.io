@@ -105,7 +105,7 @@
       </tags>
   </entry>
   <entry>
-    <title>文件上传方式总结</title>
+    <title>shiro1.2.4反序列化漏洞复现</title>
     <url>/2021/11/28/shiro1.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</url>
     <content><![CDATA[<h1 id="shiro-反序列化漏洞复现"><a href="#shiro-反序列化漏洞复现" class="headerlink" title="shiro 反序列化漏洞复现"></a>shiro 反序列化漏洞复现</h1><h2 id="漏洞详情"><a href="#漏洞详情" class="headerlink" title="漏洞详情"></a>漏洞详情</h2><p>Apache Shiro 是一个开源安全框架，提供身份验证、授权、密码学和会话管理。在它编号为 550 的 issue 中爆出严重的 Java 反序列化漏洞。</p>
 <p>在 Apache Shiro&lt;=1.2.4 版本中 AES 加密时采用的 key 是<strong>硬编码</strong>在代码中的，这就为伪造 cookie 提供了机会。只要 rememberMe 的 AES 加密密钥泄露，无论 shiro 是什么版本都会导致反序列化漏洞。</p>
