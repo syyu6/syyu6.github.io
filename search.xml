@@ -695,4 +695,29 @@
         <tag>总结</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Windows10更改用户名方式</title>
+    <url>/2021/12/03/Windows10%E6%9B%B4%E6%94%B9%E7%94%A8%E6%88%B7%E5%90%8D%E6%96%B9%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="更改方式"><a href="#更改方式" class="headerlink" title="更改方式"></a>更改方式</h2><hr>
+<p>使用管理员权限打开一个CMD</p>
+<h3 id="修改用户名"><a href="#修改用户名" class="headerlink" title="修改用户名"></a>修改用户名</h3><p>输入 <code>control userpasswords2</code> ，回车；</p>
+<p>点击属性，修改用户名，点击确定；</p>
+<h3 id="注册表修改路径位置"><a href="#注册表修改路径位置" class="headerlink" title="注册表修改路径位置"></a>注册表修改路径位置</h3><p>打开运行，输入regedit，回车；<br>定位到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList；</span><br></pre></td></tr></table></figure>
+<p>选中下面名字最长的项，双击右侧的ProfileImagePath，修改 C:\Users\ 后的用户名，点击确定；</p>
+<p>注销并重新登录；</p>
+<h3 id="重命名用户文件夹"><a href="#重命名用户文件夹" class="headerlink" title="重命名用户文件夹"></a>重命名用户文件夹</h3><p>打开 C:\User\，</p>
+<p>将新的用户名文件夹删除，</p>
+<p>再将原来的的用户名文件夹重命名为新的用户名；</p>
+<p>再次注销并重新登录。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/u011479200/article/details/107902826">https://blog.csdn.net/u011479200/article/details/107902826</a></p>
+]]></content>
+      <categories>
+        <category>Windows技巧</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
 </search>
