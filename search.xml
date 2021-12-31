@@ -858,7 +858,7 @@
   </entry>
   <entry>
     <title>MySQL提权方式总结</title>
-    <url>/articles/0/</url>
+    <url>/articles/82bffd74/</url>
     <content><![CDATA[<h1 id="MySQL提权方式总结"><a href="#MySQL提权方式总结" class="headerlink" title="MySQL提权方式总结"></a>MySQL提权方式总结</h1><h2 id="os-shell-into-outfile"><a href="#os-shell-into-outfile" class="headerlink" title="os-shell / into outfile"></a>os-shell / into outfile</h2><ul>
 <li>  知道网站物理路径</li>
 <li>  高权限数据库用户</li>
