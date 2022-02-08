@@ -1686,4 +1686,152 @@
         <tag>漏洞复现</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Scoop不完全上手指南</title>
+    <url>/articles/e7aa9a12/</url>
+    <content><![CDATA[<h2 id="scoop介绍"><a href="#scoop介绍" class="headerlink" title="scoop介绍"></a>scoop介绍</h2><blockquote>
+<p>   <a href="https://scoop.sh/">scoop</a>是一个 windows 下的软件包管理器，无需管理员权限，将软件全部安装到用户文件夹下，方便管理。</p>
+<p>  安装一些命令行软件非常方便。</p>
+<p>  <a href="https://scoop.sh/">https://scoop.sh/</a></p>
+<p>  官方文档：<a href="https://github.com/ScoopInstaller/Scoop/wiki/">https://github.com/ScoopInstaller/Scoop/wiki/</a></p>
+</blockquote>
+<p>类似的命令行包管理工具还有 <code>Chocolatey</code> , 但安装路径不够统一，scoop能做到同一文件夹下管理。</p>
+<h2 id="安装-scoop"><a href="#安装-scoop" class="headerlink" title="安装 scoop"></a>安装 scoop</h2><p>打开 Powershell 窗口，运行下面的命令。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先设置允许运行远程脚本</span></span><br><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-Scope</span> CurrentUser</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装scoop</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (<span class="built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="string">&#x27;https://get.scoop.sh&#x27;</span>)</span><br><span class="line"><span class="comment"># or shorter</span></span><br><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果要将scoop安装到其他位置</span></span><br><span class="line"><span class="variable">$env:SCOOP</span> = <span class="string">&#x27;D:\scoop&#x27;</span></span><br><span class="line">[<span class="type">environment</span>]::setEnvironmentVariable(<span class="string">&#x27;SCOOP&#x27;</span>, <span class="variable">$env:SCOOP</span>, <span class="string">&#x27;User&#x27;</span>)</span><br><span class="line"><span class="built_in">Invoke-WebRequest</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">Invoke-Expression</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h2><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$</span> scoop</span><br><span class="line">Usage: scoop &lt;command&gt; [&lt;<span class="type">args</span>&gt;]</span><br><span class="line"></span><br><span class="line">Some useful commands are:</span><br><span class="line"></span><br><span class="line">alias       Manage scoop aliases</span><br><span class="line">bucket      Manage Scoop buckets</span><br><span class="line">cache       Show or <span class="built_in">clear</span> the download cache</span><br><span class="line"><span class="built_in">cat</span>         Show content of specified manifest.</span><br><span class="line">checkup     Check <span class="keyword">for</span> potential problems</span><br><span class="line">cleanup     Cleanup apps by removing old versions</span><br><span class="line">config      Get or <span class="built_in">set</span> configuration values</span><br><span class="line">create      Create a custom app manifest</span><br><span class="line">depends     List dependencies <span class="keyword">for</span> an app</span><br><span class="line">export      Exports (an importable) list of installed apps</span><br><span class="line">help        Show help <span class="keyword">for</span> a command</span><br><span class="line">hold        Hold an app to disable updates</span><br><span class="line">home        Opens the app homepage</span><br><span class="line">info        Display information about an app</span><br><span class="line">install     Install apps</span><br><span class="line">list        List installed apps</span><br><span class="line">prefix      Returns the path to the specified app</span><br><span class="line">reset       Reset an app to resolve conflicts</span><br><span class="line">search      Search available apps</span><br><span class="line">status      Show status and check <span class="keyword">for</span> new app versions</span><br><span class="line">unhold      Unhold an app to enable updates</span><br><span class="line">uninstall   Uninstall an app</span><br><span class="line">update      Update apps, or Scoop itself</span><br><span class="line">virustotal  Look <span class="keyword">for</span> app<span class="string">&#x27;s hash on virustotal.com</span></span><br><span class="line"><span class="string">which       Locate a shim/executable (similar to &#x27;</span>which<span class="string">&#x27; on Linux)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Type &#x27;</span>scoop help &lt;command&gt;<span class="string">&#x27; to get help for a specific command.</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="添加-bucket"><a href="#添加-bucket" class="headerlink" title="添加 bucket"></a>添加 bucket</h3><p>自带下面几个 bucket。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop bucket known</span><br><span class="line"></span><br><span class="line">-   main，自带的软件仓库</span><br><span class="line">-   extras，一些额外的带有图形界面软件的仓库</span><br><span class="line">-   versions，包含一些编程语言和类库的各种版本的仓库</span><br><span class="line">-   nirsoft，包含 nirsoft 软件的仓库</span><br><span class="line">-   php，各种 php 的仓库</span><br><span class="line">-   nerd<span class="literal">-fonts</span>，包含各种 nerd<span class="literal">-fonts</span> 字体</span><br><span class="line">-   nonportable，包含各种非绿色版软件的仓库</span><br><span class="line">-   java，各种 java 版本都有的仓库</span><br><span class="line">-   games，一些游戏和相关工具的仓库</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">常用： extras javamain nirsoft nonportable versions </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 添加bucket</span></span><br><span class="line">scoop bucket add extra</span><br><span class="line">scoop bucket add java</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>  <strong>添加第三方bucket</strong></li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># eg</span></span><br><span class="line">scoop bucket add Ash258 https://github.com/Ash258/Scoop<span class="literal">-Ash258</span>.git</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用代理"><a href="#使用代理" class="headerlink" title="使用代理"></a>使用代理</h3><p>scoop 默认下载比较慢，如果你有代理的话，可以为 scoop 设置代理，加速软件的下载。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop config proxy username:password@proxy.example.org:<span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># eg</span></span><br><span class="line">scoop config proxy localhost:<span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># delete Proxy Config</span></span><br><span class="line">scop config <span class="built_in">rm</span> proxy</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多连接下载"><a href="#多连接下载" class="headerlink" title="多连接下载"></a>多连接下载</h3><p>scoop 也支持多连接下载，只需要安装 aria2，scoop 就会自动利用 aria2 来进行多连接下载。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop install aria2</span><br></pre></td></tr></table></figure>
+
+<p>关于下载的其他说明，参见<a href="https://github.com/ScoopInstaller/Scoop#multi-connection-downloads-with-aria2">官方文档</a>。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop config aria2<span class="literal">-enabled</span> true <span class="comment"># 开启aria2</span></span><br><span class="line">scoop config aria2<span class="literal">-enabled</span> false <span class="comment"># 关闭aria2</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="安装-卸载install"><a href="#安装-卸载install" class="headerlink" title="安装/卸载install"></a>安装/卸载install</h3><p>首先需要搜索软件包的名称，然后就可以安装。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 搜索软件</span></span><br><span class="line">scoop search jdk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据返回的结果进行安装</span></span><br><span class="line">scoop install openjdk17</span><br></pre></td></tr></table></figure>
+
+<p>不再需要的软件包就可以卸载。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop uninstall openjdk17</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="更新程序update"><a href="#更新程序update" class="headerlink" title="更新程序update"></a>更新程序update</h3><p>获取更新</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scoop update</span><br></pre></td></tr></table></figure>
+
+<p>查看需要更新的程序</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scoop status</span><br></pre></td></tr></table></figure>
+
+<p>更新 scoop 自己。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop update scoop</span><br></pre></td></tr></table></figure>
+
+<p>更新所有软件。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop update *</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="管理多版本verison"><a href="#管理多版本verison" class="headerlink" title="管理多版本verison"></a>管理多版本verison</h3><p>管理多版本需要添加version库</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 先添加 versions bucket</span></span><br><span class="line">scoop bucket add versions</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 同时安装 Python 2.7 和最新版本</span></span><br><span class="line">scoop install python27 python</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 Python 2.7.x</span></span><br><span class="line">scoop reset python27</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 Python 3.x</span></span><br><span class="line">scoop reset python</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="清理clear"><a href="#清理clear" class="headerlink" title="清理clear"></a>清理clear</h3><p>scoop 更新软件的时候会保留几个旧版本，假如你不再需要这些旧版本，可以把他们清理掉。</p>
+<p>顺便也可以把下载缓存清理掉。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 清理软件的旧版本</span></span><br><span class="line">scoop cleanup *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理软件的下载缓存</span></span><br><span class="line">scoop cache <span class="built_in">rm</span> *</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用程序"><a href="#常用程序" class="headerlink" title="常用程序"></a>常用程序</h2><ul>
+<li><p>aria2</p>
+<blockquote>
+<p>  多连接下载器</p>
+</blockquote>
+</li>
+<li><p>  git</p>
+</li>
+<li><p>sudo</p>
+<blockquote>
+<p>  不用打开新窗口，快速以管理员权限运行</p>
+</blockquote>
+</li>
+<li><p>  wget/curl</p>
+</li>
+<li><p>starship</p>
+<blockquote>
+<p>  DIY powershell命令提示</p>
+</blockquote>
+</li>
+<li><p>mpv</p>
+<blockquote>
+<p>  开源媒体播放器</p>
+</blockquote>
+</li>
+<li><p>adb</p>
+<blockquote>
+<p>  link to Adnroid</p>
+</blockquote>
+</li>
+<li><p>开发环境</p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python go maven </span><br><span class="line">php56 php74</span><br></pre></td></tr></table></figure></li>
+<li><p>neovim</p>
+<blockquote>
+<p>  现代终端文本编辑器，yyds</p>
+</blockquote>
+</li>
+<li><p>netcat</p>
+<blockquote>
+<p>  “瑞士军刀”</p>
+</blockquote>
+</li>
+<li><p>  openssl</p>
+</li>
+<li><p>screentogif</p>
+<blockquote>
+<p>  gif 屏幕录制工具</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><ul>
+<li>  当前应用版本路径 使用  Current” 文件夹 进行软链接，方便进行路径配置。</li>
+<li>  能够自定义bucket库，方便日后diy，把自己常用的添加进去，还能新增自用的其他程序。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+        <tag>scoop</tag>
+      </tags>
+  </entry>
 </search>
