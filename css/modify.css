@@ -1,0 +1,20 @@
+
+
+
+/* 页脚透明 */
+
+/* #footer {
+    background: transparent !important;
+} */
+
+
+#nav a {
+    color: #a1cdcc;
+}
+
+/* 博主昵称颜色 */
+.author-info__name {
+    color: #a1cdcc;
+}
+
+
