@@ -48,6 +48,13 @@
 [data-theme='dark'] .top-img {
   filter: brightness(0.8);
 }
+#footer:before {
+  background: transparent !important;
+  background-color: rgba(255,255,255,0.5);
+}
+[data-theme='dark'] #footer:before {
+  background-color: rgba(0,0,0,0.5);
+}
 #footer-wrap,
 #footer-wrap a {
   color: #fff;

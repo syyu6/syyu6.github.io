@@ -51,3 +51,23 @@
 #footer:before {
   background: transparent !important;
 }
+#footer:before {
+  background: transparent !important;
+  background-color: rgba(255,255,255,0.5);
+}
+[data-theme='dark'] #footer:before {
+  background-color: rgba(0,0,0,0.5);
+}
+#footer-wrap,
+#footer-wrap a {
+  color: #fff;
+  -webkit-transition: unset;
+  -moz-transition: unset;
+  -o-transition: unset;
+  -ms-transition: unset;
+  transition: unset;
+}
+[data-theme='dark'] #footer-wrap,
+[data-theme='dark'] #footer-wrap a {
+  color: var(--light-grey);
+}
