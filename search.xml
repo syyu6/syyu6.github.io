@@ -1,6 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>KaliLinux2021安装GUI_Tools依赖问题</title>
+    <url>/articles/59cbe3b3/</url>
+    <content><![CDATA[<h2 id="KaliLinux2021安装GUI-Tools依赖问题"><a href="#KaliLinux2021安装GUI-Tools依赖问题" class="headerlink" title="KaliLinux2021安装GUI_Tools依赖问题"></a>KaliLinux2021安装GUI_Tools依赖问题</h2><h3 id="WxPython库依赖问题"><a href="#WxPython库依赖问题" class="headerlink" title="WxPython库依赖问题"></a>WxPython库依赖问题</h3><hr>
+<p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215057722.png" alt="image-20211003215057722"></p>
+<p>需要安装 <code>wxpython</code> 库 , 但是kali 下 pip3 安装, 编译会产生报错, 具体原因 我也不清楚</p>
+<p>只能转身去寻找已经编译好了的whl 包, 结果…..竟然没有Linux的包. 呜呜呜~~</p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215508315.png" alt="image-20211003215508315"></p>
+<p>只能去全球最大的同性交友网站gayhub 呸~ , <code>github</code> 寻找linux版本</p>
+<p>终于在wxpython项目组的站点找到了部分Linux的whl包</p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215853397.png" alt="image-20211003215853397"></p>
+<p>没有针对kali 的包, 那就随便冲一个吧 </p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215930052.png" alt="image-20211003215930052"></p>
+<p>看了一下debian , 发现没有 python3.9 版本的 , 但是unbuntu 18.04 有的 , 不管这么多了蒙头冲就对了</p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220147241.png" alt="image-20211003220147241"></p>
+<p>下载 , pip install 安装</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip3 install wxPython-4.1.1-cp39-cp39-linux_x86_64.whl </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220307202.png" alt="image-20211003220307202"></p>
+<h4 id="第一个依赖问题-libSDL2-2-0-so-0"><a href="#第一个依赖问题-libSDL2-2-0-so-0" class="headerlink" title="第一个依赖问题 libSDL2-2.0.so.0"></a>第一个依赖问题 libSDL2-2.0.so.0</h4><p>#todo  这里少张图 , 缺少 libSDL2-2.0.so.0</p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220519837.png" alt="image-20211003220519837"></p>
+<p>谷歌之后, 很快解决了问题</p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220650344.png" alt="image-20211003220650344"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">apt-get install libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="第二个依赖问题-libjpeg-so-8"><a href="#第二个依赖问题-libjpeg-so-8" class="headerlink" title="第二个依赖问题  libjpeg.so.8"></a>第二个依赖问题  libjpeg.so.8</h3><p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220412476.png" alt="image-20211003220412476"></p>
+<p>百度找到的很多结果是 添加libjpeg.so.8的环境变量 </p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003221123978.png" alt="image-20211003221123978"></p>
+<p>但kali机器上没有 libjpeg.so.8 , 呜呜呜</p>
+<p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003213536750.png" alt="image-20211003213536750"></p>
+<p>emmmm , google 了很久终于找到了 <strong>libjpeg 库的安装</strong> </p>
+<h5 id="libjpeg-库的安装"><a href="#libjpeg-库的安装" class="headerlink" title="libjpeg 库的安装"></a>libjpeg 库的安装</h5><p><a href="http://blog.sina.com.cn/s/blog_7956a73c0100wj9s.html">http://blog.sina.com.cn/s/blog_7956a73c0100wj9s.html</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://www.ijg.org/files/jpegsrc.v8c.tar.gz</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line">＃make test  ==&gt; 测试命令而已</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003221447466.png" alt="image-20211003221447466"></p>
+<p>A quick fix is to add the directory that contains <code>libjpeg.so.8</code> to your <code>/etc/ld.so.conf</code> file, and then run <code>ldconfig</code></p>
+<p>将 路径添加到  <code>/etc/ld.so.conf</code>  ,</p>
+<p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003222445141.png" alt="image-20211003222445141"></p>
+<p> 然后运行 <code>ldconfig</code></p>
+<p>到这里, 图形化界面就行成功运行了</p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003221748360.png" alt="image-20211003221748360"></p>
+<h3 id="Java-报错"><a href="#Java-报错" class="headerlink" title="Java 报错"></a>Java 报错</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">java: Exec format error</span><br></pre></td></tr></table></figure>
+
+<p>这里, 由于自带的java 环境是 mac 系统的程序 , 这里使用Linux环境的java进行替换进行了</p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003222318921.png" alt="image-20211003222318921"></p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003210824421.png" alt="image-20211003210824421"></p>
+<p>java1.8</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://www.java.com/en/download/manual.jsp</span><br></pre></td></tr></table></figure>
+
+<p>java 9</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://download.java.net/java/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_linux-x64_bin.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>修改路径</p>
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003222202425.png" alt="image-20211003222202425"></p>
+<h4 id="权限问题"><a href="#权限问题" class="headerlink" title="权限问题"></a>权限问题</h4><p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003210104791.png" alt="image-20211003210104791"></p>
+<p>给予 java 执行权限,  </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod +x -R java_1.8/</span><br><span class="line">chmod +x -R java9/</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003214916639.png" alt="image-20211003214916639"></p>
+<p>写到这, 终于完成了所有依赖问题, 终于可以关闭所有浏览器标签页了 ==手动狗头==</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
+        <tag>杂谈</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NTLM及Kerberos认证流程</title>
     <url>/articles/60487e7c/</url>
     <content><![CDATA[<h1 id="NTLM及Kerberos认证流程"><a href="#NTLM及Kerberos认证流程" class="headerlink" title="NTLM及Kerberos认证流程"></a>NTLM及Kerberos认证流程</h1><h2 id="NTLM认证"><a href="#NTLM认证" class="headerlink" title="NTLM认证"></a>NTLM认证</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询/应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。</p>
@@ -107,81 +182,6 @@
       </categories>
       <tags>
         <tag>网络安全</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>KaliLinux2021安装GUI_Tools依赖问题</title>
-    <url>/articles/59cbe3b3/</url>
-    <content><![CDATA[<h2 id="KaliLinux2021安装GUI-Tools依赖问题"><a href="#KaliLinux2021安装GUI-Tools依赖问题" class="headerlink" title="KaliLinux2021安装GUI_Tools依赖问题"></a>KaliLinux2021安装GUI_Tools依赖问题</h2><h3 id="WxPython库依赖问题"><a href="#WxPython库依赖问题" class="headerlink" title="WxPython库依赖问题"></a>WxPython库依赖问题</h3><hr>
-<p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215057722.png" alt="image-20211003215057722"></p>
-<p>需要安装 <code>wxpython</code> 库 , 但是kali 下 pip3 安装, 编译会产生报错, 具体原因 我也不清楚</p>
-<p>只能转身去寻找已经编译好了的whl 包, 结果…..竟然没有Linux的包. 呜呜呜~~</p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215508315.png" alt="image-20211003215508315"></p>
-<p>只能去全球最大的同性交友网站gayhub 呸~ , <code>github</code> 寻找linux版本</p>
-<p>终于在wxpython项目组的站点找到了部分Linux的whl包</p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215853397.png" alt="image-20211003215853397"></p>
-<p>没有针对kali 的包, 那就随便冲一个吧 </p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003215930052.png" alt="image-20211003215930052"></p>
-<p>看了一下debian , 发现没有 python3.9 版本的 , 但是unbuntu 18.04 有的 , 不管这么多了蒙头冲就对了</p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220147241.png" alt="image-20211003220147241"></p>
-<p>下载 , pip install 安装</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip3 install wxPython-4.1.1-cp39-cp39-linux_x86_64.whl </span><br></pre></td></tr></table></figure>
-
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220307202.png" alt="image-20211003220307202"></p>
-<h4 id="第一个依赖问题-libSDL2-2-0-so-0"><a href="#第一个依赖问题-libSDL2-2-0-so-0" class="headerlink" title="第一个依赖问题 libSDL2-2.0.so.0"></a>第一个依赖问题 libSDL2-2.0.so.0</h4><p>#todo  这里少张图 , 缺少 libSDL2-2.0.so.0</p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220519837.png" alt="image-20211003220519837"></p>
-<p>谷歌之后, 很快解决了问题</p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220650344.png" alt="image-20211003220650344"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">apt-get install libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="第二个依赖问题-libjpeg-so-8"><a href="#第二个依赖问题-libjpeg-so-8" class="headerlink" title="第二个依赖问题  libjpeg.so.8"></a>第二个依赖问题  libjpeg.so.8</h3><p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003220412476.png" alt="image-20211003220412476"></p>
-<p>百度找到的很多结果是 添加libjpeg.so.8的环境变量 </p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003221123978.png" alt="image-20211003221123978"></p>
-<p>但kali机器上没有 libjpeg.so.8 , 呜呜呜</p>
-<p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003213536750.png" alt="image-20211003213536750"></p>
-<p>emmmm , google 了很久终于找到了 <strong>libjpeg 库的安装</strong> </p>
-<h5 id="libjpeg-库的安装"><a href="#libjpeg-库的安装" class="headerlink" title="libjpeg 库的安装"></a>libjpeg 库的安装</h5><p><a href="http://blog.sina.com.cn/s/blog_7956a73c0100wj9s.html">http://blog.sina.com.cn/s/blog_7956a73c0100wj9s.html</a></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://www.ijg.org/files/jpegsrc.v8c.tar.gz</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line">＃make test  ==&gt; 测试命令而已</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003221447466.png" alt="image-20211003221447466"></p>
-<p>A quick fix is to add the directory that contains <code>libjpeg.so.8</code> to your <code>/etc/ld.so.conf</code> file, and then run <code>ldconfig</code></p>
-<p>将 路径添加到  <code>/etc/ld.so.conf</code>  ,</p>
-<p> <img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003222445141.png" alt="image-20211003222445141"></p>
-<p> 然后运行 <code>ldconfig</code></p>
-<p>到这里, 图形化界面就行成功运行了</p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003221748360.png" alt="image-20211003221748360"></p>
-<h3 id="Java-报错"><a href="#Java-报错" class="headerlink" title="Java 报错"></a>Java 报错</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">java: Exec format error</span><br></pre></td></tr></table></figure>
-
-<p>这里, 由于自带的java 环境是 mac 系统的程序 , 这里使用Linux环境的java进行替换进行了</p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003222318921.png" alt="image-20211003222318921"></p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003210824421.png" alt="image-20211003210824421"></p>
-<p>java1.8</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://www.java.com/en/download/manual.jsp</span><br></pre></td></tr></table></figure>
-
-<p>java 9</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://download.java.net/java/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_linux-x64_bin.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>修改路径</p>
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003222202425.png" alt="image-20211003222202425"></p>
-<h4 id="权限问题"><a href="#权限问题" class="headerlink" title="权限问题"></a>权限问题</h4><p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003210104791.png" alt="image-20211003210104791"></p>
-<p>给予 java 执行权限,  </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod +x -R java_1.8/</span><br><span class="line">chmod +x -R java9/</span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="https://typora-1305076737.cos.ap-shanghai.myqcloud.com/typora_image-20211003214916639.png" alt="image-20211003214916639"></p>
-<p>写到这, 终于完成了所有依赖问题, 终于可以关闭所有浏览器标签页了 ==手动狗头==</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-        <tag>杂谈</tag>
       </tags>
   </entry>
   <entry>
@@ -868,8 +868,8 @@
         <category>漏洞复现</category>
       </categories>
       <tags>
-        <tag>网络安全</tag>
         <tag>技巧</tag>
+        <tag>网络安全</tag>
         <tag>总结</tag>
       </tags>
   </entry>
@@ -1416,9 +1416,9 @@
         <category>网络安全</category>
       </categories>
       <tags>
-        <tag>网络安全</tag>
         <tag>技巧</tag>
         <tag>杂谈</tag>
+        <tag>网络安全</tag>
         <tag>CTF</tag>
       </tags>
   </entry>
