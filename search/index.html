@@ -8,11 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="Evething is possible!">
 <meta property="og:type" content="website">
-<meta property="og:title" content="syyu&#39;s Blog">
-<meta property="og:url" content="https://wh0is.xyz/archives/2021/10/index.html">
+<meta property="og:title" content="search">
+<meta property="og:url" content="https://wh0is.xyz/search/index.html">
 <meta property="og:site_name" content="syyu&#39;s Blog">
 <meta property="og:description" content="Evething is possible!">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-08T15:45:21.000Z">
+<meta property="article:modified_time" content="2024-08-08T15:47:24.608Z">
 <meta property="article:author" content="ThesYu">
 <meta name="twitter:card" content="summary">
     
@@ -34,7 +36,7 @@
       
     
     <!-- title -->
-    <title>归档: 2021/10</title>
+    <title>search</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -89,90 +91,22 @@
 </header>
 
         
-        <div id="archive">
-  <ul class="post-list">
-    
-    
-    
-    
-      
-      
-      
-      
-        <li class="post-year"><h2>2021</h2></li>
-      
-      <li class="post-item">
-        
-    <div class="meta">
-      
-        
-          <time datetime="2021-10-20T12:35:08.000Z" class="dt-published" itemprop="datePublished">2021-10-20</time>
-        
-      
-    </div>
-
-
-        <span>
-    
-        <a class="" href="/articles/c63c4f59/">Windows10更改用户名方式</a>
-    
-
-
-</span>
-      </li>
-    
-      
-      
-      
-      
-      <li class="post-item">
-        
-    <div class="meta">
-      
-        
-          <time datetime="2021-10-20T08:38:12.000Z" class="dt-published" itemprop="datePublished">2021-10-20</time>
-        
-      
-    </div>
-
-
-        <span>
-    
-        <a class="" href="/articles/59cbe3b3/">KaliLinux2021安装GUI_Tools依赖问题</a>
-    
-
-
-</span>
-      </li>
-    
-      
-      
-      
-      
-      <li class="post-item">
-        
-    <div class="meta">
-      
-        
-          <time datetime="2021-10-19T09:56:00.000Z" class="dt-published" itemprop="datePublished">2021-10-19</time>
-        
-      
-    </div>
-
-
-        <span>
-    
-        <a class="" href="/articles/d4db3d41/">Windows下快速切换全拼/双拼</a>
-    
-
-
-</span>
-      </li>
-    
-  </ul>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
   
 
-</div>
+  <div class="content" itemprop="articleBody">
+      
+        <section id="search">
+  <form>
+    <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+  </form>
+  <div id="search-result"></div>
+  <p class="search-no-result">抱歉，没有符合您搜索条件的结果。请换其它关键词再试。</p>
+</section>
+
+      
+  </div>
+</article>
 
         
         <footer id="footer">
@@ -221,6 +155,45 @@
 <script src="/js/main.js"></script>
 
 <!-- search -->
+
+  
+<script src="/js/search.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+
+    var $inputArea = $("input#search-input");
+    var $resultArea = document.querySelector("div#search-result");
+
+    $inputArea.focus(function() {
+      var search_path = "search.xml";
+      if (search_path.length == 0) {
+        search_path = "search.xml";
+      }
+      var path = "/" + search_path;
+      searchFunc(path, 'search-input', 'search-result');
+    });
+
+    $inputArea.keydown(function(e) {
+      if (e.which == 13) {
+        e.preventDefault();
+      }
+    });
+
+    var observer = new MutationObserver(function(mutationsList, observer) {
+      if (mutationsList.length == 1) {
+        if (mutationsList[0].addedNodes.length) {
+          $(".search-no-result").hide();
+        } else if (mutationsList[0].removedNodes.length) {
+          $(".search-no-result").show(200);
+        }
+      }
+    });
+
+    observer.observe($resultArea, { childList: true });
+
+  });
+  </script>
 
 <!-- Baidu Analytics -->
 

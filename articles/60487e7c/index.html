@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="NTLM及Kerberos认证流程NTLM认证1.概念NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询&#x2F;应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。 2.认证流程 ①使用用户名和密码登录客户端，进行本地认证 ②">
+    <meta name="description" content="NTLM及Kerberos认证流程NTLM认证1.概念NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询&#x2F;应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。 2.认证流程 ①使用用户名和密码登录客户端，进行本">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NTLM及Kerberos认证流程">
 <meta property="og:url" content="https://wh0is.xyz/articles/60487e7c/index.html">
 <meta property="og:site_name" content="syyu&#39;s Blog">
-<meta property="og:description" content="NTLM及Kerberos认证流程NTLM认证1.概念NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询&#x2F;应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。 2.认证流程 ①使用用户名和密码登录客户端，进行本地认证 ②">
+<meta property="og:description" content="NTLM及Kerberos认证流程NTLM认证1.概念NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询&#x2F;应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。 2.认证流程 ①使用用户名和密码登录客户端，进行本">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047697.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047362.png">
@@ -74,9 +74,11 @@
         <!--
        --><li><a href="/">首页</a></li><!--
      --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
        --><li><a href="/archives/">归档</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li><!--
      -->
       </ul>
     </span>
@@ -167,7 +169,7 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h1 id="NTLM及Kerberos认证流程"><a href="#NTLM及Kerberos认证流程" class="headerlink" title="NTLM及Kerberos认证流程"></a>NTLM及Kerberos认证流程</h1><h2 id="NTLM认证"><a href="#NTLM认证" class="headerlink" title="NTLM认证"></a>NTLM认证</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询/应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。</p>
+    <h1 id="NTLM及Kerberos认证流程"><a href="#NTLM及Kerberos认证流程" class="headerlink" title="NTLM及Kerberos认证流程"></a>NTLM及Kerberos认证流程</h1><h2 id="NTLM认证"><a href="#NTLM认证" class="headerlink" title="NTLM认证"></a>NTLM认证</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询&#x2F;应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。</p>
 <h3 id="2-认证流程"><a href="#2-认证流程" class="headerlink" title="2.认证流程"></a>2.认证流程</h3><p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047697.png" alt="Snipaste_2021-09-09_13-48-24"></p>
 <p>①使用用户名和密码登录客户端，进行<strong>本地认证</strong></p>
 <p>②客户端首先在本地加密当前用户的密码为密码散列，即<strong>NTLM Hash</strong><a target="_blank" rel="noopener" href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:1">1</a></p>
@@ -183,21 +185,21 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">winlogon.exe -&gt; 接收用户输入 -&gt; lsass.exe -&gt; 本地认证</span><br></pre></td></tr></table></figure>
 
 <h4 id="NTLM-Hash的生成"><a href="#NTLM-Hash的生成" class="headerlink" title="NTLM Hash的生成"></a>NTLM Hash的生成</h4><ul>
-<li>  用户明文密码：<code>y5neko123</code></li>
-<li>  十六进制转换为：<code>79356e656b6f313233</code></li>
-<li>  转换为Unicode码，相当于在每个字节后添加一个0x00：<code>790035006e0065006b006f00310032003300</code></li>
-<li>  以十六进制进行MD4加密：<code>2aec2647511a853cbec96388c4ae8770</code></li>
+<li>用户明文密码：<code>y5neko123</code></li>
+<li>十六进制转换为：<code>79356e656b6f313233</code></li>
+<li>转换为Unicode码，相当于在每个字节后添加一个0x00：<code>790035006e0065006b006f00310032003300</code></li>
+<li>以十六进制进行MD4加密：<code>2aec2647511a853cbec96388c4ae8770</code></li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047362.png" alt="image-20210909131622932"></p>
-<h2 id="Kerberos认证"><a href="#Kerberos认证" class="headerlink" title="Kerberos认证"></a>Kerberos认证</h2><h3 id="1-概念-1"><a href="#1-概念-1" class="headerlink" title="1.概念"></a>1.概念</h3><p>Kerberos 是一种由 MIT（麻省理工大学）提出的一种网络身份验证协议。它旨在通过使用密钥加密技术为客户端/服务器应用程序提供强身份验证。</p>
+<h2 id="Kerberos认证"><a href="#Kerberos认证" class="headerlink" title="Kerberos认证"></a>Kerberos认证</h2><h3 id="1-概念-1"><a href="#1-概念-1" class="headerlink" title="1.概念"></a>1.概念</h3><p>Kerberos 是一种由 MIT（麻省理工大学）提出的一种网络身份验证协议。它旨在通过使用密钥加密技术为客户端&#x2F;服务器应用程序提供强身份验证。</p>
 <p>Kerberos 主要是用在域环境下的身份认证协议。</p>
 <h3 id="2-认证流程-1"><a href="#2-认证流程-1" class="headerlink" title="2.认证流程"></a>2.认证流程</h3><p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047736.png" alt="img"></p>
 <p>Kerberos 协议中主要有四个角色的存在：</p>
 <ol>
-<li> 访问服务的 Client</li>
-<li> 提供服务的 Server</li>
-<li> KDC（Key Distribution Center）密钥分发中心<a target="_blank" rel="noopener" href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:3">3</a></li>
-<li> AD（Account Database）</li>
+<li>访问服务的 Client</li>
+<li>提供服务的 Server</li>
+<li>KDC（Key Distribution Center）密钥分发中心<a target="_blank" rel="noopener" href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:3">3</a></li>
+<li>AD（Account Database）</li>
 </ol>
 <hr>
 <h4 id="KDC的构成"><a href="#KDC的构成" class="headerlink" title="KDC的构成"></a>KDC的构成</h4><p><strong>Authentication Service</strong>：认证服务器，以下简称AS，作用就是验证 Client 端的身份，验证通过会发送一张<strong>TGT（Ticket Granting Ticket）</strong><a target="_blank" rel="noopener" href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:4">4</a>票据给 Client</p>
@@ -205,17 +207,17 @@
 <hr>
 <p>Kerberos认证大体上分为三个流程：</p>
 <ol>
-<li> The Authentication Service Exchange：Client 与 AS 的交互</li>
-<li> The Ticket-Granting Service (TGS) Exchange：Client 与 TGS 的交互</li>
-<li> The Client/Server Authentication Exchange：Client 与 Server 的交互</li>
+<li>The Authentication Service Exchange：Client 与 AS 的交互</li>
+<li>The Ticket-Granting Service (TGS) Exchange：Client 与 TGS 的交互</li>
+<li>The Client&#x2F;Server Authentication Exchange：Client 与 Server 的交互</li>
 </ol>
 <hr>
 <h4 id="一、Authentication-Service-Exchange"><a href="#一、Authentication-Service-Exchange" class="headerlink" title="一、Authentication Service Exchange"></a>一、Authentication Service Exchange</h4><p><strong>KRB_AS_REQ（请求）</strong></p>
 <p>Client –&gt; AS：客户端向KDC的AS发送<strong>Authenticator1</strong>，内容包含：</p>
 <ul>
-<li>  Pre-authentication data：包含用以证明自己身份的信息，一般它的内容是一个被Client hash加密过的时间戳</li>
-<li>  Client name &amp; realm：用户信息</li>
-<li>  TGS的Server name</li>
+<li>Pre-authentication data：包含用以证明自己身份的信息，一般它的内容是一个被Client hash加密过的时间戳</li>
+<li>Client name &amp; realm：用户信息</li>
+<li>TGS的Server name</li>
 </ul>
 <p><strong>KRB_AS_REP（响应）</strong></p>
 <p>AS –&gt; Client：AS根据用户名在AD中判断是否在白名单中，接着进行验证发送方是否为Client name中声称的用户</p>
@@ -229,26 +231,26 @@
 <h4 id="二、Ticket-Granting-Service-TGS-Exchange"><a href="#二、Ticket-Granting-Service-TGS-Exchange" class="headerlink" title="二、Ticket-Granting Service (TGS) Exchange"></a>二、Ticket-Granting Service (TGS) Exchange</h4><p><strong>KRB_TGS_REQ（请求）</strong></p>
 <p>Client –&gt; TGS：Client向KDC的TGS发送<strong>Authenticator2</strong>，内容包含：</p>
 <ul>
-<li>  TGT</li>
-<li>  Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
-<li>  Client name &amp; realm</li>
-<li>  Server name &amp; realm：Client要访问的Server</li>
+<li>TGT</li>
+<li>Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
+<li>Client name &amp; realm</li>
+<li>Server name &amp; realm：Client要访问的Server</li>
 </ul>
 <p><strong>KRB_TGS_REP（响应）</strong></p>
 <p>TGS –&gt; Client：TGS首先通过自己的NTLM Hash（krbtgt账户的NTLM Hash）对Client提供的TGT进行解密，即可得到<strong>SessionKey</strong>，再通过这个SessionKey解密Client提供的<strong>Authenticator</strong>来进行验证，此时生成一个<strong>SessionKey-tgs</strong></p>
 <p>验证成功后向对方发送两个数据：</p>
 <ul>
-<li>  使用SessionKey加密<strong>SessionKey-tgs</strong>生成<strong>SessionKey-tgs-encrypt</strong>，用于Client和Server的认证</li>
-<li>  使用Server的NTLM Hash加密<strong>SessionKey-tgs</strong>生成<strong>ST</strong><a target="_blank" rel="noopener" href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:5">5</a></li>
+<li>使用SessionKey加密<strong>SessionKey-tgs</strong>生成<strong>SessionKey-tgs-encrypt</strong>，用于Client和Server的认证</li>
+<li>使用Server的NTLM Hash加密<strong>SessionKey-tgs</strong>生成<strong>ST</strong><a target="_blank" rel="noopener" href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:5">5</a></li>
 </ul>
 <p>Client收到KRB_TGS_REP，使用SessionKey对返回的<strong>SessionKey-tgs-encrypt</strong>进行解密得到<strong>SessionKey-tgs</strong>，有了<strong>SessionKey-tgs</strong>和<strong>ST</strong>，Client就可以和Server交互了，至此TGS的任务完成</p>
 <hr>
-<h4 id="三、Client-Server-Authentication-Exchange"><a href="#三、Client-Server-Authentication-Exchange" class="headerlink" title="三、Client/Server Authentication Exchange"></a>三、Client/Server Authentication Exchange</h4><p><strong>KRB_AP_REQ（请求）</strong></p>
+<h4 id="三、Client-Server-Authentication-Exchange"><a href="#三、Client-Server-Authentication-Exchange" class="headerlink" title="三、Client&#x2F;Server Authentication Exchange"></a>三、Client&#x2F;Server Authentication Exchange</h4><p><strong>KRB_AP_REQ（请求）</strong></p>
 <p>Client –&gt; Server：Client向Server发送<strong>Authenticator3</strong>，内容包含：</p>
 <ul>
-<li>  ST</li>
-<li>  Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
-<li>  Flag：用于表示Client是否需要进行双向验证</li>
+<li>ST</li>
+<li>Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
+<li>Flag：用于表示Client是否需要进行双向验证</li>
 </ul>
 <p><strong>KRB_AP_REP（响应）</strong></p>
 <p>Server –&gt; Client：Server首先通过自己的NTLM Hash对收到的ST进行解密，即可得到<strong>SessionKey-tgs</strong>，再通过这个<strong>SessionKey-tgs</strong>解密收到的<strong>Authenticator</strong>即可验证身份，原理同上</p>
@@ -258,10 +260,10 @@
 </blockquote>
 <hr>
 <ol>
-<li> 通常意义上的NTLM Hash指存储在SAM数据库及NTDS数据库中对密码进行 Hash摘要计算后的结果，这类 Hash可以直接用于 PTH，并且通常存在于LSASS进程中，便于 SSP（NTLM 安全支持提供程序）使用。 Account Manager Database，安全账号管理数据库 [</li>
-<li> KDC 服务默认会安装在一个域的域控中，KDC 服务框架中包含一个 KRBTGT 账户，它是在创建域时系统自动创建的一个账号，是一个无法登陆的账号，在发放票据时会使用到它的密码 HASH 值。</li>
-<li> TGT包含：使用KDC中krbtgt账户的NTLM Hash加密的SessionKey、Client name &amp; realm以及End Time：TGT的到期时间</li>
-<li> 可以用来访问 Server 端的票据，包含：SessionKey-tgs、Client name &amp; realm以及End Time：ST的到期时间</li>
+<li>通常意义上的NTLM Hash指存储在SAM数据库及NTDS数据库中对密码进行 Hash摘要计算后的结果，这类 Hash可以直接用于 PTH，并且通常存在于LSASS进程中，便于 SSP（NTLM 安全支持提供程序）使用。 Account Manager Database，安全账号管理数据库 [</li>
+<li>KDC 服务默认会安装在一个域的域控中，KDC 服务框架中包含一个 KRBTGT 账户，它是在创建域时系统自动创建的一个账号，是一个无法登陆的账号，在发放票据时会使用到它的密码 HASH 值。</li>
+<li>TGT包含：使用KDC中krbtgt账户的NTLM Hash加密的SessionKey、Client name &amp; realm以及End Time：TGT的到期时间</li>
+<li>可以用来访问 Server 端的票据，包含：SessionKey-tgs、Client name &amp; realm以及End Time：ST的到期时间</li>
 </ol>
 
   </div>
@@ -278,9 +280,11 @@
         
           <li><a href="/">首页</a></li>
         
+          <li><a href="/search/">搜索</a></li>
+        
           <li><a href="/archives/">归档</a></li>
         
-          <li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li>
+          <li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li>
         
       </ul>
     </div>
@@ -336,9 +340,11 @@
         <!--
        --><li><a href="/">首页</a></li><!--
      --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
        --><li><a href="/archives/">归档</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li><!--
      -->
       </ul>
     </nav>

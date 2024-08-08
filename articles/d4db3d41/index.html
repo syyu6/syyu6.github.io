@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="Windows下快速切换全拼&#x2F;双拼bat批处理文件方式change.bat123456@echo offset Mainkey&#x3D;HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS for &#x2F;f %%i in (&#x27;reg query %MainKey% &#x2F;v &quot;Enable Double Pinyin&quot; ^| findstr">
+    <meta name="description" content="Windows下快速切换全拼&#x2F;双拼bat批处理文件方式change.bat123456@echo offset Mainkey&#x3D;HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS for &#x2F;f %%i in (&#x27;reg query %MainKey% &#x2F;v &quot;Enable Double Pinyin&quot; ^| fi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Windows下快速切换全拼&#x2F;双拼">
 <meta property="og:url" content="https://wh0is.xyz/articles/d4db3d41/index.html">
 <meta property="og:site_name" content="syyu&#39;s Blog">
-<meta property="og:description" content="Windows下快速切换全拼&#x2F;双拼bat批处理文件方式change.bat123456@echo offset Mainkey&#x3D;HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS for &#x2F;f %%i in (&#x27;reg query %MainKey% &#x2F;v &quot;Enable Double Pinyin&quot; ^| findstr">
+<meta property="og:description" content="Windows下快速切换全拼&#x2F;双拼bat批处理文件方式change.bat123456@echo offset Mainkey&#x3D;HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS for &#x2F;f %%i in (&#x27;reg query %MainKey% &#x2F;v &quot;Enable Double Pinyin&quot; ^| fi">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-10-19T09:56:00.000Z">
 <meta property="article:modified_time" content="2024-08-08T13:53:26.785Z">
@@ -72,9 +72,11 @@
         <!--
        --><li><a href="/">首页</a></li><!--
      --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
        --><li><a href="/archives/">归档</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li><!--
      -->
       </ul>
     </span>
@@ -163,7 +165,7 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+    <h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼&#x2F;双拼"></a>Windows下快速切换全拼&#x2F;双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
 
 
 <h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
@@ -194,9 +196,11 @@
         
           <li><a href="/">首页</a></li>
         
+          <li><a href="/search/">搜索</a></li>
+        
           <li><a href="/archives/">归档</a></li>
         
-          <li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li>
+          <li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li>
         
       </ul>
     </div>
@@ -252,9 +256,11 @@
         <!--
        --><li><a href="/">首页</a></li><!--
      --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
        --><li><a href="/archives/">归档</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li><!--
      -->
       </ul>
     </nav>

