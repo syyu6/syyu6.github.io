@@ -76,6 +76,411 @@
       </tags>
   </entry>
   <entry>
+    <title>Scoop不完全上手指南</title>
+    <url>/articles/e7aa9a12/</url>
+    <content><![CDATA[<h2 id="scoop介绍"><a href="#scoop介绍" class="headerlink" title="scoop介绍"></a>scoop介绍</h2><blockquote>
+<p>   <a href="https://scoop.sh/">scoop</a>是一个 windows 下的软件包管理器，无需管理员权限，将软件全部安装到用户文件夹下，方便管理。</p>
+<p>  安装一些命令行软件非常方便。</p>
+<p>  <a href="https://scoop.sh/">https://scoop.sh/</a></p>
+<p>  官方文档：<a href="https://github.com/ScoopInstaller/Scoop/wiki/">https://github.com/ScoopInstaller/Scoop/wiki/</a></p>
+</blockquote>
+<p>类似的命令行包管理工具还有 <code>Chocolatey</code> , 但安装路径不够统一，scoop能做到同一文件夹下管理。</p>
+<h2 id="安装-scoop"><a href="#安装-scoop" class="headerlink" title="安装 scoop"></a>安装 scoop</h2><p>打开 Powershell 窗口，运行下面的命令。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先设置允许运行远程脚本</span></span><br><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-Scope</span> CurrentUser</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装scoop</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (<span class="built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="string">&#x27;https://get.scoop.sh&#x27;</span>)</span><br><span class="line"><span class="comment"># or shorter</span></span><br><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果要将scoop安装到其他位置</span></span><br><span class="line"><span class="variable">$env:SCOOP</span> = <span class="string">&#x27;D:\scoop&#x27;</span></span><br><span class="line">[<span class="type">environment</span>]::setEnvironmentVariable(<span class="string">&#x27;SCOOP&#x27;</span>, <span class="variable">$env:SCOOP</span>, <span class="string">&#x27;User&#x27;</span>)</span><br><span class="line"><span class="built_in">Invoke-WebRequest</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">Invoke-Expression</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h2><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$</span> scoop</span><br><span class="line">Usage: scoop &lt;command&gt; [&lt;<span class="type">args</span>&gt;]</span><br><span class="line"></span><br><span class="line">Some useful commands are:</span><br><span class="line"></span><br><span class="line">alias       Manage scoop aliases</span><br><span class="line">bucket      Manage Scoop buckets</span><br><span class="line">cache       Show or <span class="built_in">clear</span> the download cache</span><br><span class="line"><span class="built_in">cat</span>         Show content of specified manifest.</span><br><span class="line">checkup     Check <span class="keyword">for</span> potential problems</span><br><span class="line">cleanup     Cleanup apps by removing old versions</span><br><span class="line">config      Get or <span class="built_in">set</span> configuration values</span><br><span class="line">create      Create a custom app manifest</span><br><span class="line">depends     List dependencies <span class="keyword">for</span> an app</span><br><span class="line">export      Exports (an importable) list of installed apps</span><br><span class="line">help        Show help <span class="keyword">for</span> a command</span><br><span class="line">hold        Hold an app to disable updates</span><br><span class="line">home        Opens the app homepage</span><br><span class="line">info        Display information about an app</span><br><span class="line">install     Install apps</span><br><span class="line">list        List installed apps</span><br><span class="line">prefix      Returns the path to the specified app</span><br><span class="line">reset       Reset an app to resolve conflicts</span><br><span class="line">search      Search available apps</span><br><span class="line">status      Show status and check <span class="keyword">for</span> new app versions</span><br><span class="line">unhold      Unhold an app to enable updates</span><br><span class="line">uninstall   Uninstall an app</span><br><span class="line">update      Update apps, or Scoop itself</span><br><span class="line">virustotal  Look <span class="keyword">for</span> app<span class="string">&#x27;s hash on virustotal.com</span></span><br><span class="line"><span class="string">which       Locate a shim/executable (similar to &#x27;</span>which<span class="string">&#x27; on Linux)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Type &#x27;</span>scoop help &lt;command&gt;<span class="string">&#x27; to get help for a specific command.</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="添加-bucket"><a href="#添加-bucket" class="headerlink" title="添加 bucket"></a>添加 bucket</h3><p>自带下面几个 bucket。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop bucket known</span><br><span class="line"></span><br><span class="line">-   main，自带的软件仓库</span><br><span class="line">-   extras，一些额外的带有图形界面软件的仓库</span><br><span class="line">-   versions，包含一些编程语言和类库的各种版本的仓库</span><br><span class="line">-   nirsoft，包含 nirsoft 软件的仓库</span><br><span class="line">-   php，各种 php 的仓库</span><br><span class="line">-   nerd<span class="literal">-fonts</span>，包含各种 nerd<span class="literal">-fonts</span> 字体</span><br><span class="line">-   nonportable，包含各种非绿色版软件的仓库</span><br><span class="line">-   java，各种 java 版本都有的仓库</span><br><span class="line">-   games，一些游戏和相关工具的仓库</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">常用： extras javamain nirsoft nonportable versions </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 添加bucket</span></span><br><span class="line">scoop bucket add extra</span><br><span class="line">scoop bucket add java</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>  <strong>添加第三方bucket</strong></li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># eg</span></span><br><span class="line">scoop bucket add Ash258 https://github.com/Ash258/Scoop<span class="literal">-Ash258</span>.git</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用代理"><a href="#使用代理" class="headerlink" title="使用代理"></a>使用代理</h3><p>scoop 默认下载比较慢，如果你有代理的话，可以为 scoop 设置代理，加速软件的下载。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop config proxy username:password@proxy.example.org:<span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># eg</span></span><br><span class="line">scoop config proxy localhost:<span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># delete Proxy Config</span></span><br><span class="line">scop config <span class="built_in">rm</span> proxy</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多连接下载"><a href="#多连接下载" class="headerlink" title="多连接下载"></a>多连接下载</h3><p>scoop 也支持多连接下载，只需要安装 aria2，scoop 就会自动利用 aria2 来进行多连接下载。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop install aria2</span><br></pre></td></tr></table></figure>
+
+<p>关于下载的其他说明，参见<a href="https://github.com/ScoopInstaller/Scoop#multi-connection-downloads-with-aria2">官方文档</a>。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop config aria2<span class="literal">-enabled</span> true <span class="comment"># 开启aria2</span></span><br><span class="line">scoop config aria2<span class="literal">-enabled</span> false <span class="comment"># 关闭aria2</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="安装-卸载install"><a href="#安装-卸载install" class="headerlink" title="安装/卸载install"></a>安装/卸载install</h3><p>首先需要搜索软件包的名称，然后就可以安装。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 搜索软件</span></span><br><span class="line">scoop search jdk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据返回的结果进行安装</span></span><br><span class="line">scoop install openjdk17</span><br></pre></td></tr></table></figure>
+
+<p>不再需要的软件包就可以卸载。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop uninstall openjdk17</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="更新程序update"><a href="#更新程序update" class="headerlink" title="更新程序update"></a>更新程序update</h3><p>获取更新</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scoop update</span><br></pre></td></tr></table></figure>
+
+<p>查看需要更新的程序</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scoop status</span><br></pre></td></tr></table></figure>
+
+<p>更新 scoop 自己。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop update scoop</span><br></pre></td></tr></table></figure>
+
+<p>更新所有软件。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop update *</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="管理多版本verison"><a href="#管理多版本verison" class="headerlink" title="管理多版本verison"></a>管理多版本verison</h3><p>管理多版本需要添加version库</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 先添加 versions bucket</span></span><br><span class="line">scoop bucket add versions</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 同时安装 Python 2.7 和最新版本</span></span><br><span class="line">scoop install python27 python</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 Python 2.7.x</span></span><br><span class="line">scoop reset python27</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 Python 3.x</span></span><br><span class="line">scoop reset python</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="清理clear"><a href="#清理clear" class="headerlink" title="清理clear"></a>清理clear</h3><p>scoop 更新软件的时候会保留几个旧版本，假如你不再需要这些旧版本，可以把他们清理掉。</p>
+<p>顺便也可以把下载缓存清理掉。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 清理软件的旧版本</span></span><br><span class="line">scoop cleanup *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理软件的下载缓存</span></span><br><span class="line">scoop cache <span class="built_in">rm</span> *</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用程序"><a href="#常用程序" class="headerlink" title="常用程序"></a>常用程序</h2><ul>
+<li><p>aria2</p>
+<blockquote>
+<p>  多连接下载器</p>
+</blockquote>
+</li>
+<li><p>  git</p>
+</li>
+<li><p>sudo</p>
+<blockquote>
+<p>  不用打开新窗口，快速以管理员权限运行</p>
+</blockquote>
+</li>
+<li><p>  wget/curl</p>
+</li>
+<li><p>starship</p>
+<blockquote>
+<p>  DIY powershell命令提示</p>
+</blockquote>
+</li>
+<li><p>mpv</p>
+<blockquote>
+<p>  开源媒体播放器</p>
+</blockquote>
+</li>
+<li><p>adb</p>
+<blockquote>
+<p>  link to Adnroid</p>
+</blockquote>
+</li>
+<li><p>开发环境</p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python go maven </span><br><span class="line">php56 php74</span><br></pre></td></tr></table></figure></li>
+<li><p>neovim</p>
+<blockquote>
+<p>  现代终端文本编辑器，yyds</p>
+</blockquote>
+</li>
+<li><p>netcat</p>
+<blockquote>
+<p>  “瑞士军刀”</p>
+</blockquote>
+</li>
+<li><p>  openssl</p>
+</li>
+<li><p>screentogif</p>
+<blockquote>
+<p>  gif 屏幕录制工具</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><ul>
+<li>  当前应用版本路径 使用  Current” 文件夹 进行软链接，方便进行路径配置。</li>
+<li>  能够自定义bucket库，方便日后diy，把自己常用的添加进去，还能新增自用的其他程序。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+        <tag>scoop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Windows Termianl 美化配置指北</title>
+    <url>/articles/dffc1475/</url>
+    <content><![CDATA[<h2 id="Windows-Terminal-介绍"><a href="#Windows-Terminal-介绍" class="headerlink" title="Windows Terminal 介绍"></a>Windows Terminal 介绍</h2><blockquote>
+<p>  官方github地址：<a href="https://github.com/microsoft/terminal">https://github.com/microsoft/terminal</a></p>
+<p>  少数派：<a href="https://sspai.com/post/59380">https://sspai.com/post/59380</a></p>
+</blockquote>
+<p>新晋 Windows 终端模拟器：<a href="https://github.com/microsoft/terminal">Windows Terminal</a>，自发布以来就备受开发者的喜爱，并与 <a href="https://sspai.com/post/43813">WSL</a> 一起，让不少先前非 Linux 不用的开发者朋友们向 Windows 倾斜。Windows Terminal 不仅开源免费，还拥有现代化的界面、完整的字体字符渲染机制（包括 Emoji）、GPU 加速和 Fluent 设计风格。这些都让 Windows Terminal 成为 Windows 平台最先进的终端模拟器，力压一众第三方终端以及 Windows 自带的默认终端。</p>
+<ul>
+<li>  支持WSL2，SSH，Powershell，cmd和其他命令行</li>
+<li>  多个选项卡和拆分窗格</li>
+<li>  搜索框</li>
+<li>  自定义键绑定</li>
+<li>  GPU加速文字渲染</li>
+<li>  美观的新字体Cascadia Code</li>
+<li>  资源使用率低（每个选项卡通常10MB）</li>
+<li>  自动更新（如果使用Microsoft Store）</li>
+</ul>
+<p>Windows Terminal 2.0 开发路线图：<a href="https://github.com/microsoft/terminal/blob/main/doc/terminal-v2-roadmap.md">https://github.com/microsoft/terminal/blob/main/doc/terminal-v2-roadmap.md</a></p>
+<h2 id="安装-Windows-Terminal"><a href="#安装-Windows-Terminal" class="headerlink" title="安装 Windows Terminal"></a>安装 Windows Terminal</h2><p>在官方 <a href="https://github.com/microsoft/terminal">README</a> 中，安装Windows Terminal有如下方法：</p>
+<ul>
+<li><p>  <strong>Microsoft Store</strong>（推荐）</p>
+</li>
+<li><p><strong>Github</strong> </p>
+<p>  <a href="https://github.com/microsoft/terminal/releases">https://github.com/microsoft/terminal/releases</a></p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Add-AppxPackage Microsoft.WindowsTerminal_&lt;versionNumber&gt;.msixbundle</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>winget</strong> </p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">winget install --id=Microsoft.WindowsTerminal -e</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>Chocolatey</strong></p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">choco install microsoft-windows-terminal</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>Scoop</strong></p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop bucket add extras</span><br><span class="line">scoop install windows-terminal</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>这里使用Microsoft Store进行安装，简单直接，还能自动更新【doge】</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240407.png" alt="image-20220207200021516"></p>
+<h2 id="Windows-Terminal-配置"><a href="#Windows-Terminal-配置" class="headerlink" title="Windows Terminal 配置"></a>Windows Terminal 配置</h2><blockquote>
+<p>  官方配置文档：<a href="https://docs.microsoft.com/zh-cn/windows/terminal/customize-settings/profile-general">https://docs.microsoft.com/zh-cn/windows/terminal/customize-settings/profile-general</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl + ，进入设置页面</span><br><span class="line">目前版本已经实现大部分内容的可视化设置。。。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">进入设置界面后，左下角点击设置按钮，即可编辑setting.json文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="窗口设置"><a href="#窗口设置" class="headerlink" title="窗口设置"></a>窗口设置</h3><blockquote>
+<p>  通过坐标 “initialPosition”参数 控制窗口位置。</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;initialCols&quot;</span>: <span class="number">97</span>,</span><br><span class="line"><span class="string">&quot;initialPosition&quot;</span>: <span class="string">&quot;480,250&quot;</span>,</span><br><span class="line"><span class="string">&quot;initialRows&quot;</span>: <span class="number">27</span>，</span><br></pre></td></tr></table></figure>
+
+<h3 id="颜色配置"><a href="#颜色配置" class="headerlink" title="颜色配置"></a>颜色配置</h3><blockquote>
+<p>  在线预览颜色配置：<a href="https://windowsterminalthemes.dev/">https://windowsterminalthemes.dev/</a></p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="comment">// one，自用配色，修改自one of hack</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;background&quot;</span>: <span class="string">&quot;#001B26&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;black&quot;</span>: <span class="string">&quot;#282C34&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;blue&quot;</span>: <span class="string">&quot;#61AFEF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightBlack&quot;</span>: <span class="string">&quot;#5A6374&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightBlue&quot;</span>: <span class="string">&quot;#61AFEF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightCyan&quot;</span>: <span class="string">&quot;#56B6C2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightGreen&quot;</span>: <span class="string">&quot;#98C379&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightPurple&quot;</span>: <span class="string">&quot;#C678DD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightRed&quot;</span>: <span class="string">&quot;#E06C75&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightWhite&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightYellow&quot;</span>: <span class="string">&quot;#E5C07B&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorColor&quot;</span>: <span class="string">&quot;#FFFFFF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cyan&quot;</span>: <span class="string">&quot;#56B6C2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;foreground&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;green&quot;</span>: <span class="string">&quot;#98C379&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;One&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;purple&quot;</span>: <span class="string">&quot;#C678DD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;red&quot;</span>: <span class="string">&quot;#E06C75&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;selectionBackground&quot;</span>: <span class="string">&quot;#FFFFFF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;white&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;yellow&quot;</span>: <span class="string">&quot;#E5C07B&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Profile配置"><a href="#Profile配置" class="headerlink" title="Profile配置"></a>Profile配置</h3><blockquote>
+<p>  已实现可视化配置。</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 个人使用配置</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;acrylicOpacity&quot;</span>: <span class="number">0.6</span>,</span><br><span class="line">    <span class="attr">&quot;backgroundImage&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;backgroundImageOpacity&quot;</span>: <span class="number">0.0</span>,</span><br><span class="line">    <span class="attr">&quot;bellStyle&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;window&quot;</span>,</span><br><span class="line">        <span class="string">&quot;taskbar&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;closeOnExit&quot;</span>: <span class="string">&quot;graceful&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;colorScheme&quot;</span>: <span class="string">&quot;One&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;commandline&quot;</span>: <span class="string">&quot;D:/PowerShell/7/pwsh.exe -nologo&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorColor&quot;</span>: <span class="string">&quot;#AEAFAD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorShape&quot;</span>: <span class="string">&quot;filledBox&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;font&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;face&quot;</span>: <span class="string">&quot;CaskaydiaCove NF&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;size&quot;</span>: <span class="number">10</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;guid&quot;</span>: <span class="string">&quot;&#123;xxxx-xxxx-xxx-xxx-xxx-xxxx-xxxx&#125;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;hidden&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;historySize&quot;</span>: <span class="number">9001</span>,</span><br><span class="line">    <span class="attr">&quot;icon&quot;</span>: <span class="string">&quot;D:\\PowerShell\\7\\assets\\StoreLogo.png&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;PowerShell&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;padding&quot;</span>: <span class="string">&quot;5&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;snapOnInput&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;startingDirectory&quot;</span>: <span class="string">&quot;%USERPROFILE%/Desktop&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;suppressApplicationTitle&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;useAcrylic&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="字体配置"><a href="#字体配置" class="headerlink" title="字体配置"></a>字体配置</h3><blockquote>
+<p>  字体下载：<a href="https://www.nerdfonts.com/font-downloads">https://www.nerdfonts.com/font-downloads</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Caskaydia Cove Nerd Font</span><br><span class="line">Hack Nerd Font</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="PowerShell-配置"><a href="#PowerShell-配置" class="headerlink" title="PowerShell 配置"></a>PowerShell 配置</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">编辑 profile 文件</span><br><span class="line">code $PROFILE</span><br></pre></td></tr></table></figure>
+
+<h3 id="PSFzf"><a href="#PSFzf" class="headerlink" title="PSFzf"></a>PSFzf</h3><blockquote>
+<p>  终端下的文件查找工具</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> PSReadLine  <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># PSFzf</span></span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> PSFzf</span><br><span class="line"><span class="built_in">Set-PSFzfOption</span> <span class="literal">-PSReadlineChordProvider</span> <span class="string">&#x27;Ctrl+f&#x27;</span> <span class="literal">-PSReadlineChordReverseHistory</span> <span class="string">&#x27;Ctrl+r&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="PSReadLine"><a href="#PSReadLine" class="headerlink" title="PSReadLine"></a>PSReadLine</h3><blockquote>
+<p>  历史命令提示</p>
+  <figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> PSReadLine  <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<p>  PS：如果powershell的版本大于等于6，将自动包含最新的PSReadLine，不需要再单独安装</p>
+  <figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$PSVersionTable</span> <span class="comment"># 查看powershell版本</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Import-Module</span></span><br><span class="line"><span class="built_in">Import-Module</span> PSReadLine</span><br><span class="line"><span class="comment"># # PSReadLine Option</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -EditMode Emacs</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -BellStyle None</span></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-PredictionSource</span> <span class="built_in">History</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -PredictionViewStyle ListView</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&#x27;Ctrl+d&#x27;</span> <span class="literal">-Function</span> DeleteChar </span><br><span class="line"><span class="comment"># 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> UpArrow <span class="literal">-Function</span> HistorySearchBackward</span><br><span class="line"><span class="comment"># 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> DownArrow <span class="literal">-Function</span> HistorySearchForward</span><br><span class="line"><span class="comment"># 设置 Tab 键补全</span></span><br><span class="line"><span class="comment"># Set-PSReadlineKeyHandler -Key Tab -Function Complete</span></span><br><span class="line"><span class="comment"># # 设置 Ctrl+d 为退出 PowerShell</span></span><br><span class="line"><span class="comment"># # Set-PSReadlineKeyHandler -Key &quot;Ctrl+d&quot; -Function ViExit</span></span><br><span class="line"><span class="comment"># # 设置 Ctrl+z 为撤销</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key &quot;Ctrl+z&quot; -Function Undo</span></span><br><span class="line"><span class="comment"># # 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward</span></span><br><span class="line"><span class="comment"># # 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-Colors</span> <span class="selector-tag">@</span>&#123;</span><br><span class="line">    Command             = <span class="string">&quot;#e5c07b&quot;</span></span><br><span class="line">    Number              = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Member              = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Operator            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    <span class="built_in">Type</span>                = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    Variable            = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    <span class="keyword">Parameter</span>           = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    ContinuationPrompt  = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Default             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Emphasis            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Selection           = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Comment             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Keyword             = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    String              = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    InlinePrediction    = <span class="string">&quot;#9f9193&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>zsh-Autosuggestion除了可以使用<code>→</code>键补全全部外，还可以使用<code>ctrl + →</code>选择下一个单词。</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># powershell-PSReadLine实现方式</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&quot;Ctrl+RightArrow&quot;</span> <span class="literal">-Function</span> ForwardWord</span><br></pre></td></tr></table></figure>
+
+<h3 id="ZLocation-目录跳转"><a href="#ZLocation-目录跳转" class="headerlink" title="ZLocation - 目录跳转"></a>ZLocation - 目录跳转</h3><blockquote>
+<p>  <a href="https://github.com/vors/ZLocation">https://github.com/vors/ZLocation</a></p>
+<p>  类似于linux下的autojump</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> ZLocation <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> z</span><br></pre></td></tr></table></figure>
+
+<p>usage：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">z &lt;dir_name&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Terminal-Icons"><a href="#Terminal-Icons" class="headerlink" title="Terminal-Icons"></a>Terminal-Icons</h3><blockquote>
+<p>  <a href="https://github.com/devblackops/Terminal-Icons">https://github.com/devblackops/Terminal-Icons</a></p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span> <span class="literal">-Repository</span> PSGallery</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240410.png" alt="image-20220207211444500"></p>
+<h3 id="命令行流量代理"><a href="#命令行流量代理" class="headerlink" title="命令行流量代理"></a>命令行流量代理</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:10808&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetClashProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:7890&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:http_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">	<span class="built_in">Set-Item</span> Env:https_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:http_proxy</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:https_proxy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetProxy</span></span> &#123;</span><br><span class="line">    <span class="built_in">Remove-Item</span> Env:all_proxy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="自定义提示符"><a href="#自定义提示符" class="headerlink" title="自定义提示符"></a>自定义提示符</h3><h4 id="starship"><a href="#starship" class="headerlink" title="starship"></a>starship</h4><blockquote>
+<p>  starship 安装</p>
+<p>  <code>scoop install starship</code></p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># # -----------starship----------</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (&amp;starship init powershell)</span><br></pre></td></tr></table></figure>
+
+<h4 id="pshazz"><a href="#pshazz" class="headerlink" title="pshazz"></a>pshazz</h4><blockquote>
+<p>  pshazz 安装</p>
+<p>  <code>scoop install pshazz</code></p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ---------pshazz----------</span></span><br><span class="line"><span class="keyword">try</span> &#123; <span class="variable">$null</span> = <span class="built_in">gcm</span> pshazz <span class="literal">-ea</span> stop; pshazz init <span class="string">&#x27;default&#x27;</span> &#125; <span class="keyword">catch</span> &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="oh-my-posh3"><a href="#oh-my-posh3" class="headerlink" title="oh-my-posh3"></a>oh-my-posh3</h4><blockquote>
+<p>  oh-my-posh3 配置</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 posh-git </span></span><br><span class="line"><span class="built_in">Install-Module</span> posh<span class="literal">-git</span>  <span class="literal">-Scope</span> CurrentUser</span><br><span class="line"><span class="comment"># 安装 oh-my-posh</span></span><br><span class="line"><span class="built_in">Install-Module</span> <span class="built_in">oh</span><span class="literal">-my</span><span class="literal">-posh</span> <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># scoop安装方式</span></span><br><span class="line">scoop install <span class="built_in">oh</span><span class="literal">-my</span><span class="literal">-posh3</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="自定义"><a href="#自定义" class="headerlink" title="自定义"></a>自定义</h4><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ----------command----------- </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">prompt</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">#Write-Host(&quot;$pwd&gt;&quot;)</span></span><br><span class="line">    <span class="comment"># &quot;syyu@win &quot; + &quot;$pwd ~ `n $ &quot;</span></span><br><span class="line">    <span class="string">&quot; syyu@win &quot;</span> + <span class="string">&quot;<span class="variable">$pwd</span> `n <span class="variable">$</span> &quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="winfetch"><a href="#winfetch" class="headerlink" title="winfetch"></a>winfetch</h3><blockquote>
+<p>  一款花里胡哨的基本信息查看工具，类似的有 neofetch，screenfetch</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop install winfetch</span><br></pre></td></tr></table></figure>
+
+<h2 id="Scoop"><a href="#Scoop" class="headerlink" title="Scoop"></a>Scoop</h2><h3 id="scoop安装"><a href="#scoop安装" class="headerlink" title="scoop安装"></a>scoop安装</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Invoke-Expression</span> (<span class="built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="string">&#x27;https://get.scoop.sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># or shorter</span></span><br><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<p>Note: if you get an error you might need to change the execution policy (i.e. enable Powershell) with</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
+
+<h3 id="scoop-Usage"><a href="#scoop-Usage" class="headerlink" title="scoop Usage"></a>scoop Usage</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Usage: scoop &lt;command&gt; [&lt;args&gt;]</span><br><span class="line"></span><br><span class="line">Some useful commands are:</span><br><span class="line"></span><br><span class="line">alias       Manage scoop aliases</span><br><span class="line">bucket      Manage Scoop buckets</span><br><span class="line">cache       Show or clear the download cache</span><br><span class="line">cat         Show content of specified manifest.</span><br><span class="line">checkup     Check for potential problems</span><br><span class="line">cleanup     Cleanup apps by removing old versions</span><br><span class="line">config      Get or set configuration values</span><br><span class="line">create      Create a custom app manifest</span><br><span class="line">depends     List dependencies for an app</span><br><span class="line">export      Exports (an importable) list of installed apps</span><br><span class="line">help        Show help for a command</span><br><span class="line">hold        Hold an app to disable updates</span><br><span class="line">home        Opens the app homepage</span><br><span class="line">info        Display information about an app</span><br><span class="line">install     Install apps</span><br><span class="line">list        List installed apps</span><br><span class="line">prefix      Returns the path to the specified app</span><br><span class="line">reset       Reset an app to resolve conflicts</span><br><span class="line">search      Search available apps</span><br><span class="line">status      Show status and check for new app versions</span><br><span class="line">unhold      Unhold an app to enable updates</span><br><span class="line">uninstall   Uninstall an app</span><br><span class="line">update      Update apps, or Scoop itself</span><br><span class="line">virustotal  Look for app&#x27;s hash on virustotal.com</span><br><span class="line">which       Locate a shim/executable (similar to &#x27;which&#x27; on Linux)</span><br><span class="line"></span><br><span class="line">Type &#x27;scoop help &lt;command&gt;&#x27; to get help for a specific command.</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="scoop配置指南"><a href="#scoop配置指南" class="headerlink" title="scoop配置指南"></a>scoop配置指南</h3><p>见另一篇博客 </p>
+<p>#TODO</p>
+<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><ul>
+<li>  <strong>win + 反引号（`）</strong></li>
+</ul>
+<blockquote>
+<p>  打开Quake模式</p>
+</blockquote>
+<ul>
+<li>  配置专注模式（eg: <strong>Alt + P</strong>)</li>
+</ul>
+<blockquote>
+<p>  显示/隐藏标题栏，在Quake模式（win + 反引号）也可触发</p>
+</blockquote>
+<ul>
+<li>  分屏操作</li>
+</ul>
+<blockquote>
+<p>  <a href="https://docs.microsoft.com/zh-cn/windows/terminal/panes">https://docs.microsoft.com/zh-cn/windows/terminal/panes</a></p>
+<p>  Alt + Shift + (+)  水平窗格</p>
+<p>  Alt + Shift + (-)  垂直窗格</p>
+<p>  …</p>
+</blockquote>
+<p>and so on …</p>
+<p>#TODO</p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="Windows-Terminal"><a href="#Windows-Terminal" class="headerlink" title="Windows Terminal"></a>Windows Terminal</h3><blockquote>
+<p>   C:\Users\%USERNAME%\AppData\Local\Packages\Microsoft.WindowsTerminal_xxxxxxxxxxxxx\LocalState\settings.json</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>#TODO</p>
+<h3 id="PowerShell-7"><a href="#PowerShell-7" class="headerlink" title="PowerShell 7"></a>PowerShell 7</h3><blockquote>
+<p>  C:\Users\%USERNAME%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># SetProxy</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:10808&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetClashProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:7890&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:http_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">	<span class="built_in">Set-Item</span> Env:https_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:http_proxy</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:https_proxy</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetProxy</span></span> &#123;</span><br><span class="line">    <span class="built_in">Remove-Item</span> Env:all_proxy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Import-Module</span></span><br><span class="line"><span class="built_in">Import-Module</span> PSReadLine</span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span></span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> z</span><br><span class="line"><span class="comment"># Import-Module -Name PSFzf</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-PredictionSource</span> <span class="built_in">History</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -PredictionViewStyle ListView</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&#x27;Ctrl+d&#x27;</span> <span class="literal">-Function</span> DeleteChar </span><br><span class="line"><span class="comment"># 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> UpArrow <span class="literal">-Function</span> HistorySearchBackward</span><br><span class="line"><span class="comment"># 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> DownArrow <span class="literal">-Function</span> HistorySearchForward</span><br><span class="line"><span class="comment"># 设置ctrl + 右键，逐字补全</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&quot;Ctrl+RightArrow&quot;</span> <span class="literal">-Function</span> ForwardWord</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-Colors</span> <span class="selector-tag">@</span>&#123;</span><br><span class="line">    Command             = <span class="string">&quot;#e5c07b&quot;</span></span><br><span class="line">    Number              = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Member              = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Operator            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    <span class="built_in">Type</span>                = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    Variable            = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    <span class="keyword">Parameter</span>           = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    ContinuationPrompt  = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Default             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Emphasis            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Selection           = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Comment             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Keyword             = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    String              = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    InlinePrediction    = <span class="string">&quot;#9f9193&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># PSFzf</span></span><br><span class="line"><span class="comment"># Set-PSFzfOption -PSReadlineChordProvider &#x27;Ctrl+f&#x27; -PSReadlineChordReverseHistory &#x27;Ctrl+r&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # -----------starship----------</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (&amp;starship init powershell)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># ----------command----------- </span></span><br><span class="line"><span class="comment"># function prompt</span></span><br><span class="line"><span class="comment"># &#123;</span></span><br><span class="line"><span class="comment">#     #Write-Host(&quot;$pwd&gt;&quot;)</span></span><br><span class="line"><span class="comment">#     # &quot;syyu@win &quot; + &quot;$pwd ~ `n $ &quot;</span></span><br><span class="line"><span class="comment">#     &quot; syyu@win &quot; + &quot;$pwd `n $ &quot;</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------pshazz----------</span></span><br><span class="line"><span class="comment"># try &#123; $null = gcm pshazz -ea stop; pshazz init &#x27;default&#x27; &#125; catch &#123; &#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="PowerShell"><a href="#PowerShell" class="headerlink" title="PowerShell"></a>PowerShell</h3><blockquote>
+<p>  C:\Users\%USERNAME%\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</p>
+</blockquote>
+<p>好了，大致的配置就结束了。</p>
+<p>看一波效果图…</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240415.png" alt="image-20220207212029891"></p>
+<p>还有一些配置和图片，下次一定，先建个#TODO ，哈哈哈哈</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://docs.microsoft.com/zh-cn/windows/terminal/">https://docs.microsoft.com/zh-cn/windows/terminal/</a></p>
+<p><a href="https://juejin.cn/post/6984620463917891614">https://juejin.cn/post/6984620463917891614</a></p>
+<p><a href="https://elfile4138.moe/2021/08/Windows-Terminal%E7%9A%84%E9%85%8D%E7%BD%AE/">https://elfile4138.moe/2021/08/Windows-Terminal%E7%9A%84%E9%85%8D%E7%BD%AE/</a></p>
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+        <tag>美化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Windows下快速切换全拼/双拼</title>
+    <url>/articles/d4db3d41/</url>
+    <content><![CDATA[<h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeDouble-bat"><a href="#ChangeDouble-bat" class="headerlink" title="ChangeDouble.bat"></a>ChangeDouble.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x0 /f</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="VBS脚本方式"><a href="#VBS脚本方式" class="headerlink" title="VBS脚本方式"></a>VBS脚本方式</h2><h3 id="vbs"><a href="#vbs" class="headerlink" title="vbs"></a>vbs</h3><figure class="highlight vbs"><table><tr><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeAll.bat&quot;</span>,<span class="number">0</span></span><br><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeDouble.bat&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="uTools插件"><a href="#uTools插件" class="headerlink" title="uTools插件"></a>uTools插件</h2><p>目前已经做成了 uTools 插件 , 插件名称 : <code>切换微软全拼</code></p>
+<p>项目地址: <a href="https://github.com/syyu6/utools-ChangeDouble">https://github.com/syyu6/utools-ChangeDouble</a></p>
+<p>And so on …</p>
+<h2 id="utools快捷命令"><a href="#utools快捷命令" class="headerlink" title="utools快捷命令"></a>utools快捷命令</h2><h3 id="实现-ps1-脚本"><a href="#实现-ps1-脚本" class="headerlink" title="实现 ps1 脚本"></a>实现 ps1 脚本</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$out</span> = reg query HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span>; </span><br><span class="line"><span class="variable">$outStr</span> = <span class="variable">$out</span> <span class="operator">-as</span> [<span class="built_in">string</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$outStr</span> <span class="operator">-match</span> <span class="string">&#x27;(Pinyin.+0x)(\d)&#x27;</span>) &#123;<span class="variable">$mode</span> = <span class="variable">$Matches</span>[<span class="number">2</span>] &#125; <span class="keyword">else</span> &#123; <span class="variable">$mode</span> = <span class="number">1</span> &#125;; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$mode</span> <span class="operator">-as</span> [<span class="built_in">int</span>] <span class="operator">-eq</span> <span class="number">1</span>) &#123; <span class="variable">$Double</span> = <span class="number">0</span> &#125; <span class="keyword">else</span> &#123; <span class="variable">$Double</span> = <span class="number">1</span> &#125;;</span><br><span class="line">reg.exe add HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span> /t REG_DWORD /d <span class="variable">$Double</span> /f;</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
+        <tag>杂谈</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Windows10更改用户名方式</title>
+    <url>/articles/c63c4f59/</url>
+    <content><![CDATA[<h2 id="更改方式"><a href="#更改方式" class="headerlink" title="更改方式"></a>更改方式</h2><hr>
+<p>使用管理员权限打开一个CMD</p>
+<h3 id="修改用户名"><a href="#修改用户名" class="headerlink" title="修改用户名"></a>修改用户名</h3><p>输入 <code>control userpasswords2</code> ，回车；</p>
+<p>点击属性，修改用户名，点击确定；</p>
+<h3 id="注册表修改路径位置"><a href="#注册表修改路径位置" class="headerlink" title="注册表修改路径位置"></a>注册表修改路径位置</h3><p>打开运行，输入regedit，回车；<br>定位到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList；</span><br></pre></td></tr></table></figure>
+<p>选中下面名字最长的项，双击右侧的ProfileImagePath，修改 C:\Users\ 后的用户名，点击确定；</p>
+<p>注销并重新登录；</p>
+<h3 id="重命名用户文件夹"><a href="#重命名用户文件夹" class="headerlink" title="重命名用户文件夹"></a>重命名用户文件夹</h3><p>打开 C:\User\，</p>
+<p>将新的用户名文件夹删除，</p>
+<p>再将原来的的用户名文件夹重命名为新的用户名；</p>
+<p>再次注销并重新登录。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/u011479200/article/details/107902826">https://blog.csdn.net/u011479200/article/details/107902826</a></p>
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NTLM及Kerberos认证流程</title>
     <url>/articles/60487e7c/</url>
     <content><![CDATA[<h1 id="NTLM及Kerberos认证流程"><a href="#NTLM及Kerberos认证流程" class="headerlink" title="NTLM及Kerberos认证流程"></a>NTLM及Kerberos认证流程</h1><h2 id="NTLM认证"><a href="#NTLM认证" class="headerlink" title="NTLM认证"></a>NTLM认证</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询/应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。</p>
@@ -360,411 +765,6 @@
       <tags>
         <tag>网络安全</tag>
         <tag>漏洞复现</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Scoop不完全上手指南</title>
-    <url>/articles/e7aa9a12/</url>
-    <content><![CDATA[<h2 id="scoop介绍"><a href="#scoop介绍" class="headerlink" title="scoop介绍"></a>scoop介绍</h2><blockquote>
-<p>   <a href="https://scoop.sh/">scoop</a>是一个 windows 下的软件包管理器，无需管理员权限，将软件全部安装到用户文件夹下，方便管理。</p>
-<p>  安装一些命令行软件非常方便。</p>
-<p>  <a href="https://scoop.sh/">https://scoop.sh/</a></p>
-<p>  官方文档：<a href="https://github.com/ScoopInstaller/Scoop/wiki/">https://github.com/ScoopInstaller/Scoop/wiki/</a></p>
-</blockquote>
-<p>类似的命令行包管理工具还有 <code>Chocolatey</code> , 但安装路径不够统一，scoop能做到同一文件夹下管理。</p>
-<h2 id="安装-scoop"><a href="#安装-scoop" class="headerlink" title="安装 scoop"></a>安装 scoop</h2><p>打开 Powershell 窗口，运行下面的命令。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先设置允许运行远程脚本</span></span><br><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-Scope</span> CurrentUser</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装scoop</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (<span class="built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="string">&#x27;https://get.scoop.sh&#x27;</span>)</span><br><span class="line"><span class="comment"># or shorter</span></span><br><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果要将scoop安装到其他位置</span></span><br><span class="line"><span class="variable">$env:SCOOP</span> = <span class="string">&#x27;D:\scoop&#x27;</span></span><br><span class="line">[<span class="type">environment</span>]::setEnvironmentVariable(<span class="string">&#x27;SCOOP&#x27;</span>, <span class="variable">$env:SCOOP</span>, <span class="string">&#x27;User&#x27;</span>)</span><br><span class="line"><span class="built_in">Invoke-WebRequest</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">Invoke-Expression</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h2><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$</span> scoop</span><br><span class="line">Usage: scoop &lt;command&gt; [&lt;<span class="type">args</span>&gt;]</span><br><span class="line"></span><br><span class="line">Some useful commands are:</span><br><span class="line"></span><br><span class="line">alias       Manage scoop aliases</span><br><span class="line">bucket      Manage Scoop buckets</span><br><span class="line">cache       Show or <span class="built_in">clear</span> the download cache</span><br><span class="line"><span class="built_in">cat</span>         Show content of specified manifest.</span><br><span class="line">checkup     Check <span class="keyword">for</span> potential problems</span><br><span class="line">cleanup     Cleanup apps by removing old versions</span><br><span class="line">config      Get or <span class="built_in">set</span> configuration values</span><br><span class="line">create      Create a custom app manifest</span><br><span class="line">depends     List dependencies <span class="keyword">for</span> an app</span><br><span class="line">export      Exports (an importable) list of installed apps</span><br><span class="line">help        Show help <span class="keyword">for</span> a command</span><br><span class="line">hold        Hold an app to disable updates</span><br><span class="line">home        Opens the app homepage</span><br><span class="line">info        Display information about an app</span><br><span class="line">install     Install apps</span><br><span class="line">list        List installed apps</span><br><span class="line">prefix      Returns the path to the specified app</span><br><span class="line">reset       Reset an app to resolve conflicts</span><br><span class="line">search      Search available apps</span><br><span class="line">status      Show status and check <span class="keyword">for</span> new app versions</span><br><span class="line">unhold      Unhold an app to enable updates</span><br><span class="line">uninstall   Uninstall an app</span><br><span class="line">update      Update apps, or Scoop itself</span><br><span class="line">virustotal  Look <span class="keyword">for</span> app<span class="string">&#x27;s hash on virustotal.com</span></span><br><span class="line"><span class="string">which       Locate a shim/executable (similar to &#x27;</span>which<span class="string">&#x27; on Linux)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Type &#x27;</span>scoop help &lt;command&gt;<span class="string">&#x27; to get help for a specific command.</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="添加-bucket"><a href="#添加-bucket" class="headerlink" title="添加 bucket"></a>添加 bucket</h3><p>自带下面几个 bucket。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop bucket known</span><br><span class="line"></span><br><span class="line">-   main，自带的软件仓库</span><br><span class="line">-   extras，一些额外的带有图形界面软件的仓库</span><br><span class="line">-   versions，包含一些编程语言和类库的各种版本的仓库</span><br><span class="line">-   nirsoft，包含 nirsoft 软件的仓库</span><br><span class="line">-   php，各种 php 的仓库</span><br><span class="line">-   nerd<span class="literal">-fonts</span>，包含各种 nerd<span class="literal">-fonts</span> 字体</span><br><span class="line">-   nonportable，包含各种非绿色版软件的仓库</span><br><span class="line">-   java，各种 java 版本都有的仓库</span><br><span class="line">-   games，一些游戏和相关工具的仓库</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">常用： extras javamain nirsoft nonportable versions </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 添加bucket</span></span><br><span class="line">scoop bucket add extra</span><br><span class="line">scoop bucket add java</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>  <strong>添加第三方bucket</strong></li>
-</ul>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># eg</span></span><br><span class="line">scoop bucket add Ash258 https://github.com/Ash258/Scoop<span class="literal">-Ash258</span>.git</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="使用代理"><a href="#使用代理" class="headerlink" title="使用代理"></a>使用代理</h3><p>scoop 默认下载比较慢，如果你有代理的话，可以为 scoop 设置代理，加速软件的下载。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop config proxy username:password@proxy.example.org:<span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># eg</span></span><br><span class="line">scoop config proxy localhost:<span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># delete Proxy Config</span></span><br><span class="line">scop config <span class="built_in">rm</span> proxy</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="多连接下载"><a href="#多连接下载" class="headerlink" title="多连接下载"></a>多连接下载</h3><p>scoop 也支持多连接下载，只需要安装 aria2，scoop 就会自动利用 aria2 来进行多连接下载。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop install aria2</span><br></pre></td></tr></table></figure>
-
-<p>关于下载的其他说明，参见<a href="https://github.com/ScoopInstaller/Scoop#multi-connection-downloads-with-aria2">官方文档</a>。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop config aria2<span class="literal">-enabled</span> true <span class="comment"># 开启aria2</span></span><br><span class="line">scoop config aria2<span class="literal">-enabled</span> false <span class="comment"># 关闭aria2</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="安装-卸载install"><a href="#安装-卸载install" class="headerlink" title="安装/卸载install"></a>安装/卸载install</h3><p>首先需要搜索软件包的名称，然后就可以安装。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 搜索软件</span></span><br><span class="line">scoop search jdk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据返回的结果进行安装</span></span><br><span class="line">scoop install openjdk17</span><br></pre></td></tr></table></figure>
-
-<p>不再需要的软件包就可以卸载。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop uninstall openjdk17</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="更新程序update"><a href="#更新程序update" class="headerlink" title="更新程序update"></a>更新程序update</h3><p>获取更新</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scoop update</span><br></pre></td></tr></table></figure>
-
-<p>查看需要更新的程序</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scoop status</span><br></pre></td></tr></table></figure>
-
-<p>更新 scoop 自己。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop update scoop</span><br></pre></td></tr></table></figure>
-
-<p>更新所有软件。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">scoop update *</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="管理多版本verison"><a href="#管理多版本verison" class="headerlink" title="管理多版本verison"></a>管理多版本verison</h3><p>管理多版本需要添加version库</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 先添加 versions bucket</span></span><br><span class="line">scoop bucket add versions</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 同时安装 Python 2.7 和最新版本</span></span><br><span class="line">scoop install python27 python</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 Python 2.7.x</span></span><br><span class="line">scoop reset python27</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 Python 3.x</span></span><br><span class="line">scoop reset python</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="清理clear"><a href="#清理clear" class="headerlink" title="清理clear"></a>清理clear</h3><p>scoop 更新软件的时候会保留几个旧版本，假如你不再需要这些旧版本，可以把他们清理掉。</p>
-<p>顺便也可以把下载缓存清理掉。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 清理软件的旧版本</span></span><br><span class="line">scoop cleanup *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理软件的下载缓存</span></span><br><span class="line">scoop cache <span class="built_in">rm</span> *</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="常用程序"><a href="#常用程序" class="headerlink" title="常用程序"></a>常用程序</h2><ul>
-<li><p>aria2</p>
-<blockquote>
-<p>  多连接下载器</p>
-</blockquote>
-</li>
-<li><p>  git</p>
-</li>
-<li><p>sudo</p>
-<blockquote>
-<p>  不用打开新窗口，快速以管理员权限运行</p>
-</blockquote>
-</li>
-<li><p>  wget/curl</p>
-</li>
-<li><p>starship</p>
-<blockquote>
-<p>  DIY powershell命令提示</p>
-</blockquote>
-</li>
-<li><p>mpv</p>
-<blockquote>
-<p>  开源媒体播放器</p>
-</blockquote>
-</li>
-<li><p>adb</p>
-<blockquote>
-<p>  link to Adnroid</p>
-</blockquote>
-</li>
-<li><p>开发环境</p>
-  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python go maven </span><br><span class="line">php56 php74</span><br></pre></td></tr></table></figure></li>
-<li><p>neovim</p>
-<blockquote>
-<p>  现代终端文本编辑器，yyds</p>
-</blockquote>
-</li>
-<li><p>netcat</p>
-<blockquote>
-<p>  “瑞士军刀”</p>
-</blockquote>
-</li>
-<li><p>  openssl</p>
-</li>
-<li><p>screentogif</p>
-<blockquote>
-<p>  gif 屏幕录制工具</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><ul>
-<li>  当前应用版本路径 使用  Current” 文件夹 进行软链接，方便进行路径配置。</li>
-<li>  能够自定义bucket库，方便日后diy，把自己常用的添加进去，还能新增自用的其他程序。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
-        <tag>scoop</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Windows10更改用户名方式</title>
-    <url>/articles/c63c4f59/</url>
-    <content><![CDATA[<h2 id="更改方式"><a href="#更改方式" class="headerlink" title="更改方式"></a>更改方式</h2><hr>
-<p>使用管理员权限打开一个CMD</p>
-<h3 id="修改用户名"><a href="#修改用户名" class="headerlink" title="修改用户名"></a>修改用户名</h3><p>输入 <code>control userpasswords2</code> ，回车；</p>
-<p>点击属性，修改用户名，点击确定；</p>
-<h3 id="注册表修改路径位置"><a href="#注册表修改路径位置" class="headerlink" title="注册表修改路径位置"></a>注册表修改路径位置</h3><p>打开运行，输入regedit，回车；<br>定位到</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList；</span><br></pre></td></tr></table></figure>
-<p>选中下面名字最长的项，双击右侧的ProfileImagePath，修改 C:\Users\ 后的用户名，点击确定；</p>
-<p>注销并重新登录；</p>
-<h3 id="重命名用户文件夹"><a href="#重命名用户文件夹" class="headerlink" title="重命名用户文件夹"></a>重命名用户文件夹</h3><p>打开 C:\User\，</p>
-<p>将新的用户名文件夹删除，</p>
-<p>再将原来的的用户名文件夹重命名为新的用户名；</p>
-<p>再次注销并重新登录。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/u011479200/article/details/107902826">https://blog.csdn.net/u011479200/article/details/107902826</a></p>
-]]></content>
-      <categories>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Windows Termianl 美化配置指北</title>
-    <url>/articles/dffc1475/</url>
-    <content><![CDATA[<h2 id="Windows-Terminal-介绍"><a href="#Windows-Terminal-介绍" class="headerlink" title="Windows Terminal 介绍"></a>Windows Terminal 介绍</h2><blockquote>
-<p>  官方github地址：<a href="https://github.com/microsoft/terminal">https://github.com/microsoft/terminal</a></p>
-<p>  少数派：<a href="https://sspai.com/post/59380">https://sspai.com/post/59380</a></p>
-</blockquote>
-<p>新晋 Windows 终端模拟器：<a href="https://github.com/microsoft/terminal">Windows Terminal</a>，自发布以来就备受开发者的喜爱，并与 <a href="https://sspai.com/post/43813">WSL</a> 一起，让不少先前非 Linux 不用的开发者朋友们向 Windows 倾斜。Windows Terminal 不仅开源免费，还拥有现代化的界面、完整的字体字符渲染机制（包括 Emoji）、GPU 加速和 Fluent 设计风格。这些都让 Windows Terminal 成为 Windows 平台最先进的终端模拟器，力压一众第三方终端以及 Windows 自带的默认终端。</p>
-<ul>
-<li>  支持WSL2，SSH，Powershell，cmd和其他命令行</li>
-<li>  多个选项卡和拆分窗格</li>
-<li>  搜索框</li>
-<li>  自定义键绑定</li>
-<li>  GPU加速文字渲染</li>
-<li>  美观的新字体Cascadia Code</li>
-<li>  资源使用率低（每个选项卡通常10MB）</li>
-<li>  自动更新（如果使用Microsoft Store）</li>
-</ul>
-<p>Windows Terminal 2.0 开发路线图：<a href="https://github.com/microsoft/terminal/blob/main/doc/terminal-v2-roadmap.md">https://github.com/microsoft/terminal/blob/main/doc/terminal-v2-roadmap.md</a></p>
-<h2 id="安装-Windows-Terminal"><a href="#安装-Windows-Terminal" class="headerlink" title="安装 Windows Terminal"></a>安装 Windows Terminal</h2><p>在官方 <a href="https://github.com/microsoft/terminal">README</a> 中，安装Windows Terminal有如下方法：</p>
-<ul>
-<li><p>  <strong>Microsoft Store</strong>（推荐）</p>
-</li>
-<li><p><strong>Github</strong> </p>
-<p>  <a href="https://github.com/microsoft/terminal/releases">https://github.com/microsoft/terminal/releases</a></p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Add-AppxPackage Microsoft.WindowsTerminal_&lt;versionNumber&gt;.msixbundle</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>winget</strong> </p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">winget install --id=Microsoft.WindowsTerminal -e</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>Chocolatey</strong></p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">choco install microsoft-windows-terminal</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>Scoop</strong></p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop bucket add extras</span><br><span class="line">scoop install windows-terminal</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>这里使用Microsoft Store进行安装，简单直接，还能自动更新【doge】</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240407.png" alt="image-20220207200021516"></p>
-<h2 id="Windows-Terminal-配置"><a href="#Windows-Terminal-配置" class="headerlink" title="Windows Terminal 配置"></a>Windows Terminal 配置</h2><blockquote>
-<p>  官方配置文档：<a href="https://docs.microsoft.com/zh-cn/windows/terminal/customize-settings/profile-general">https://docs.microsoft.com/zh-cn/windows/terminal/customize-settings/profile-general</a></p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl + ，进入设置页面</span><br><span class="line">目前版本已经实现大部分内容的可视化设置。。。</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">进入设置界面后，左下角点击设置按钮，即可编辑setting.json文件</span><br></pre></td></tr></table></figure>
-
-<h3 id="窗口设置"><a href="#窗口设置" class="headerlink" title="窗口设置"></a>窗口设置</h3><blockquote>
-<p>  通过坐标 “initialPosition”参数 控制窗口位置。</p>
-</blockquote>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;initialCols&quot;</span>: <span class="number">97</span>,</span><br><span class="line"><span class="string">&quot;initialPosition&quot;</span>: <span class="string">&quot;480,250&quot;</span>,</span><br><span class="line"><span class="string">&quot;initialRows&quot;</span>: <span class="number">27</span>，</span><br></pre></td></tr></table></figure>
-
-<h3 id="颜色配置"><a href="#颜色配置" class="headerlink" title="颜色配置"></a>颜色配置</h3><blockquote>
-<p>  在线预览颜色配置：<a href="https://windowsterminalthemes.dev/">https://windowsterminalthemes.dev/</a></p>
-</blockquote>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="comment">// one，自用配色，修改自one of hack</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;background&quot;</span>: <span class="string">&quot;#001B26&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;black&quot;</span>: <span class="string">&quot;#282C34&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;blue&quot;</span>: <span class="string">&quot;#61AFEF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightBlack&quot;</span>: <span class="string">&quot;#5A6374&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightBlue&quot;</span>: <span class="string">&quot;#61AFEF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightCyan&quot;</span>: <span class="string">&quot;#56B6C2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightGreen&quot;</span>: <span class="string">&quot;#98C379&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightPurple&quot;</span>: <span class="string">&quot;#C678DD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightRed&quot;</span>: <span class="string">&quot;#E06C75&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightWhite&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;brightYellow&quot;</span>: <span class="string">&quot;#E5C07B&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorColor&quot;</span>: <span class="string">&quot;#FFFFFF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cyan&quot;</span>: <span class="string">&quot;#56B6C2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;foreground&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;green&quot;</span>: <span class="string">&quot;#98C379&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;One&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;purple&quot;</span>: <span class="string">&quot;#C678DD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;red&quot;</span>: <span class="string">&quot;#E06C75&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;selectionBackground&quot;</span>: <span class="string">&quot;#FFFFFF&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;white&quot;</span>: <span class="string">&quot;#DCDFE4&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;yellow&quot;</span>: <span class="string">&quot;#E5C07B&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Profile配置"><a href="#Profile配置" class="headerlink" title="Profile配置"></a>Profile配置</h3><blockquote>
-<p>  已实现可视化配置。</p>
-</blockquote>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 个人使用配置</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;acrylicOpacity&quot;</span>: <span class="number">0.6</span>,</span><br><span class="line">    <span class="attr">&quot;backgroundImage&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;backgroundImageOpacity&quot;</span>: <span class="number">0.0</span>,</span><br><span class="line">    <span class="attr">&quot;bellStyle&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;window&quot;</span>,</span><br><span class="line">        <span class="string">&quot;taskbar&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;closeOnExit&quot;</span>: <span class="string">&quot;graceful&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;colorScheme&quot;</span>: <span class="string">&quot;One&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;commandline&quot;</span>: <span class="string">&quot;D:/PowerShell/7/pwsh.exe -nologo&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorColor&quot;</span>: <span class="string">&quot;#AEAFAD&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;cursorShape&quot;</span>: <span class="string">&quot;filledBox&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;font&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;face&quot;</span>: <span class="string">&quot;CaskaydiaCove NF&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;size&quot;</span>: <span class="number">10</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;guid&quot;</span>: <span class="string">&quot;&#123;xxxx-xxxx-xxx-xxx-xxx-xxxx-xxxx&#125;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;hidden&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;historySize&quot;</span>: <span class="number">9001</span>,</span><br><span class="line">    <span class="attr">&quot;icon&quot;</span>: <span class="string">&quot;D:\\PowerShell\\7\\assets\\StoreLogo.png&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;PowerShell&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;padding&quot;</span>: <span class="string">&quot;5&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;snapOnInput&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;startingDirectory&quot;</span>: <span class="string">&quot;%USERPROFILE%/Desktop&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;suppressApplicationTitle&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;useAcrylic&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="字体配置"><a href="#字体配置" class="headerlink" title="字体配置"></a>字体配置</h3><blockquote>
-<p>  字体下载：<a href="https://www.nerdfonts.com/font-downloads">https://www.nerdfonts.com/font-downloads</a></p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Caskaydia Cove Nerd Font</span><br><span class="line">Hack Nerd Font</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="PowerShell-配置"><a href="#PowerShell-配置" class="headerlink" title="PowerShell 配置"></a>PowerShell 配置</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">编辑 profile 文件</span><br><span class="line">code $PROFILE</span><br></pre></td></tr></table></figure>
-
-<h3 id="PSFzf"><a href="#PSFzf" class="headerlink" title="PSFzf"></a>PSFzf</h3><blockquote>
-<p>  终端下的文件查找工具</p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> PSReadLine  <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># PSFzf</span></span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> PSFzf</span><br><span class="line"><span class="built_in">Set-PSFzfOption</span> <span class="literal">-PSReadlineChordProvider</span> <span class="string">&#x27;Ctrl+f&#x27;</span> <span class="literal">-PSReadlineChordReverseHistory</span> <span class="string">&#x27;Ctrl+r&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="PSReadLine"><a href="#PSReadLine" class="headerlink" title="PSReadLine"></a>PSReadLine</h3><blockquote>
-<p>  历史命令提示</p>
-  <figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> PSReadLine  <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
-
-<p>  PS：如果powershell的版本大于等于6，将自动包含最新的PSReadLine，不需要再单独安装</p>
-  <figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$PSVersionTable</span> <span class="comment"># 查看powershell版本</span></span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Import-Module</span></span><br><span class="line"><span class="built_in">Import-Module</span> PSReadLine</span><br><span class="line"><span class="comment"># # PSReadLine Option</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -EditMode Emacs</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -BellStyle None</span></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-PredictionSource</span> <span class="built_in">History</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -PredictionViewStyle ListView</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&#x27;Ctrl+d&#x27;</span> <span class="literal">-Function</span> DeleteChar </span><br><span class="line"><span class="comment"># 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> UpArrow <span class="literal">-Function</span> HistorySearchBackward</span><br><span class="line"><span class="comment"># 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> DownArrow <span class="literal">-Function</span> HistorySearchForward</span><br><span class="line"><span class="comment"># 设置 Tab 键补全</span></span><br><span class="line"><span class="comment"># Set-PSReadlineKeyHandler -Key Tab -Function Complete</span></span><br><span class="line"><span class="comment"># # 设置 Ctrl+d 为退出 PowerShell</span></span><br><span class="line"><span class="comment"># # Set-PSReadlineKeyHandler -Key &quot;Ctrl+d&quot; -Function ViExit</span></span><br><span class="line"><span class="comment"># # 设置 Ctrl+z 为撤销</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key &quot;Ctrl+z&quot; -Function Undo</span></span><br><span class="line"><span class="comment"># # 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward</span></span><br><span class="line"><span class="comment"># # 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="comment"># Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-Colors</span> <span class="selector-tag">@</span>&#123;</span><br><span class="line">    Command             = <span class="string">&quot;#e5c07b&quot;</span></span><br><span class="line">    Number              = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Member              = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Operator            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    <span class="built_in">Type</span>                = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    Variable            = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    <span class="keyword">Parameter</span>           = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    ContinuationPrompt  = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Default             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Emphasis            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Selection           = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Comment             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Keyword             = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    String              = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    InlinePrediction    = <span class="string">&quot;#9f9193&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>zsh-Autosuggestion除了可以使用<code>→</code>键补全全部外，还可以使用<code>ctrl + →</code>选择下一个单词。</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># powershell-PSReadLine实现方式</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&quot;Ctrl+RightArrow&quot;</span> <span class="literal">-Function</span> ForwardWord</span><br></pre></td></tr></table></figure>
-
-<h3 id="ZLocation-目录跳转"><a href="#ZLocation-目录跳转" class="headerlink" title="ZLocation - 目录跳转"></a>ZLocation - 目录跳转</h3><blockquote>
-<p>  <a href="https://github.com/vors/ZLocation">https://github.com/vors/ZLocation</a></p>
-<p>  类似于linux下的autojump</p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> ZLocation <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> z</span><br></pre></td></tr></table></figure>
-
-<p>usage：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">z &lt;dir_name&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Terminal-Icons"><a href="#Terminal-Icons" class="headerlink" title="Terminal-Icons"></a>Terminal-Icons</h3><blockquote>
-<p>  <a href="https://github.com/devblackops/Terminal-Icons">https://github.com/devblackops/Terminal-Icons</a></p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Install-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span> <span class="literal">-Repository</span> PSGallery</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240410.png" alt="image-20220207211444500"></p>
-<h3 id="命令行流量代理"><a href="#命令行流量代理" class="headerlink" title="命令行流量代理"></a>命令行流量代理</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:10808&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetClashProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:7890&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:http_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">	<span class="built_in">Set-Item</span> Env:https_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:http_proxy</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:https_proxy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetProxy</span></span> &#123;</span><br><span class="line">    <span class="built_in">Remove-Item</span> Env:all_proxy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="自定义提示符"><a href="#自定义提示符" class="headerlink" title="自定义提示符"></a>自定义提示符</h3><h4 id="starship"><a href="#starship" class="headerlink" title="starship"></a>starship</h4><blockquote>
-<p>  starship 安装</p>
-<p>  <code>scoop install starship</code></p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># # -----------starship----------</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (&amp;starship init powershell)</span><br></pre></td></tr></table></figure>
-
-<h4 id="pshazz"><a href="#pshazz" class="headerlink" title="pshazz"></a>pshazz</h4><blockquote>
-<p>  pshazz 安装</p>
-<p>  <code>scoop install pshazz</code></p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ---------pshazz----------</span></span><br><span class="line"><span class="keyword">try</span> &#123; <span class="variable">$null</span> = <span class="built_in">gcm</span> pshazz <span class="literal">-ea</span> stop; pshazz init <span class="string">&#x27;default&#x27;</span> &#125; <span class="keyword">catch</span> &#123; &#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="oh-my-posh3"><a href="#oh-my-posh3" class="headerlink" title="oh-my-posh3"></a>oh-my-posh3</h4><blockquote>
-<p>  oh-my-posh3 配置</p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 posh-git </span></span><br><span class="line"><span class="built_in">Install-Module</span> posh<span class="literal">-git</span>  <span class="literal">-Scope</span> CurrentUser</span><br><span class="line"><span class="comment"># 安装 oh-my-posh</span></span><br><span class="line"><span class="built_in">Install-Module</span> <span class="built_in">oh</span><span class="literal">-my</span><span class="literal">-posh</span> <span class="literal">-Scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># scoop安装方式</span></span><br><span class="line">scoop install <span class="built_in">oh</span><span class="literal">-my</span><span class="literal">-posh3</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="自定义"><a href="#自定义" class="headerlink" title="自定义"></a>自定义</h4><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ----------command----------- </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">prompt</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">#Write-Host(&quot;$pwd&gt;&quot;)</span></span><br><span class="line">    <span class="comment"># &quot;syyu@win &quot; + &quot;$pwd ~ `n $ &quot;</span></span><br><span class="line">    <span class="string">&quot; syyu@win &quot;</span> + <span class="string">&quot;<span class="variable">$pwd</span> `n <span class="variable">$</span> &quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="winfetch"><a href="#winfetch" class="headerlink" title="winfetch"></a>winfetch</h3><blockquote>
-<p>  一款花里胡哨的基本信息查看工具，类似的有 neofetch，screenfetch</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scoop install winfetch</span><br></pre></td></tr></table></figure>
-
-<h2 id="Scoop"><a href="#Scoop" class="headerlink" title="Scoop"></a>Scoop</h2><h3 id="scoop安装"><a href="#scoop安装" class="headerlink" title="scoop安装"></a>scoop安装</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Invoke-Expression</span> (<span class="built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="string">&#x27;https://get.scoop.sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># or shorter</span></span><br><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
-
-<p>Note: if you get an error you might need to change the execution policy (i.e. enable Powershell) with</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-scope</span> CurrentUser</span><br></pre></td></tr></table></figure>
-
-<h3 id="scoop-Usage"><a href="#scoop-Usage" class="headerlink" title="scoop Usage"></a>scoop Usage</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Usage: scoop &lt;command&gt; [&lt;args&gt;]</span><br><span class="line"></span><br><span class="line">Some useful commands are:</span><br><span class="line"></span><br><span class="line">alias       Manage scoop aliases</span><br><span class="line">bucket      Manage Scoop buckets</span><br><span class="line">cache       Show or clear the download cache</span><br><span class="line">cat         Show content of specified manifest.</span><br><span class="line">checkup     Check for potential problems</span><br><span class="line">cleanup     Cleanup apps by removing old versions</span><br><span class="line">config      Get or set configuration values</span><br><span class="line">create      Create a custom app manifest</span><br><span class="line">depends     List dependencies for an app</span><br><span class="line">export      Exports (an importable) list of installed apps</span><br><span class="line">help        Show help for a command</span><br><span class="line">hold        Hold an app to disable updates</span><br><span class="line">home        Opens the app homepage</span><br><span class="line">info        Display information about an app</span><br><span class="line">install     Install apps</span><br><span class="line">list        List installed apps</span><br><span class="line">prefix      Returns the path to the specified app</span><br><span class="line">reset       Reset an app to resolve conflicts</span><br><span class="line">search      Search available apps</span><br><span class="line">status      Show status and check for new app versions</span><br><span class="line">unhold      Unhold an app to enable updates</span><br><span class="line">uninstall   Uninstall an app</span><br><span class="line">update      Update apps, or Scoop itself</span><br><span class="line">virustotal  Look for app&#x27;s hash on virustotal.com</span><br><span class="line">which       Locate a shim/executable (similar to &#x27;which&#x27; on Linux)</span><br><span class="line"></span><br><span class="line">Type &#x27;scoop help &lt;command&gt;&#x27; to get help for a specific command.</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="scoop配置指南"><a href="#scoop配置指南" class="headerlink" title="scoop配置指南"></a>scoop配置指南</h3><p>见另一篇博客 </p>
-<p>#TODO</p>
-<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><ul>
-<li>  <strong>win + 反引号（`）</strong></li>
-</ul>
-<blockquote>
-<p>  打开Quake模式</p>
-</blockquote>
-<ul>
-<li>  配置专注模式（eg: <strong>Alt + P</strong>)</li>
-</ul>
-<blockquote>
-<p>  显示/隐藏标题栏，在Quake模式（win + 反引号）也可触发</p>
-</blockquote>
-<ul>
-<li>  分屏操作</li>
-</ul>
-<blockquote>
-<p>  <a href="https://docs.microsoft.com/zh-cn/windows/terminal/panes">https://docs.microsoft.com/zh-cn/windows/terminal/panes</a></p>
-<p>  Alt + Shift + (+)  水平窗格</p>
-<p>  Alt + Shift + (-)  垂直窗格</p>
-<p>  …</p>
-</blockquote>
-<p>and so on …</p>
-<p>#TODO</p>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="Windows-Terminal"><a href="#Windows-Terminal" class="headerlink" title="Windows Terminal"></a>Windows Terminal</h3><blockquote>
-<p>   C:\Users\%USERNAME%\AppData\Local\Packages\Microsoft.WindowsTerminal_xxxxxxxxxxxxx\LocalState\settings.json</p>
-</blockquote>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<p>#TODO</p>
-<h3 id="PowerShell-7"><a href="#PowerShell-7" class="headerlink" title="PowerShell 7"></a>PowerShell 7</h3><blockquote>
-<p>  C:\Users\%USERNAME%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1</p>
-</blockquote>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># SetProxy</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:10808&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetClashProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:all_proxy <span class="string">&quot;socks5://127.0.0.1:7890&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Set-Item</span> Env:http_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">	<span class="built_in">Set-Item</span> Env:https_proxy <span class="string">&quot;http://127.0.0.1:8080&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetBurpProxy</span></span> &#123;</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:http_proxy</span><br><span class="line">	<span class="built_in">Remove-Item</span> Env:https_proxy</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">UnSetProxy</span></span> &#123;</span><br><span class="line">    <span class="built_in">Remove-Item</span> Env:all_proxy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Import-Module</span></span><br><span class="line"><span class="built_in">Import-Module</span> PSReadLine</span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> Terminal<span class="literal">-Icons</span></span><br><span class="line"><span class="built_in">Import-Module</span> <span class="literal">-Name</span> z</span><br><span class="line"><span class="comment"># Import-Module -Name PSFzf</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-PredictionSource</span> <span class="built_in">History</span></span><br><span class="line"><span class="comment"># Set-PSReadLineOption -PredictionViewStyle ListView</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&#x27;Ctrl+d&#x27;</span> <span class="literal">-Function</span> DeleteChar </span><br><span class="line"><span class="comment"># 设置向上键为后向搜索历史记录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> UpArrow <span class="literal">-Function</span> HistorySearchBackward</span><br><span class="line"><span class="comment"># 设置向下键为前向搜索历史纪录</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Key</span> DownArrow <span class="literal">-Function</span> HistorySearchForward</span><br><span class="line"><span class="comment"># 设置ctrl + 右键，逐字补全</span></span><br><span class="line"><span class="built_in">Set-PSReadLineKeyHandler</span> <span class="literal">-Chord</span> <span class="string">&quot;Ctrl+RightArrow&quot;</span> <span class="literal">-Function</span> ForwardWord</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-PSReadLineOption</span> <span class="literal">-Colors</span> <span class="selector-tag">@</span>&#123;</span><br><span class="line">    Command             = <span class="string">&quot;#e5c07b&quot;</span></span><br><span class="line">    Number              = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Member              = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Operator            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    <span class="built_in">Type</span>                = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    Variable            = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    <span class="keyword">Parameter</span>           = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    ContinuationPrompt  = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Default             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Emphasis            = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    Selection           = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Comment             = <span class="string">&quot;#cdd4d4&quot;</span></span><br><span class="line">    Keyword             = <span class="string">&quot;#e06c75&quot;</span></span><br><span class="line">    String              = <span class="string">&quot;#78b6e9&quot;</span></span><br><span class="line">    InlinePrediction    = <span class="string">&quot;#9f9193&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># PSFzf</span></span><br><span class="line"><span class="comment"># Set-PSFzfOption -PSReadlineChordProvider &#x27;Ctrl+f&#x27; -PSReadlineChordReverseHistory &#x27;Ctrl+r&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # -----------starship----------</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (&amp;starship init powershell)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># ----------command----------- </span></span><br><span class="line"><span class="comment"># function prompt</span></span><br><span class="line"><span class="comment"># &#123;</span></span><br><span class="line"><span class="comment">#     #Write-Host(&quot;$pwd&gt;&quot;)</span></span><br><span class="line"><span class="comment">#     # &quot;syyu@win &quot; + &quot;$pwd ~ `n $ &quot;</span></span><br><span class="line"><span class="comment">#     &quot; syyu@win &quot; + &quot;$pwd `n $ &quot;</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------pshazz----------</span></span><br><span class="line"><span class="comment"># try &#123; $null = gcm pshazz -ea stop; pshazz init &#x27;default&#x27; &#125; catch &#123; &#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="PowerShell"><a href="#PowerShell" class="headerlink" title="PowerShell"></a>PowerShell</h3><blockquote>
-<p>  C:\Users\%USERNAME%\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</p>
-</blockquote>
-<p>好了，大致的配置就结束了。</p>
-<p>看一波效果图…</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/2022/02/202202071644240415.png" alt="image-20220207212029891"></p>
-<p>还有一些配置和图片，下次一定，先建个#TODO ，哈哈哈哈</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://docs.microsoft.com/zh-cn/windows/terminal/">https://docs.microsoft.com/zh-cn/windows/terminal/</a></p>
-<p><a href="https://juejin.cn/post/6984620463917891614">https://juejin.cn/post/6984620463917891614</a></p>
-<p><a href="https://elfile4138.moe/2021/08/Windows-Terminal%E7%9A%84%E9%85%8D%E7%BD%AE/">https://elfile4138.moe/2021/08/Windows-Terminal%E7%9A%84%E9%85%8D%E7%BD%AE/</a></p>
-]]></content>
-      <categories>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
-        <tag>美化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Windows下快速切换全拼/双拼</title>
-    <url>/articles/d4db3d41/</url>
-    <content><![CDATA[<h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="ChangeDouble-bat"><a href="#ChangeDouble-bat" class="headerlink" title="ChangeDouble.bat"></a>ChangeDouble.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x0 /f</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="VBS脚本方式"><a href="#VBS脚本方式" class="headerlink" title="VBS脚本方式"></a>VBS脚本方式</h2><h3 id="vbs"><a href="#vbs" class="headerlink" title="vbs"></a>vbs</h3><figure class="highlight vbs"><table><tr><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeAll.bat&quot;</span>,<span class="number">0</span></span><br><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeDouble.bat&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="uTools插件"><a href="#uTools插件" class="headerlink" title="uTools插件"></a>uTools插件</h2><p>目前已经做成了 uTools 插件 , 插件名称 : <code>切换微软全拼</code></p>
-<p>项目地址: <a href="https://github.com/syyu6/utools-ChangeDouble">https://github.com/syyu6/utools-ChangeDouble</a></p>
-<p>And so on …</p>
-<h2 id="utools快捷命令"><a href="#utools快捷命令" class="headerlink" title="utools快捷命令"></a>utools快捷命令</h2><h3 id="实现-ps1-脚本"><a href="#实现-ps1-脚本" class="headerlink" title="实现 ps1 脚本"></a>实现 ps1 脚本</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$out</span> = reg query HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span>; </span><br><span class="line"><span class="variable">$outStr</span> = <span class="variable">$out</span> <span class="operator">-as</span> [<span class="built_in">string</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$outStr</span> <span class="operator">-match</span> <span class="string">&#x27;(Pinyin.+0x)(\d)&#x27;</span>) &#123;<span class="variable">$mode</span> = <span class="variable">$Matches</span>[<span class="number">2</span>] &#125; <span class="keyword">else</span> &#123; <span class="variable">$mode</span> = <span class="number">1</span> &#125;; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$mode</span> <span class="operator">-as</span> [<span class="built_in">int</span>] <span class="operator">-eq</span> <span class="number">1</span>) &#123; <span class="variable">$Double</span> = <span class="number">0</span> &#125; <span class="keyword">else</span> &#123; <span class="variable">$Double</span> = <span class="number">1</span> &#125;;</span><br><span class="line">reg.exe add HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span> /t REG_DWORD /d <span class="variable">$Double</span> /f;</span><br></pre></td></tr></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-        <tag>杂谈</tag>
-        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Scoop——强大的Windows命令行包管理工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scoop不完全上手指南">
+<meta property="og:url" content="https://wh0is.xyz/articles/e7aa9a12/index.html">
+<meta property="og:site_name" content="syyu&#39;s Blog">
+<meta property="og:description" content="Scoop——强大的Windows命令行包管理工具">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-08T09:42:35.000Z">
+<meta property="article:modified_time" content="2024-08-08T13:53:26.784Z">
+<meta property="article:author" content="ThesYu">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="scoop">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Scoop不完全上手指南</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/articles/44efe9e0/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/articles/dffc1475/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://wh0is.xyz/articles/e7aa9a12/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://wh0is.xyz/articles/e7aa9a12/&text=Scoop不完全上手指南"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://wh0is.xyz/articles/e7aa9a12/&is_video=false&description=Scoop不完全上手指南"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Scoop不完全上手指南&body=Check out this article: https://wh0is.xyz/articles/e7aa9a12/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://wh0is.xyz/articles/e7aa9a12/&name=Scoop不完全上手指南&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://wh0is.xyz/articles/e7aa9a12/&t=Scoop不完全上手指南"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#scoop%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">scoop介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-scoop"><span class="toc-number">2.</span> <span class="toc-text">安装 scoop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">3.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0-bucket"><span class="toc-number">4.1.</span> <span class="toc-text">添加 bucket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86"><span class="toc-number">4.2.</span> <span class="toc-text">使用代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E8%BF%9E%E6%8E%A5%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.3.</span> <span class="toc-text">多连接下载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-%E5%8D%B8%E8%BD%BDinstall"><span class="toc-number">5.1.</span> <span class="toc-text">安装&#x2F;卸载install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E7%A8%8B%E5%BA%8Fupdate"><span class="toc-number">5.2.</span> <span class="toc-text">更新程序update</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%A4%9A%E7%89%88%E6%9C%ACverison"><span class="toc-number">5.3.</span> <span class="toc-text">管理多版本verison</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E7%90%86clear"><span class="toc-number">5.4.</span> <span class="toc-text">清理clear</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">常用程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%AE%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">亮点</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Scoop不完全上手指南
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ThesYu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-08T09:42:35.000Z" class="dt-published" itemprop="datePublished">2022-02-08</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Windows/">Windows</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Windows/" rel="tag">Windows</a>, <a class="p-category" href="/tags/scoop/" rel="tag">scoop</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="scoop介绍"><a href="#scoop介绍" class="headerlink" title="scoop介绍"></a>scoop介绍</h2><blockquote>
+<p>   <a target="_blank" rel="noopener" href="https://scoop.sh/">scoop</a>是一个 windows 下的软件包管理器，无需管理员权限，将软件全部安装到用户文件夹下，方便管理。</p>
+<p>  安装一些命令行软件非常方便。</p>
+<p>  <a target="_blank" rel="noopener" href="https://scoop.sh/">https://scoop.sh/</a></p>
+<p>  官方文档：<a target="_blank" rel="noopener" href="https://github.com/ScoopInstaller/Scoop/wiki/">https://github.com/ScoopInstaller/Scoop/wiki/</a></p>
+</blockquote>
+<p>类似的命令行包管理工具还有 <code>Chocolatey</code> , 但安装路径不够统一，scoop能做到同一文件夹下管理。</p>
+<h2 id="安装-scoop"><a href="#安装-scoop" class="headerlink" title="安装 scoop"></a>安装 scoop</h2><p>打开 Powershell 窗口，运行下面的命令。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先设置允许运行远程脚本</span></span><br><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-Scope</span> CurrentUser</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装scoop</span></span><br><span class="line"><span class="built_in">Invoke-Expression</span> (<span class="built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="string">&#x27;https://get.scoop.sh&#x27;</span>)</span><br><span class="line"><span class="comment"># or shorter</span></span><br><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果要将scoop安装到其他位置</span></span><br><span class="line"><span class="variable">$env:SCOOP</span> = <span class="string">&#x27;D:\scoop&#x27;</span></span><br><span class="line">[<span class="type">environment</span>]::setEnvironmentVariable(<span class="string">&#x27;SCOOP&#x27;</span>, <span class="variable">$env:SCOOP</span>, <span class="string">&#x27;User&#x27;</span>)</span><br><span class="line"><span class="built_in">Invoke-WebRequest</span> <span class="literal">-useb</span> get.scoop.sh | <span class="built_in">Invoke-Expression</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> scoop</span><br><span class="line">Usage: scoop &lt;command&gt; [&lt;<span class="type">args</span>&gt;]</span><br><span class="line"></span><br><span class="line">Some useful commands are:</span><br><span class="line"></span><br><span class="line">alias       Manage scoop aliases</span><br><span class="line">bucket      Manage Scoop buckets</span><br><span class="line">cache       Show or <span class="built_in">clear</span> the download cache</span><br><span class="line"><span class="built_in">cat</span>         Show content of specified manifest.</span><br><span class="line">checkup     Check <span class="keyword">for</span> potential problems</span><br><span class="line">cleanup     Cleanup apps by removing old versions</span><br><span class="line">config      Get or <span class="built_in">set</span> configuration values</span><br><span class="line">create      Create a custom app manifest</span><br><span class="line">depends     List dependencies <span class="keyword">for</span> an app</span><br><span class="line">export      Exports (an importable) list of installed apps</span><br><span class="line">help        Show help <span class="keyword">for</span> a command</span><br><span class="line">hold        Hold an app to disable updates</span><br><span class="line">home        Opens the app homepage</span><br><span class="line">info        Display information about an app</span><br><span class="line">install     Install apps</span><br><span class="line">list        List installed apps</span><br><span class="line">prefix      Returns the path to the specified app</span><br><span class="line">reset       Reset an app to resolve conflicts</span><br><span class="line">search      Search available apps</span><br><span class="line">status      Show status and check <span class="keyword">for</span> new app versions</span><br><span class="line">unhold      Unhold an app to enable updates</span><br><span class="line">uninstall   Uninstall an app</span><br><span class="line">update      Update apps, or Scoop itself</span><br><span class="line">virustotal  Look <span class="keyword">for</span> app<span class="string">&#x27;s hash on virustotal.com</span></span><br><span class="line"><span class="string">which       Locate a shim/executable (similar to &#x27;</span>which<span class="string">&#x27; on Linux)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Type &#x27;</span>scoop help &lt;command&gt;<span class="string">&#x27; to get help for a specific command.</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="添加-bucket"><a href="#添加-bucket" class="headerlink" title="添加 bucket"></a>添加 bucket</h3><p>自带下面几个 bucket。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">scoop bucket known</span><br><span class="line"></span><br><span class="line">-   main，自带的软件仓库</span><br><span class="line">-   extras，一些额外的带有图形界面软件的仓库</span><br><span class="line">-   versions，包含一些编程语言和类库的各种版本的仓库</span><br><span class="line">-   nirsoft，包含 nirsoft 软件的仓库</span><br><span class="line">-   php，各种 php 的仓库</span><br><span class="line">-   nerd<span class="literal">-fonts</span>，包含各种 nerd<span class="literal">-fonts</span> 字体</span><br><span class="line">-   nonportable，包含各种非绿色版软件的仓库</span><br><span class="line">-   java，各种 java 版本都有的仓库</span><br><span class="line">-   games，一些游戏和相关工具的仓库</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">常用： extras javamain nirsoft nonportable versions </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加bucket</span></span><br><span class="line">scoop bucket add extra</span><br><span class="line">scoop bucket add java</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>  <strong>添加第三方bucket</strong></li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># eg</span></span><br><span class="line">scoop bucket add Ash258 https://github.com/Ash258/Scoop<span class="literal">-Ash258</span>.git</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用代理"><a href="#使用代理" class="headerlink" title="使用代理"></a>使用代理</h3><p>scoop 默认下载比较慢，如果你有代理的话，可以为 scoop 设置代理，加速软件的下载。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scoop config proxy username:password@proxy.example.org:<span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># eg</span></span><br><span class="line">scoop config proxy localhost:<span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># delete Proxy Config</span></span><br><span class="line">scop config <span class="built_in">rm</span> proxy</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多连接下载"><a href="#多连接下载" class="headerlink" title="多连接下载"></a>多连接下载</h3><p>scoop 也支持多连接下载，只需要安装 aria2，scoop 就会自动利用 aria2 来进行多连接下载。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop install aria2</span><br></pre></td></tr></table></figure>
+
+<p>关于下载的其他说明，参见<a target="_blank" rel="noopener" href="https://github.com/ScoopInstaller/Scoop#multi-connection-downloads-with-aria2">官方文档</a>。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scoop config aria2<span class="literal">-enabled</span> true <span class="comment"># 开启aria2</span></span><br><span class="line">scoop config aria2<span class="literal">-enabled</span> false <span class="comment"># 关闭aria2</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="安装-卸载install"><a href="#安装-卸载install" class="headerlink" title="安装/卸载install"></a>安装/卸载install</h3><p>首先需要搜索软件包的名称，然后就可以安装。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索软件</span></span><br><span class="line">scoop search jdk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据返回的结果进行安装</span></span><br><span class="line">scoop install openjdk17</span><br></pre></td></tr></table></figure>
+
+<p>不再需要的软件包就可以卸载。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop uninstall openjdk17</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="更新程序update"><a href="#更新程序update" class="headerlink" title="更新程序update"></a>更新程序update</h3><p>获取更新</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop update</span><br></pre></td></tr></table></figure>
+
+<p>查看需要更新的程序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop status</span><br></pre></td></tr></table></figure>
+
+<p>更新 scoop 自己。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop update scoop</span><br></pre></td></tr></table></figure>
+
+<p>更新所有软件。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop update *</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="管理多版本verison"><a href="#管理多版本verison" class="headerlink" title="管理多版本verison"></a>管理多版本verison</h3><p>管理多版本需要添加version库</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先添加 versions bucket</span></span><br><span class="line">scoop bucket add versions</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 同时安装 Python 2.7 和最新版本</span></span><br><span class="line">scoop install python27 python</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 Python 2.7.x</span></span><br><span class="line">scoop reset python27</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到 Python 3.x</span></span><br><span class="line">scoop reset python</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="清理clear"><a href="#清理clear" class="headerlink" title="清理clear"></a>清理clear</h3><p>scoop 更新软件的时候会保留几个旧版本，假如你不再需要这些旧版本，可以把他们清理掉。</p>
+<p>顺便也可以把下载缓存清理掉。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 清理软件的旧版本</span></span><br><span class="line">scoop cleanup *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理软件的下载缓存</span></span><br><span class="line">scoop cache <span class="built_in">rm</span> *</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用程序"><a href="#常用程序" class="headerlink" title="常用程序"></a>常用程序</h2><ul>
+<li><p>aria2</p>
+<blockquote>
+<p>  多连接下载器</p>
+</blockquote>
+</li>
+<li><p>  git</p>
+</li>
+<li><p>sudo</p>
+<blockquote>
+<p>  不用打开新窗口，快速以管理员权限运行</p>
+</blockquote>
+</li>
+<li><p>  wget/curl</p>
+</li>
+<li><p>starship</p>
+<blockquote>
+<p>  DIY powershell命令提示</p>
+</blockquote>
+</li>
+<li><p>mpv</p>
+<blockquote>
+<p>  开源媒体播放器</p>
+</blockquote>
+</li>
+<li><p>adb</p>
+<blockquote>
+<p>  link to Adnroid</p>
+</blockquote>
+</li>
+<li><p>开发环境</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python go maven </span><br><span class="line">php56 php74</span><br></pre></td></tr></table></figure></li>
+<li><p>neovim</p>
+<blockquote>
+<p>  现代终端文本编辑器，yyds</p>
+</blockquote>
+</li>
+<li><p>netcat</p>
+<blockquote>
+<p>  “瑞士军刀”</p>
+</blockquote>
+</li>
+<li><p>  openssl</p>
+</li>
+<li><p>screentogif</p>
+<blockquote>
+<p>  gif 屏幕录制工具</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><ul>
+<li>  当前应用版本路径 使用  Current” 文件夹 进行软链接，方便进行路径配置。</li>
+<li>  能够自定义bucket库，方便日后diy，把自己常用的添加进去，还能新增自用的其他程序。</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#scoop%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">scoop介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-scoop"><span class="toc-number">2.</span> <span class="toc-text">安装 scoop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">3.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0-bucket"><span class="toc-number">4.1.</span> <span class="toc-text">添加 bucket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86"><span class="toc-number">4.2.</span> <span class="toc-text">使用代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E8%BF%9E%E6%8E%A5%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.3.</span> <span class="toc-text">多连接下载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-%E5%8D%B8%E8%BD%BDinstall"><span class="toc-number">5.1.</span> <span class="toc-text">安装&#x2F;卸载install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E7%A8%8B%E5%BA%8Fupdate"><span class="toc-number">5.2.</span> <span class="toc-text">更新程序update</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%A4%9A%E7%89%88%E6%9C%ACverison"><span class="toc-number">5.3.</span> <span class="toc-text">管理多版本verison</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E7%90%86clear"><span class="toc-number">5.4.</span> <span class="toc-text">清理clear</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">常用程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%AE%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">亮点</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://wh0is.xyz/articles/e7aa9a12/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://wh0is.xyz/articles/e7aa9a12/&text=Scoop不完全上手指南"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://wh0is.xyz/articles/e7aa9a12/&is_video=false&description=Scoop不完全上手指南"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Scoop不完全上手指南&body=Check out this article: https://wh0is.xyz/articles/e7aa9a12/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://wh0is.xyz/articles/e7aa9a12/&title=Scoop不完全上手指南"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://wh0is.xyz/articles/e7aa9a12/&name=Scoop不完全上手指南&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://wh0is.xyz/articles/e7aa9a12/&t=Scoop不完全上手指南"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2024
+    ThesYu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

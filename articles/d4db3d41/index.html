@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Windows下快速切换全拼&#x2F;双拼bat批处理文件方式change.bat123456@echo offset Mainkey&#x3D;HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS for &#x2F;f %%i in (&#x27;reg query %MainKey% &#x2F;v &quot;Enable Double Pinyin&quot; ^| findstr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows下快速切换全拼&#x2F;双拼">
+<meta property="og:url" content="https://wh0is.xyz/articles/d4db3d41/index.html">
+<meta property="og:site_name" content="syyu&#39;s Blog">
+<meta property="og:description" content="Windows下快速切换全拼&#x2F;双拼bat批处理文件方式change.bat123456@echo offset Mainkey&#x3D;HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS for &#x2F;f %%i in (&#x27;reg query %MainKey% &#x2F;v &quot;Enable Double Pinyin&quot; ^| findstr">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-19T09:56:00.000Z">
+<meta property="article:modified_time" content="2024-08-08T13:53:26.785Z">
+<meta property="article:author" content="ThesYu">
+<meta property="article:tag" content="技巧">
+<meta property="article:tag" content="杂谈">
+<meta property="article:tag" content="Windows">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Windows下快速切换全拼/双拼</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/articles/59cbe3b3/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://wh0is.xyz/articles/d4db3d41/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://wh0is.xyz/articles/d4db3d41/&text=Windows下快速切换全拼/双拼"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://wh0is.xyz/articles/d4db3d41/&is_video=false&description=Windows下快速切换全拼/双拼"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Windows下快速切换全拼/双拼&body=Check out this article: https://wh0is.xyz/articles/d4db3d41/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://wh0is.xyz/articles/d4db3d41/&name=Windows下快速切换全拼/双拼&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://wh0is.xyz/articles/d4db3d41/&t=Windows下快速切换全拼/双拼"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows%E4%B8%8B%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2%E5%85%A8%E6%8B%BC-%E5%8F%8C%E6%8B%BC"><span class="toc-number">1.</span> <span class="toc-text">Windows下快速切换全拼&#x2F;双拼</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#bat%E6%89%B9%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">bat批处理文件方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#change-bat"><span class="toc-number">1.1.1.</span> <span class="toc-text">change.bat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ChangeAll-bat"><span class="toc-number">1.1.2.</span> <span class="toc-text">ChangeAll.bat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ChangeDouble-bat"><span class="toc-number">1.1.3.</span> <span class="toc-text">ChangeDouble.bat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VBS%E8%84%9A%E6%9C%AC%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">VBS脚本方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vbs"><span class="toc-number">1.2.1.</span> <span class="toc-text">vbs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uTools%E6%8F%92%E4%BB%B6"><span class="toc-number">1.3.</span> <span class="toc-text">uTools插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#utools%E5%BF%AB%E6%8D%B7%E5%91%BD%E4%BB%A4"><span class="toc-number">1.4.</span> <span class="toc-text">utools快捷命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-ps1-%E8%84%9A%E6%9C%AC"><span class="toc-number">1.4.1.</span> <span class="toc-text">实现 ps1 脚本</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Windows下快速切换全拼/双拼
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ThesYu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-10-19T09:56:00.000Z" class="dt-published" itemprop="datePublished">2021-10-19</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Windows/">Windows</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Windows/" rel="tag">Windows</a>, <a class="p-category" href="/tags/%E6%8A%80%E5%B7%A7/" rel="tag">技巧</a>, <a class="p-category" href="/tags/%E6%9D%82%E8%B0%88/" rel="tag">杂谈</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼/双拼"></a>Windows下快速切换全拼/双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeAll-bat"><a href="#ChangeAll-bat" class="headerlink" title="ChangeAll.bat"></a>ChangeAll.bat</h3><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x1 /f</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ChangeDouble-bat"><a href="#ChangeDouble-bat" class="headerlink" title="ChangeDouble.bat"></a>ChangeDouble.bat</h3><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg (</span><br><span class="line">    reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line"><span class="comment">    @REM reg add %MainKey% /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d 0x0 /f</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="VBS脚本方式"><a href="#VBS脚本方式" class="headerlink" title="VBS脚本方式"></a>VBS脚本方式</h2><h3 id="vbs"><a href="#vbs" class="headerlink" title="vbs"></a>vbs</h3><figure class="highlight vbs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeAll.bat&quot;</span>,<span class="number">0</span></span><br><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;ChangeDouble.bat&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="uTools插件"><a href="#uTools插件" class="headerlink" title="uTools插件"></a>uTools插件</h2><p>目前已经做成了 uTools 插件 , 插件名称 : <code>切换微软全拼</code></p>
+<p>项目地址: <a target="_blank" rel="noopener" href="https://github.com/syyu6/utools-ChangeDouble">https://github.com/syyu6/utools-ChangeDouble</a></p>
+<p>And so on …</p>
+<h2 id="utools快捷命令"><a href="#utools快捷命令" class="headerlink" title="utools快捷命令"></a>utools快捷命令</h2><h3 id="实现-ps1-脚本"><a href="#实现-ps1-脚本" class="headerlink" title="实现 ps1 脚本"></a>实现 ps1 脚本</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$out</span> = reg query HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span>; </span><br><span class="line"><span class="variable">$outStr</span> = <span class="variable">$out</span> <span class="operator">-as</span> [<span class="built_in">string</span>]; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$outStr</span> <span class="operator">-match</span> <span class="string">&#x27;(Pinyin.+0x)(\d)&#x27;</span>) &#123;<span class="variable">$mode</span> = <span class="variable">$Matches</span>[<span class="number">2</span>] &#125; <span class="keyword">else</span> &#123; <span class="variable">$mode</span> = <span class="number">1</span> &#125;; </span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$mode</span> <span class="operator">-as</span> [<span class="built_in">int</span>] <span class="operator">-eq</span> <span class="number">1</span>) &#123; <span class="variable">$Double</span> = <span class="number">0</span> &#125; <span class="keyword">else</span> &#123; <span class="variable">$Double</span> = <span class="number">1</span> &#125;;</span><br><span class="line">reg.exe add HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS /v <span class="string">&quot;Enable Double Pinyin&quot;</span> /t REG_DWORD /d <span class="variable">$Double</span> /f;</span><br></pre></td></tr></table></figure>
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows%E4%B8%8B%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2%E5%85%A8%E6%8B%BC-%E5%8F%8C%E6%8B%BC"><span class="toc-number">1.</span> <span class="toc-text">Windows下快速切换全拼&#x2F;双拼</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#bat%E6%89%B9%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">bat批处理文件方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#change-bat"><span class="toc-number">1.1.1.</span> <span class="toc-text">change.bat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ChangeAll-bat"><span class="toc-number">1.1.2.</span> <span class="toc-text">ChangeAll.bat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ChangeDouble-bat"><span class="toc-number">1.1.3.</span> <span class="toc-text">ChangeDouble.bat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VBS%E8%84%9A%E6%9C%AC%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">VBS脚本方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vbs"><span class="toc-number">1.2.1.</span> <span class="toc-text">vbs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uTools%E6%8F%92%E4%BB%B6"><span class="toc-number">1.3.</span> <span class="toc-text">uTools插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#utools%E5%BF%AB%E6%8D%B7%E5%91%BD%E4%BB%A4"><span class="toc-number">1.4.</span> <span class="toc-text">utools快捷命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-ps1-%E8%84%9A%E6%9C%AC"><span class="toc-number">1.4.1.</span> <span class="toc-text">实现 ps1 脚本</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://wh0is.xyz/articles/d4db3d41/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://wh0is.xyz/articles/d4db3d41/&text=Windows下快速切换全拼/双拼"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://wh0is.xyz/articles/d4db3d41/&is_video=false&description=Windows下快速切换全拼/双拼"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Windows下快速切换全拼/双拼&body=Check out this article: https://wh0is.xyz/articles/d4db3d41/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://wh0is.xyz/articles/d4db3d41/&title=Windows下快速切换全拼/双拼"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://wh0is.xyz/articles/d4db3d41/&name=Windows下快速切换全拼/双拼&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://wh0is.xyz/articles/d4db3d41/&t=Windows下快速切换全拼/双拼"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2024
+    ThesYu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
