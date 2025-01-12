@@ -6,7 +6,7 @@
   <link href="https://wh0is.xyz/atom.xml" rel="self"/>
   
   <link href="https://wh0is.xyz/"/>
-  <updated>2024-11-01T01:42:56.642Z</updated>
+  <updated>2025-01-12T02:58:49.700Z</updated>
   <id>https://wh0is.xyz/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Macbook配置指北（update ing）</title>
+    <link href="https://wh0is.xyz/articles/c245633d/"/>
+    <id>https://wh0is.xyz/articles/c245633d/</id>
+    <published>2024-12-21T03:01:38.768Z</published>
+    <updated>2025-01-12T02:58:49.700Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    
+    <category term="TODO" scheme="https://wh0is.xyz/tags/TODO/"/>
+    
+    <category term="MacTips" scheme="https://wh0is.xyz/tags/MacTips/"/>
+    
+    <category term="mac工具" scheme="https://wh0is.xyz/tags/mac%E5%B7%A5%E5%85%B7/"/>
+    
+    <category term="Mac美化" scheme="https://wh0is.xyz/tags/Mac%E7%BE%8E%E5%8C%96/"/>
+    
+  </entry>
   
   <entry>
     <title>xxl-job-executor内存马</title>
@@ -191,9 +220,9 @@
     
     <category term="网络安全" scheme="https://wh0is.xyz/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/"/>
     
-    <category term="总结" scheme="https://wh0is.xyz/tags/%E6%80%BB%E7%BB%93/"/>
-    
     <category term="MySQL" scheme="https://wh0is.xyz/tags/MySQL/"/>
+    
+    <category term="总结" scheme="https://wh0is.xyz/tags/%E6%80%BB%E7%BB%93/"/>
     
   </entry>
   

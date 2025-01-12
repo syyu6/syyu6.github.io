@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Macbook配置指北（update ing）参考链接 国光博客 https:&#x2F;&#x2F;www.sqlsec.com&#x2F;2023&#x2F;09&#x2F;softmac.html https:&#x2F;&#x2F;www.sqlsec.com&#x2F;2022&#x2F;01&#x2F;monterey.html    软件清单https:&#x2F;&#x2F;syyu.notion.site&#x2F;32c6b4946d5c4fa38b343a0fb567d555?v&#x3D;646540aae6d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Macbook配置指北（update ing）">
+<meta property="og:url" content="https://wh0is.xyz/articles/c245633d/index.html">
+<meta property="og:site_name" content="syyu&#39;s Blog">
+<meta property="og:description" content="Macbook配置指北（update ing）参考链接 国光博客 https:&#x2F;&#x2F;www.sqlsec.com&#x2F;2023&#x2F;09&#x2F;softmac.html https:&#x2F;&#x2F;www.sqlsec.com&#x2F;2022&#x2F;01&#x2F;monterey.html    软件清单https:&#x2F;&#x2F;syyu.notion.site&#x2F;32c6b4946d5c4fa38b343a0fb567d555?v&#x3D;646540aae6d">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/syyu6/Images/img/2025/01/202501121736650713.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/syyu6/Images/img/2025/01/202501121736650715.png">
+<meta property="og:image" content="https://wh0is.xyz/assets/image-20241231043255-1.png">
+<meta property="og:image" content="https://wh0is.xyz/assets/image-20241231043850-1.png">
+<meta property="og:image" content="https://wh0is.xyz/assets/image-20241231044402-1.png">
+<meta property="og:image" content="https://wh0is.xyz/assets/image-20241231044538-1.png">
+<meta property="article:published_time" content="2024-12-21T03:01:38.768Z">
+<meta property="article:modified_time" content="2025-01-12T02:58:49.700Z">
+<meta property="article:author" content="ThesYu">
+<meta property="article:tag" content="TODO">
+<meta property="article:tag" content="MacTips">
+<meta property="article:tag" content="mac工具">
+<meta property="article:tag" content="Mac美化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/syyu6/Images/img/2025/01/202501121736650713.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Macbook配置指北（update ing）</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="syyu&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/articles/4ac9859d/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://wh0is.xyz/articles/c245633d/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://wh0is.xyz/articles/c245633d/&text=Macbook配置指北（update ing）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://wh0is.xyz/articles/c245633d/&is_video=false&description=Macbook配置指北（update ing）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Macbook配置指北（update ing）&body=Check out this article: https://wh0is.xyz/articles/c245633d/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://wh0is.xyz/articles/c245633d/&name=Macbook配置指北（update ing）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://wh0is.xyz/articles/c245633d/&t=Macbook配置指北（update ing）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Macbook%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8C%97%EF%BC%88update-ing%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Macbook配置指北（update ing）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.1.</span> <span class="toc-text">参考链接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E6%B8%85%E5%8D%95"><span class="toc-number">2.</span> <span class="toc-text">软件清单</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#raycast-%E5%BF%85%E5%A4%87%EF%BC%8C%E6%97%A0%E9%9C%80%E5%A4%9A%E8%A8%80"><span class="toc-number">2.1.</span> <span class="toc-text">raycast(必备，无需多言)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">2.2.</span> <span class="toc-text">浏览器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.3.</span> <span class="toc-text">终端软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wezterm"><span class="toc-number">2.4.</span> <span class="toc-text">wezterm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%94%E8%AE%B0%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.5.</span> <span class="toc-text">笔记软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%BE%91%E5%99%A8"><span class="toc-number">2.6.</span> <span class="toc-text">编辑器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E9%87%8F"><span class="toc-number">2.7.</span> <span class="toc-text">流量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.7.1.</span> <span class="toc-text">防火墙软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxychains"><span class="toc-number">2.7.2.</span> <span class="toc-text">proxychains</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#arm-mac%E5%AE%89%E8%A3%85%E6%8A%80%E5%B7%A7"><span class="toc-number">2.7.2.1.</span> <span class="toc-text">arm-mac安装技巧</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="toc-number">2.8.</span> <span class="toc-text">终端配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#zim%EF%BC%88%E5%8F%AF%E8%83%BD%E6%98%AF%E6%9C%80%E5%BF%AB%E7%9A%84zsh%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">2.8.1.</span> <span class="toc-text">zim（可能是最快的zsh配置）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%B3%E9%94%AE%E7%AE%A1%E7%90%86"><span class="toc-number">2.9.</span> <span class="toc-text">右键管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E7%BA%A7%E5%8F%B3%E9%94%AE"><span class="toc-number">2.9.1.</span> <span class="toc-text">超级右键</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#crack%E6%96%B9%E5%BC%8F%EF%BC%88frida%EF%BC%89"><span class="toc-number">2.9.1.1.</span> <span class="toc-text">crack方式（frida）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rclick-%E5%BC%80%E6%BA%90"><span class="toc-number">2.9.2.</span> <span class="toc-text">Rclick(开源)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E7%AE%A1%E7%90%86"><span class="toc-number">2.10.</span> <span class="toc-text">docker管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#orbstack"><span class="toc-number">2.10.1.</span> <span class="toc-text">orbstack</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AI%E7%9B%B8%E5%85%B3"><span class="toc-number">2.11.</span> <span class="toc-text">AI相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lobe-chat"><span class="toc-number">2.11.1.</span> <span class="toc-text">lobe-chat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ollama"><span class="toc-number">2.12.</span> <span class="toc-text">ollama</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E5%B7%A5%E5%85%B7"><span class="toc-number">2.13.</span> <span class="toc-text">小工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ice"><span class="toc-number">2.13.1.</span> <span class="toc-text">ice</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#easydict"><span class="toc-number">2.13.2.</span> <span class="toc-text">easydict</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mounty"><span class="toc-number">2.13.3.</span> <span class="toc-text">mounty</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#snipaste"><span class="toc-number">2.13.4.</span> <span class="toc-text">snipaste</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Karabiner-Elements"><span class="toc-number">2.13.5.</span> <span class="toc-text">Karabiner-Elements</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tiny-RDM"><span class="toc-number">2.13.6.</span> <span class="toc-text">Tiny RDM</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%88%E7%8E%87%E6%8F%90%E5%8D%87%E6%8A%80%E5%B7%A7"><span class="toc-number">3.</span> <span class="toc-text">效率提升技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#raycast%E5%AE%9E%E7%8E%B0%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86-%E5%BA%94%E7%94%A8%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8"><span class="toc-number">3.1.</span> <span class="toc-text">raycast实现窗口管理+应用快捷启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jar%E5%8C%85%E5%BA%94%E7%94%A8%E5%BF%AB%E6%8D%B7%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F"><span class="toc-number">3.2.</span> <span class="toc-text">jar包应用快捷打开方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Touch-ID-%E6%8E%88%E6%9D%83-MacOS-%E7%BB%88%E7%AB%AF"><span class="toc-number">3.3.</span> <span class="toc-text">Touch ID 授权 MacOS 终端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E6%8E%89%E7%83%A6%E4%BA%BA%E7%9A%84%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6DS-Store"><span class="toc-number">3.4.</span> <span class="toc-text">去掉烦人的隐藏文件DS_Store</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A6%81%E6%AD%A2-DS-Store%E7%94%9F%E6%88%90"><span class="toc-number">3.4.0.0.1.</span> <span class="toc-text">禁止.DS_Store生成</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%81%A2%E5%A4%8D-DS-Store%E7%94%9F%E6%88%90"><span class="toc-number">3.4.0.0.2.</span> <span class="toc-text">恢复.DS_Store生成</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E4%B9%8B%E5%89%8D%E7%94%9F%E6%88%90%E7%9A%84-DS-Store"><span class="toc-number">3.4.0.0.3.</span> <span class="toc-text">删除之前生成的.DS_Store</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#finder"><span class="toc-number">3.5.</span> <span class="toc-text">finder</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E5%88%97%E5%AE%BD"><span class="toc-number">3.5.1.</span> <span class="toc-text">调整列宽</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E5%B9%B6%E6%89%80%E6%9C%89%E7%AA%97%E5%8F%A3"><span class="toc-number">3.5.2.</span> <span class="toc-text">合并所有窗口</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Macbook配置指北（update ing）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ThesYu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-21T03:01:38.768Z" class="dt-published" itemprop="datePublished">2024-12-21</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/MacTips/" rel="tag">MacTips</a>, <a class="p-category" href="/tags/Mac%E7%BE%8E%E5%8C%96/" rel="tag">Mac美化</a>, <a class="p-category" href="/tags/TODO/" rel="tag">TODO</a>, <a class="p-category" href="/tags/mac%E5%B7%A5%E5%85%B7/" rel="tag">mac工具</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Macbook配置指北（update-ing）"><a href="#Macbook配置指北（update-ing）" class="headerlink" title="Macbook配置指北（update ing）"></a>Macbook配置指北（update ing）</h1><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li>国光博客<ul>
+<li><a target="_blank" rel="noopener" href="https://www.sqlsec.com/2023/09/softmac.html">https://www.sqlsec.com/2023/09/softmac.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.sqlsec.com/2022/01/monterey.html">https://www.sqlsec.com/2022/01/monterey.html</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="软件清单"><a href="#软件清单" class="headerlink" title="软件清单"></a>软件清单</h1><p><a target="_blank" rel="noopener" href="https://syyu.notion.site/32c6b4946d5c4fa38b343a0fb567d555?v=646540aae6d443e9b8a4c8d9aefc4d8a">https://syyu.notion.site/32c6b4946d5c4fa38b343a0fb567d555?v=646540aae6d443e9b8a4c8d9aefc4d8a</a></p>
+<h2 id="raycast-必备，无需多言"><a href="#raycast-必备，无需多言" class="headerlink" title="raycast(必备，无需多言)"></a>raycast(必备，无需多言)</h2><p><a target="_blank" rel="noopener" href="https://www.raycast.com/">https://www.raycast.com/</a></p>
+<h2 id="浏览器"><a href="#浏览器" class="headerlink" title="浏览器"></a>浏览器</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>下载链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chrome</td>
+<td><a target="_blank" rel="noopener" href="https://www.google.cn/intl/zh-CN/chrome/">https://www.google.cn/intl/zh-CN/chrome/</a></td>
+</tr>
+<tr>
+<td>Arc</td>
+<td><a target="_blank" rel="noopener" href="https://arc.net/">https://arc.net/</a></td>
+</tr>
+<tr>
+<td>Vivaldi</td>
+<td><a target="_blank" rel="noopener" href="https://vivaldi.com/zh-hans/">https://vivaldi.com/zh-hans/</a></td>
+</tr>
+</tbody></table>
+<h2 id="终端软件"><a href="#终端软件" class="headerlink" title="终端软件"></a>终端软件</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>下载链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>iTerm2</td>
+<td><a target="_blank" rel="noopener" href="https://iterm2.com/">https://iterm2.com/</a></td>
+</tr>
+<tr>
+<td>wezterm</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/wez/wezterm">https://github.com/wez/wezterm</a></td>
+</tr>
+<tr>
+<td>windterm</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/kingToolbox/WindTerm">https://github.com/kingToolbox/WindTerm</a></td>
+</tr>
+<tr>
+<td>ghostty</td>
+<td><a target="_blank" rel="noopener" href="https://ghostty.org/">https://ghostty.org/</a></td>
+</tr>
+</tbody></table>
+<h2 id="wezterm"><a href="#wezterm" class="headerlink" title="wezterm"></a>wezterm</h2><p>目前在使用的是wezterm，由rust强力驱动。最近听说 <a target="_blank" rel="noopener" href="https://ghostty.org/">ghostty</a> 也不错，找机会试试。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/2025/01/202501121736650713.png"></p>
+<h2 id="笔记软件"><a href="#笔记软件" class="headerlink" title="笔记软件"></a>笔记软件</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>下载链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>obsidian</td>
+<td><a target="_blank" rel="noopener" href="https://obsidian.md/">https://obsidian.md/</a></td>
+</tr>
+<tr>
+<td>语雀</td>
+<td><a target="_blank" rel="noopener" href="https://www.yuque.com/">https://www.yuque.com/</a></td>
+</tr>
+</tbody></table>
+<h2 id="编辑器"><a href="#编辑器" class="headerlink" title="编辑器"></a>编辑器</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>下载链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>vscode</td>
+<td><a target="_blank" rel="noopener" href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></td>
+</tr>
+<tr>
+<td>neovim</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/neovim/neovim">https://github.com/neovim/neovim</a></td>
+</tr>
+</tbody></table>
+<h2 id="流量"><a href="#流量" class="headerlink" title="流量"></a>流量</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>下载链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Proxifier</td>
+<td><a target="_blank" rel="noopener" href="https://www.proxifier.com/">https://www.proxifier.com/</a></td>
+</tr>
+<tr>
+<td>proxychains-ng</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/rofl0r/proxychains-ng">https://github.com/rofl0r/proxychains-ng</a></td>
+</tr>
+<tr>
+<td>clashx</td>
+<td>&#x2F;</td>
+</tr>
+<tr>
+<td>sing-box</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/SagerNet/sing-box">https://github.com/SagerNet/sing-box</a></td>
+</tr>
+</tbody></table>
+<h3 id="防火墙软件"><a href="#防火墙软件" class="headerlink" title="防火墙软件"></a>防火墙软件</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>下载链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lu Lu</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/objective-see/LuLu/">https://github.com/objective-see/LuLu/</a></td>
+</tr>
+</tbody></table>
+<h3 id="proxychains"><a href="#proxychains" class="headerlink" title="proxychains"></a>proxychains</h3><blockquote>
+<p> Tips:<br> 通过如下命令进入的终端，将全局进行流量转发</p>
+<p> proxychains4 -q &#x2F;bin&#x2F;zsh</p>
+</blockquote>
+<h4 id="arm-mac安装技巧"><a href="#arm-mac安装技巧" class="headerlink" title="arm-mac安装技巧"></a>arm-mac安装技巧</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">brew install proxychains-ng</span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后 手动编译项目</span></span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/rofl0r/proxychains-ng</span><br><span class="line"></span><br><span class="line">./configure --prefix=/opt/homebrew/Cellar/proxychains-ng/4.16 --sysconfdir=/opt/homebrew/etc --fat-binary-m1 make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<h2 id="终端配置"><a href="#终端配置" class="headerlink" title="终端配置"></a>终端配置</h2><h3 id="zim（可能是最快的zsh配置）"><a href="#zim（可能是最快的zsh配置）" class="headerlink" title="zim（可能是最快的zsh配置）"></a>zim（可能是最快的zsh配置）</h3><blockquote>
+<p> <a target="_blank" rel="noopener" href="https://zimfw.sh/">https://zimfw.sh/</a></p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">https://zimfw.sh/docs/install/</span><br><span class="line"></span><br><span class="line">- 使用 `curl`：</span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh</span><br><span class="line">    </span><br><span class="line">- 使用 `wget`：</span><br><span class="line">wget -nv -O - https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh</span><br></pre></td></tr></table></figure>
+
+<p>配置.zimrc</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">zmodule asciiship</span><br><span class="line"></span><br><span class="line"># Additional completion definitions for Zsh.</span><br><span class="line">zmodule zsh-users/zsh-completions --fpath src</span><br><span class="line"># Enables and configures smart and extensive tab completion.</span><br><span class="line"># completion must be sourced after all modules that add completion definitions.</span><br><span class="line">zmodule completion</span><br><span class="line"></span><br><span class="line"># Fish-like syntax highlighting for Zsh.</span><br><span class="line"># zsh-users/zsh-syntax-highlighting must be sourced after completion</span><br><span class="line">zmodule zsh-users/zsh-syntax-highlighting</span><br><span class="line">zmodule zsh-users/zsh-history-substring-search</span><br><span class="line"># Fish-like autosuggestions for Zsh.</span><br><span class="line">zmodule zsh-users/zsh-autosuggestions</span><br><span class="line"></span><br><span class="line">zmodule Aloxaf/fzf-tab</span><br><span class="line">zmodule wookayin/fzf-fasd</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/syyu6/Images/img/2025/01/202501121736650715.png"></p>
+<h2 id="右键管理"><a href="#右键管理" class="headerlink" title="右键管理"></a>右键管理</h2><h3 id="超级右键"><a href="#超级右键" class="headerlink" title="超级右键"></a>超级右键</h3><p><a target="_blank" rel="noopener" href="https://www.better365.cn/irightmouse.html">https://www.better365.cn/irightmouse.html</a></p>
+<h4 id="crack方式（frida）"><a href="#crack方式（frida）" class="headerlink" title="crack方式（frida）"></a>crack方式（frida）</h4><h3 id="Rclick-开源"><a href="#Rclick-开源" class="headerlink" title="Rclick(开源)"></a>Rclick(开源)</h3><p><a target="_blank" rel="noopener" href="https://github.com/wflixu/RClick">https://github.com/wflixu/RClick</a></p>
+<h2 id="docker管理"><a href="#docker管理" class="headerlink" title="docker管理"></a>docker管理</h2><h3 id="orbstack"><a href="#orbstack" class="headerlink" title="orbstack"></a>orbstack</h3><blockquote>
+<p>告别缓慢、笨拙的容器和 VM，OrbStack 是运行 Docker 容器和 Linux 的快速、轻便且简单的方法。<br><a target="_blank" rel="noopener" href="https://orbstack.dev/">https://orbstack.dev/</a></p>
+</blockquote>
+<h2 id="AI相关"><a href="#AI相关" class="headerlink" title="AI相关"></a>AI相关</h2><h3 id="lobe-chat"><a href="#lobe-chat" class="headerlink" title="lobe-chat"></a>lobe-chat</h3><blockquote>
+<p>Lobe Chat - 一个开源的、现代设计的 AI 聊天框架。支持多 AI 提供商（OpenAI &#x2F; Claude 3 &#x2F; Gemini &#x2F; Ollama &#x2F; Qwen &#x2F; DeepSeek）、知识库（文件上传&#x2F;知识管理 &#x2F; RAG）、多模态（Vision&#x2F;TTS&#x2F;插件&#x2F;工件）。<br><a target="_blank" rel="noopener" href="https://github.com/lobehub/lobe-chat">https://github.com/lobehub/lobe-chat</a></p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 3210:3210 --restart always  --name lobe-chat  lobehub/lobe-chat</span><br></pre></td></tr></table></figure>
+
+<h2 id="ollama"><a href="#ollama" class="headerlink" title="ollama"></a>ollama</h2><blockquote>
+<p>本地化运行大模型<br><a target="_blank" rel="noopener" href="https://github.com/ollama/ollama">https://github.com/ollama/ollama</a></p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install ollama</span><br></pre></td></tr></table></figure>
+
+<h2 id="小工具"><a href="#小工具" class="headerlink" title="小工具"></a>小工具</h2><h3 id="ice"><a href="#ice" class="headerlink" title="ice"></a>ice</h3><blockquote>
+<p> 适用于 macOS 的强大菜单栏管理器<br> <a target="_blank" rel="noopener" href="https://github.com/jordanbaird/Ice">https://github.com/jordanbaird/Ice</a></p>
+</blockquote>
+<h3 id="easydict"><a href="#easydict" class="headerlink" title="easydict"></a>easydict</h3><blockquote>
+<p>一个简洁优雅的词典翻译 macOS App。开箱即用，支持离线 OCR 识别，支持有道词典，🍎 苹果系统词典，🍎 苹果系统翻译，OpenAI，Gemini，DeepL，Google，Bing，腾讯，百度，阿里，小牛，彩云和火山翻译。<br><a target="_blank" rel="noopener" href="https://github.com/tisfeng/Easydict">https://github.com/tisfeng/Easydict</a></p>
+</blockquote>
+<h3 id="mounty"><a href="#mounty" class="headerlink" title="mounty"></a>mounty</h3><blockquote>
+<p>Mounty 现在用作免费提供的 NTFS-3G 驱动程序的用户界面<br><a target="_blank" rel="noopener" href="https://mounty.app/">https://mounty.app/</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install --cask macfuse</span><br><span class="line">brew install gromgit/fuse/ntfs-3g-mac</span><br><span class="line">brew install --cask mounty</span><br></pre></td></tr></table></figure>
+
+<h3 id="snipaste"><a href="#snipaste" class="headerlink" title="snipaste"></a>snipaste</h3><blockquote>
+<p>一个简单但强大的截图工具<br><a target="_blank" rel="noopener" href="https://zh.snipaste.com/">https://zh.snipaste.com/</a></p>
+</blockquote>
+<h3 id="Karabiner-Elements"><a href="#Karabiner-Elements" class="headerlink" title="Karabiner-Elements"></a>Karabiner-Elements</h3><blockquote>
+<p>适用于 macOS 的强大而稳定的键盘映射工具<br><a target="_blank" rel="noopener" href="https://karabiner-elements.pqrs.org/">https://karabiner-elements.pqrs.org/</a></p>
+</blockquote>
+<h3 id="Tiny-RDM"><a href="#Tiny-RDM" class="headerlink" title="Tiny RDM"></a>Tiny RDM</h3><blockquote>
+<p>一个更现代化的Redis桌面管理客户端<br><a target="_blank" rel="noopener" href="https://redis.tinycraft.cc/zh/">https://redis.tinycraft.cc/zh/</a></p>
+</blockquote>
+<h1 id="效率提升技巧"><a href="#效率提升技巧" class="headerlink" title="效率提升技巧"></a>效率提升技巧</h1><h2 id="raycast实现窗口管理-应用快捷启动"><a href="#raycast实现窗口管理-应用快捷启动" class="headerlink" title="raycast实现窗口管理+应用快捷启动"></a>raycast实现窗口管理+应用快捷启动</h2><blockquote>
+<p>将大写键绑定到 cmd + shift + option + ctrl ，做为 superkey ,<br>通过Karabiner-Elements 完成实现，同时将左&#x2F;右shift 映射到语言切换按键</p>
+</blockquote>
+<p><img src="/assets/image-20241231043255-1.png"></p>
+<p>通过raycast设置应用快捷启动，例如 obsidian 设置为 Caps + D, 根据喜好，自行设置</p>
+<p><img src="/assets/image-20241231043850-1.png"></p>
+<h2 id="jar包应用快捷打开方式"><a href="#jar包应用快捷打开方式" class="headerlink" title="jar包应用快捷打开方式"></a>jar包应用快捷打开方式</h2><p>先在raycast 中添加 “scripy Directory”，设置一个脚本文件夹</p>
+<p><img src="/assets/image-20241231044402-1.png"></p>
+<p>通过raycast script脚本打开, 模板如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/zsh</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Required parameters:</span></span><br><span class="line"><span class="comment"># @raycast.schemaVersion 1</span></span><br><span class="line"><span class="comment"># @raycast.title jadx-gui</span></span><br><span class="line"><span class="comment"># @raycast.mode silent</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Optional parameters:</span></span><br><span class="line"><span class="comment"># @raycast.icon 🤖</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sh /xxxx/APP/jadx-1.3.2/bin/jadx-gui ; <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>效果如下：</p>
+<p><img src="/assets/image-20241231044538-1.png"></p>
+<h2 id="Touch-ID-授权-MacOS-终端"><a href="#Touch-ID-授权-MacOS-终端" class="headerlink" title="Touch ID 授权 MacOS 终端"></a>Touch ID 授权 MacOS 终端</h2><p>使用指纹快速授权，节省输入密码的时间。</p>
+<p>在使用 sudo 命令的时候，需要输入开机密码才可以获取 root 权限。当密码特别长的时候，输入密码就会特别费时间。</p>
+<p>在 Terminal 输入以下命令，然后重新启动 Terminal。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -i &quot;.bak&quot; &#x27;2s/^/auth       sufficient     pam_tid.so\&#x27;$&#x27;\n/g&#x27; /etc/pam.d/sudo</span><br></pre></td></tr></table></figure>
+
+<h2 id="去掉烦人的隐藏文件DS-Store"><a href="#去掉烦人的隐藏文件DS-Store" class="headerlink" title="去掉烦人的隐藏文件DS_Store"></a>去掉烦人的隐藏文件DS_Store</h2><h5 id="禁止-DS-Store生成"><a href="#禁止-DS-Store生成" class="headerlink" title="禁止.DS_Store生成"></a>禁止.DS_Store生成</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defaults write com.<span class="property">apple</span>.<span class="property">finder</span> <span class="title class_">AppleShowAllFiles</span> <span class="variable constant_">FALSE</span>;killall <span class="title class_">Finder</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="恢复-DS-Store生成"><a href="#恢复-DS-Store生成" class="headerlink" title="恢复.DS_Store生成"></a>恢复.DS_Store生成</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">defaults write com.<span class="property">apple</span>.<span class="property">finder</span> <span class="title class_">AppleShowAllFiles</span> <span class="variable constant_">TRUE</span></span><br><span class="line">defaults <span class="keyword">delete</span> com.<span class="property">apple</span>.<span class="property">desktopservices</span> <span class="title class_">DSDontWriteNetworkStores</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="删除之前生成的-DS-Store"><a href="#删除之前生成的-DS-Store" class="headerlink" title="删除之前生成的.DS_Store"></a>删除之前生成的.DS_Store</h5><p>对已经生成的文件还需要你手动删除, 打开<code>终端</code>, 执行下列命令:</p>
+<p>代码语言：javascript</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo find / -name <span class="string">&quot;.DS_Store&quot;</span> -depth -exec rm &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<h2 id="finder"><a href="#finder" class="headerlink" title="finder"></a>finder</h2><h3 id="调整列宽"><a href="#调整列宽" class="headerlink" title="调整列宽"></a>调整列宽</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Finder 多列模式 自动调整列宽</span><br><span class="line">defaults write com.apple.finder _FXEnableColumnAutoSizing -bool true &amp;&amp; killall Finder</span><br></pre></td></tr></table></figure>
+
+<h3 id="合并所有窗口"><a href="#合并所有窗口" class="headerlink" title="合并所有窗口"></a>合并所有窗口</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/WinstonLau/article/details/106612488">Mac系统设置合并所有访达窗口的快捷键</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Macbook%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8C%97%EF%BC%88update-ing%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Macbook配置指北（update ing）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.1.</span> <span class="toc-text">参考链接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E6%B8%85%E5%8D%95"><span class="toc-number">2.</span> <span class="toc-text">软件清单</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#raycast-%E5%BF%85%E5%A4%87%EF%BC%8C%E6%97%A0%E9%9C%80%E5%A4%9A%E8%A8%80"><span class="toc-number">2.1.</span> <span class="toc-text">raycast(必备，无需多言)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">2.2.</span> <span class="toc-text">浏览器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.3.</span> <span class="toc-text">终端软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wezterm"><span class="toc-number">2.4.</span> <span class="toc-text">wezterm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%94%E8%AE%B0%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.5.</span> <span class="toc-text">笔记软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%BE%91%E5%99%A8"><span class="toc-number">2.6.</span> <span class="toc-text">编辑器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E9%87%8F"><span class="toc-number">2.7.</span> <span class="toc-text">流量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.7.1.</span> <span class="toc-text">防火墙软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxychains"><span class="toc-number">2.7.2.</span> <span class="toc-text">proxychains</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#arm-mac%E5%AE%89%E8%A3%85%E6%8A%80%E5%B7%A7"><span class="toc-number">2.7.2.1.</span> <span class="toc-text">arm-mac安装技巧</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="toc-number">2.8.</span> <span class="toc-text">终端配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#zim%EF%BC%88%E5%8F%AF%E8%83%BD%E6%98%AF%E6%9C%80%E5%BF%AB%E7%9A%84zsh%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">2.8.1.</span> <span class="toc-text">zim（可能是最快的zsh配置）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%B3%E9%94%AE%E7%AE%A1%E7%90%86"><span class="toc-number">2.9.</span> <span class="toc-text">右键管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E7%BA%A7%E5%8F%B3%E9%94%AE"><span class="toc-number">2.9.1.</span> <span class="toc-text">超级右键</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#crack%E6%96%B9%E5%BC%8F%EF%BC%88frida%EF%BC%89"><span class="toc-number">2.9.1.1.</span> <span class="toc-text">crack方式（frida）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rclick-%E5%BC%80%E6%BA%90"><span class="toc-number">2.9.2.</span> <span class="toc-text">Rclick(开源)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E7%AE%A1%E7%90%86"><span class="toc-number">2.10.</span> <span class="toc-text">docker管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#orbstack"><span class="toc-number">2.10.1.</span> <span class="toc-text">orbstack</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AI%E7%9B%B8%E5%85%B3"><span class="toc-number">2.11.</span> <span class="toc-text">AI相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lobe-chat"><span class="toc-number">2.11.1.</span> <span class="toc-text">lobe-chat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ollama"><span class="toc-number">2.12.</span> <span class="toc-text">ollama</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E5%B7%A5%E5%85%B7"><span class="toc-number">2.13.</span> <span class="toc-text">小工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ice"><span class="toc-number">2.13.1.</span> <span class="toc-text">ice</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#easydict"><span class="toc-number">2.13.2.</span> <span class="toc-text">easydict</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mounty"><span class="toc-number">2.13.3.</span> <span class="toc-text">mounty</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#snipaste"><span class="toc-number">2.13.4.</span> <span class="toc-text">snipaste</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Karabiner-Elements"><span class="toc-number">2.13.5.</span> <span class="toc-text">Karabiner-Elements</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tiny-RDM"><span class="toc-number">2.13.6.</span> <span class="toc-text">Tiny RDM</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%88%E7%8E%87%E6%8F%90%E5%8D%87%E6%8A%80%E5%B7%A7"><span class="toc-number">3.</span> <span class="toc-text">效率提升技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#raycast%E5%AE%9E%E7%8E%B0%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86-%E5%BA%94%E7%94%A8%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8"><span class="toc-number">3.1.</span> <span class="toc-text">raycast实现窗口管理+应用快捷启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jar%E5%8C%85%E5%BA%94%E7%94%A8%E5%BF%AB%E6%8D%B7%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F"><span class="toc-number">3.2.</span> <span class="toc-text">jar包应用快捷打开方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Touch-ID-%E6%8E%88%E6%9D%83-MacOS-%E7%BB%88%E7%AB%AF"><span class="toc-number">3.3.</span> <span class="toc-text">Touch ID 授权 MacOS 终端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E6%8E%89%E7%83%A6%E4%BA%BA%E7%9A%84%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6DS-Store"><span class="toc-number">3.4.</span> <span class="toc-text">去掉烦人的隐藏文件DS_Store</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A6%81%E6%AD%A2-DS-Store%E7%94%9F%E6%88%90"><span class="toc-number">3.4.0.0.1.</span> <span class="toc-text">禁止.DS_Store生成</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%81%A2%E5%A4%8D-DS-Store%E7%94%9F%E6%88%90"><span class="toc-number">3.4.0.0.2.</span> <span class="toc-text">恢复.DS_Store生成</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E4%B9%8B%E5%89%8D%E7%94%9F%E6%88%90%E7%9A%84-DS-Store"><span class="toc-number">3.4.0.0.3.</span> <span class="toc-text">删除之前生成的.DS_Store</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#finder"><span class="toc-number">3.5.</span> <span class="toc-text">finder</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E5%88%97%E5%AE%BD"><span class="toc-number">3.5.1.</span> <span class="toc-text">调整列宽</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E5%B9%B6%E6%89%80%E6%9C%89%E7%AA%97%E5%8F%A3"><span class="toc-number">3.5.2.</span> <span class="toc-text">合并所有窗口</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://wh0is.xyz/articles/c245633d/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://wh0is.xyz/articles/c245633d/&text=Macbook配置指北（update ing）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://wh0is.xyz/articles/c245633d/&is_video=false&description=Macbook配置指北（update ing）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Macbook配置指北（update ing）&body=Check out this article: https://wh0is.xyz/articles/c245633d/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://wh0is.xyz/articles/c245633d/&title=Macbook配置指北（update ing）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://wh0is.xyz/articles/c245633d/&name=Macbook配置指北（update ing）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://wh0is.xyz/articles/c245633d/&t=Macbook配置指北（update ing）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2025
+    ThesYu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/syyu6">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
